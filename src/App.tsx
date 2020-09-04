@@ -9,7 +9,8 @@ export const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Praktyki! Jarosław</h1>
+        <h1>Praktyki Lech! Jarosław</h1>
+
         <img width={40} alt="" src={logo} />
       </header>
       <hr />
