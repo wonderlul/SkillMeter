@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
-import { DemoButton } from './components/DemoButton/DemoButton';
-import { Button, Popover, Modal } from 'antd';
-import './App.scss';
+import React, { useState } from "react";
+import logo from "./logo.svg";
+import { DemoButton } from "./components/DemoButton/DemoButton";
+import { Button, Popover, Modal } from "antd";
+import "./App.scss";
 
 export const App = () => {
   const [modalShown, setModalShown] = useState<boolean>(false);
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Praktyki!</h1>
+        <h1>Praktyki! Jarosław</h1>
         <img width={40} alt="" src={logo} />
       </header>
       <hr />
