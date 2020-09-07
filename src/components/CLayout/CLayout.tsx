@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import CNavbar from "../CNavbar/CNavbar";
 import CHeader from "../CHeader/CHeader";
@@ -13,6 +13,23 @@ export const CLayout = () => {
   const collapseHandler = (isCollapsed: boolean): void => {
     setIsCollapsed(!isCollapsed);
   };
+
+  useEffect(() => {
+    const onResize = () => {
+      const windowWidth = window.screen.width;
+
+      if (windowWidth < 800) {
+        setIsCollapsed(true);
+      } else if (windowWidth > 800) {
+        setIsCollapsed(false);
+      }
+    };
+
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
 
   return (
     <div className={styles.centerWrapper}>
