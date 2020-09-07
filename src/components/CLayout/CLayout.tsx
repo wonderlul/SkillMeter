@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import CNavbar from "../CNavbar/CNavbar";
 import CHeader from "../CHeader/CHeader";
@@ -6,30 +6,15 @@ import CContent from "../CContent/CContent";
 
 import styles from "./CLayout.module.scss";
 
+import ICollapse from "../../models/ICollapse";
+
 import { Layout } from "antd";
 
 export const CLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const collapseHandler = (isCollapsed: boolean): void => {
+  const collapseHandler = (isCollapsed: ICollapse): void => {
     setIsCollapsed(!isCollapsed);
   };
-
-  useEffect(() => {
-    const onResize = () => {
-      const windowWidth = window.innerWidth;
-
-      if (windowWidth < 800) {
-        setIsCollapsed(true);
-      } else if (windowWidth > 800) {
-        setIsCollapsed(false);
-      }
-    };
-
-    window.addEventListener("resize", onResize);
-    return () => {
-      window.removeEventListener("resize", onResize);
-    };
-  }, []);
 
   return (
     <div className={styles.centerWrapper}>

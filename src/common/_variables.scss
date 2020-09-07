@@ -1,47 +1,26 @@
-/* Smartphones (portrait and landscape) ----------- */
-@mixin smartphones {
-  @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
-    @content;
-  }
-}
+//colors
 
-/* Smartphones (landscape) ----------- */
-@media only screen and (min-width: 321px) {
-  /* Styles */
-}
+$light-blue-color: #9ad4fc;
+$dark-blue-color: #4b97cc;
+$light-green-color: #eafbd3;
+$light-yellow-color: #eafbd3;
 
-/* Smartphones (portrait) ----------- */
-@media only screen and (max-width: 320px) {
-  /* Styles */
-}
+$primary-color: #000;
 
-/* iPads (portrait and landscape) ----------- */
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-  /* Styles */
-}
+//fonts
 
-/* iPads (landscape) ----------- */
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
-  /* Styles */
-}
+$primary-font: "Roboto";
+$secondary-font: "Poppins";
+$bold: 700;
+$regular: 500;
+$light: 300;
 
-/* iPads (portrait) ----------- */
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
-  /* Styles */
-}
+//metrics
 
-/* Desktops and laptops ----------- */
-@media only screen and (min-width: 1224px) {
-  /* Styles */
-}
-
-/* Large screens ----------- */
-@media only screen and (min-width: 1824px) {
-  /* Styles */
-}
-
-/* iPhone 4 ----------- */
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-  only screen and (min-device-pixel-ratio: 1.5) {
-  /* Styles */
-}
+$x-small: 10px;
+$small: 20px;
+$base: 30px;
+$medium: 40px;
+$large: 60px;
+$x-large: 80px;
+$xx-large: 100px;
