@@ -16,7 +16,7 @@ export const CLayout = () => {
 
   useEffect(() => {
     const onResize = () => {
-      const windowWidth = window.screen.width;
+      const windowWidth = window.innerWidth;
 
       if (windowWidth < 800) {
         setIsCollapsed(true);
