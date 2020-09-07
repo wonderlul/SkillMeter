@@ -6,11 +6,13 @@ import CContent from "../CContent/CContent";
 
 import styles from "./CLayout.module.scss";
 
+import ICollapse from "../../models/ICollapse";
+
 import { Layout } from "antd";
 
 export const CLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const collapseHandler = (isCollapsed: boolean): void => {
+  const collapseHandler = (isCollapsed: ICollapse): void => {
     setIsCollapsed(!isCollapsed);
   };
 

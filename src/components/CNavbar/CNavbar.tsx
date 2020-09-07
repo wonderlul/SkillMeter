@@ -1,5 +1,7 @@
 import React from "react";
 
+import ICollapse from "../../models/ICollapse";
+
 import { NavLink } from "react-router-dom";
 
 import styles from "./CNavbar.module.scss";
@@ -11,7 +13,7 @@ import {
   HomeOutlined,
 } from "@ant-design/icons";
 
-export const CNavbar = ({ isCollapsed }: { isCollapsed: boolean }) => {
+export const CNavbar = ({ isCollapsed }: ICollapse) => {
   const { Sider } = Layout;
 
   return (

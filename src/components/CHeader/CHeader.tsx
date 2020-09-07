@@ -1,5 +1,7 @@
 import React from "react";
 
+import ICollapse from "../../models/ICollapse";
+
 import styles from "./CHeader.module.scss";
 
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
@@ -8,11 +10,8 @@ import { Layout, Input } from "antd";
 
 export const CHeader = ({
   isCollapsed,
-  collapseHandler,
-}: {
-  isCollapsed: boolean;
-  collapseHandler: Function;
-}) => {
+  collapseHandler = (): void => {},
+}: ICollapse) => {
   const { Search } = Input;
   const { Header } = Layout;
 
