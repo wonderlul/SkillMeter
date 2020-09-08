@@ -1,16 +1,23 @@
 export enum ELevels {
-  Junior = "Junior",
-  Mid = "Mid",
-  Senior = "Senior",
+  JUNIOR = "Junior",
+  MID = "Mid",
+  SENIOR = "Senior",
+}
+export enum EPositions {
+  SOFTWARE_DEVELOPER = "Software Developer",
+  QA = "QA",
+  PROJECT_MANAGER = "Project Manager",
 }
 
 export interface IEmployee {
+  id?: string;
   name: string;
   surname: string;
-  startWorkDate: Date;
-  evaluationDate: Date;
-  tags: string[];
+  startWorkDate: string;
+  evaluationDate: string;
+  tags?: string[];
   level: ELevels;
-  position: string;
-  photo: string;
+  position: EPositions;
+  photo?: string;
+  project?: string;
 }
