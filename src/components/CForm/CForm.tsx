@@ -2,13 +2,26 @@ import React, { useState, useRef } from "react";
 
 import styles from "./CForm.module.scss";
 
+import { IEmployee, EPositions, ELevels } from "../../models/IEmployee";
+
 import { Form, Input, Button, Select, DatePicker, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import moment from "moment";
 
 const { Option } = Select;
 
 const CForm = () => {
   const [form] = Form.useForm();
+
+  let computedValues: IEmployee;
+
+  const disabledStartDate = (current: any) => {
+    return current && current > moment().endOf("day");
+  };
+
+  const disabledEvaluationDate = (current: any) => {
+    return current && current > moment().startOf("day");
+  };
 
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
@@ -17,7 +30,13 @@ const CForm = () => {
   const inputRef = useRef(null);
 
   const onFinish = (values: any) => {
+    computedValues = {
+      ...values,
+      startWorkDate: new Date(values.startWorkDate._d),
+      evaluationDate: new Date(values.evaluationDate._d),
+    };
     console.log(values);
+    onReset();
   };
 
   const onReset = () => {
@@ -26,9 +45,25 @@ const CForm = () => {
     setTags([]);
   };
 
+  const validateMessages = {
+    required: "${label} is required!",
+    types: {
+      email: "${label} is not validate email!",
+      number: "${label} is not a validate number!",
+    },
+    number: {
+      range: "${label} must be between ${min} and ${max}",
+    },
+  };
+
   return (
     <div className={styles.formWrapper}>
-      <Form form={form} name="employeeForm" onFinish={onFinish}>
+      <Form
+        form={form}
+        name="employeeForm"
+        onFinish={onFinish}
+        validateMessages={validateMessages}
+      >
         <Form.Item
           name="name"
           label="Name"
@@ -44,18 +79,18 @@ const CForm = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          name="startDate"
+          name="startWorkDate"
           label="Year of starting work in industry"
           rules={[{ required: true }]}
         >
-          <DatePicker picker="year" />
+          <DatePicker picker="year" disabledDate={disabledStartDate} />
         </Form.Item>
         <Form.Item
           name="evaluationDate"
           label="Date of last evaluation talk"
           rules={[{ required: true }]}
         >
-          <DatePicker />
+          <DatePicker disabledDate={disabledEvaluationDate} />
         </Form.Item>
         <Form.Item
           name="project"
@@ -66,36 +101,29 @@ const CForm = () => {
         </Form.Item>
 
         <Form.Item
-          name="seniority"
+          name="level"
           label="Seniority level"
           rules={[{ required: true }]}
         >
-          <Select
-            placeholder="Select the seniority level"
-            onChange={(value) => {
-              switch (value) {
-                case "male":
-                  form.setFieldsValue({ note: "Hi, man!" });
-                  return;
-                case "female":
-                  form.setFieldsValue({ note: "Hi, lady!" });
-                  return;
-              }
-            }}
-            allowClear
-          >
-            <Option value="junior">Junior</Option>
-            <Option value="mid">Mid</Option>
-            <Option value="senior">Senior</Option>
+          <Select placeholder="Select the seniority level" allowClear>
+            <Option value={ELevels.JUNIOR}>Junior</Option>
+            <Option value={ELevels.MID}>Mid</Option>
+            <Option value={ELevels.SENIOR}>Senior</Option>
           </Select>
         </Form.Item>
 
         <Form.Item
           name="position"
           label="Position"
-          rules={[{ required: true, whitespace: true }]}
+          rules={[{ required: true }]}
         >
-          <Input />
+          <Select placeholder="Select your position" allowClear>
+            <Option value={EPositions.SOFTWARE_DEVELOPER}>
+              Software Developer
+            </Option>
+            <Option value={EPositions.QA}>QA</Option>
+            <Option value={EPositions.PROJECT_MANAGER}>Project Manager</Option>
+          </Select>
         </Form.Item>
 
         <Form.List name="tags">
@@ -117,18 +145,17 @@ const CForm = () => {
                         setTags([...currentTags]);
                       }}
                     >
-                      {tags[field.name]}
+                      #{tags[field.name]}
                     </Tag>
                   </Form.Item>
                 ))}
 
                 {inputVisible && (
                   <Form.Item
+                    required
                     rules={[{ required: true, whitespace: true }]}
-                    name="tag"
                     validateTrigger={["onBlur", "onChange", "onFinish"]}
                   >
-                    {console.log(tags)}
                     <Input
                       ref={inputRef}
                       type="text"
