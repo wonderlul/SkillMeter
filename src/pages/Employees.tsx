@@ -1,11 +1,10 @@
 import React from "react";
-
-import CForm from "../components/CForm/CForm";
+import Form from "./Form";
 
 export const App = () => {
   return (
     <>
-      <CForm />
+      <Form />
     </>
   );
 };

@@ -1,5 +1,8 @@
 import React, { useState, useRef } from "react";
 
+import { useSelector, useDispatch } from "react-redux";
+import * as actions from "../../actions";
+
 import styles from "./CForm.module.scss";
 
 import { IEmployee, EPositions, ELevels } from "../../models/IEmployee";
@@ -11,40 +14,11 @@ import moment from "moment";
 const { Option } = Select;
 
 const CForm = () => {
-  const [form] = Form.useForm();
+  //Variables
 
-  let computedValues: IEmployee;
+  let employeeData: IEmployee;
 
-  const disabledStartDate = (current: any) => {
-    return current && current > moment().endOf("day");
-  };
-
-  const disabledEvaluationDate = (current: any) => {
-    return current && current > moment().startOf("day");
-  };
-
-  const [inputVisible, setInputVisible] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>("");
-  const [tags, setTags] = useState<string[]>([]);
-
-  const inputRef = useRef(null);
-
-  const onFinish = (values: any) => {
-    computedValues = {
-      ...values,
-      startWorkDate: new Date(values.startWorkDate._d),
-      evaluationDate: new Date(values.evaluationDate._d),
-    };
-    console.log(values);
-    onReset();
-  };
-
-  const onReset = () => {
-    form.resetFields();
-    setInputValue("");
-    setTags([]);
-  };
-
+  /* eslint-disable no-template-curly-in-string */
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -56,13 +30,60 @@ const CForm = () => {
     },
   };
 
+  //State
+  const dispatch = useDispatch();
+  const initialForm = useSelector((state) => state);
+  console.log(initialForm);
+
+  //Hooks
+  const [form] = Form.useForm();
+
+  const [inputVisible, setInputVisible] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [submitsAmount, setSubmitsAmount] = useState<number>(0);
+
+  const inputRef = useRef(null);
+
+  //Services
+  const disabledStartDate = (current: any) => {
+    return current && current > moment().endOf("day");
+  };
+
+  const disabledEvaluationDate = (current: any) => {
+    return current && current > moment().startOf("day");
+  };
+
+  const onFinish = (values: any) => {
+    employeeData = {
+      ...values,
+      startWorkDate: values.startWorkDate._d.toISOString(),
+      evaluationDate: values.evaluationDate._d.toISOString(),
+    };
+
+    dispatch(actions.addEmployee(employeeData));
+    onReset();
+  };
+
+  const onFinishFailed = () => {
+    setSubmitsAmount(submitsAmount + 1);
+  };
+
+  const onReset = () => {
+    form.resetFields();
+    setInputValue("");
+    setTags([]);
+  };
+
   return (
     <div className={styles.formWrapper}>
       <Form
         form={form}
         name="employeeForm"
         onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
         validateMessages={validateMessages}
+        validateTrigger={[submitsAmount > 0 ? "onChange" : "onSubmit"]}
       >
         <Form.Item
           name="name"
