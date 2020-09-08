@@ -1,9 +1,11 @@
 import React from "react";
 
+import CForm from "../components/CForm/CForm";
+
 export const App = () => {
   return (
     <>
-      <h1>Employees</h1>
+      <CForm />
     </>
   );
 };
