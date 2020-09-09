@@ -35,12 +35,14 @@ export const CEmployeesTable: FC<PropsWithChildren<{
       title: "Start working",
       dataIndex: "startWorkDate",
       width: 100,
-      defaultSortOrder: "descend",
+      // defaultSortOrder: "descend",
       sorter: {
         compare: (a: any, b: any) => {
           console.log(typeof a);
           return a.startWorkDate - b.startWorkDate;
         },
+        multiple: 1,
+        sortDirections: ["descend", "ascend"],
       },
     },
     {
@@ -78,9 +80,6 @@ export const CEmployeesTable: FC<PropsWithChildren<{
       width: 150,
     },
   ];
-  // function onChange(pagination, filters, sorter, extra) {
-  //   console.log("params", pagination, filters, sorter, extra);
-  // }
   const getFullDate = (date: string) => new Date(date).toLocaleDateString();
 
   const data = employees
