@@ -3,14 +3,19 @@ import { IEmployee, ELevels, EPositions } from "../../models/IEmployee";
 
 export interface IFormState {
   employeeData: IEmployee;
-  fetchStatus: EStatus;
-  postStatus: EStatus;
+  OPERATION_STATUS: EStatus;
+  OPERATION_TYPE: EOperation;
 }
 
 export enum EStatus {
   LOADING = "LOADING",
   DONE = "DONE",
   FAILED = "FAILED",
+}
+
+export enum EOperation {
+  ADD = "ADD",
+  GET = "GET",
 }
 
 const initialState: IFormState = {
@@ -23,8 +28,8 @@ const initialState: IFormState = {
     position: EPositions.NOT_DEFINED,
     project: "",
   },
-  fetchStatus: EStatus.LOADING,
-  postStatus: EStatus.LOADING,
+  OPERATION_STATUS: EStatus.LOADING,
+  OPERATION_TYPE: EOperation.ADD,
 };
 
 export default (state = initialState, action: TFormAction) => {
@@ -32,39 +37,41 @@ export default (state = initialState, action: TFormAction) => {
     case ACTION_TYPES.GET_EMPLOYEE_REQUESTED:
       return {
         ...state,
-        fetchStatus: EStatus.LOADING,
+        OPERATION_TYPE: EOperation.GET,
+        OPERATION_STATUS: EStatus.LOADING,
       };
 
     case ACTION_TYPES.GET_EMPLOYEE_DONE:
       return {
         ...state,
-        fetchStatus: EStatus.DONE,
+        OPERATION_STATUS: EStatus.DONE,
         employeeData: action.payload,
       };
 
     case ACTION_TYPES.GET_EMPLOYEE_FAILED:
       return {
         ...state,
-        fetchStatus: EStatus.FAILED,
+        OPERATION_STATUS: EStatus.FAILED,
       };
 
     case ACTION_TYPES.ADD_EMPLOYEE_REQUESTED:
       return {
         ...state,
-        postStatus: EStatus.LOADING,
+        OPERATION_TYPE: EOperation.GET,
+        OPERATION_STATUS: EStatus.LOADING,
         employeeData: action.payload,
       };
 
     case ACTION_TYPES.ADD_EMPLOYEE_DONE:
       return {
         ...state,
-        postStatus: EStatus.DONE,
+        OPERATION_STATUS: EStatus.DONE,
       };
 
     case ACTION_TYPES.ADD_EMPLOYEE_FAILED:
       return {
         ...state,
-        postStatus: EStatus.FAILED,
+        OPERATION_STATUS: EStatus.FAILED,
       };
 
     default:
