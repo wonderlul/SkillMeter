@@ -2,14 +2,12 @@ import React, { FC, PropsWithChildren } from "react";
 import { IEmployee, ELevels } from "../../models/IEmployee";
 import { Tag, Table, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import {
-  CUserSignature,
-  IUserSignature,
-} from "../CUserSignature/CUserSignature";
 
 export const CEmployeesTable: FC<PropsWithChildren<{
   employees: IEmployee[];
 }>> = ({ employees }) => {
+  const getYear = (date: string) => new Date(date).getFullYear();
+
   const columns = [
     {
       title: "Photo",
@@ -27,7 +25,6 @@ export const CEmployeesTable: FC<PropsWithChildren<{
       title: "Name",
       dataIndex: "name",
       width: 100,
-      // render: (employee: IUserSignature) => <CUserSignature {...employee} />,
     },
     {
       title: "Surname",
@@ -39,12 +36,22 @@ export const CEmployeesTable: FC<PropsWithChildren<{
       dataIndex: "startWorkDate",
       width: 100,
       defaultSortOrder: "descend",
-      sorter: (a, b) => Number(a.startWorkDate) - Number(b.startWorkDate),
+      sorter: {
+        compare: (a: any, b: any) => {
+          console.log(typeof a);
+          return a.startWorkDate - b.startWorkDate;
+        },
+      },
     },
     {
       title: "Last evaluation",
       dataIndex: "evaluationDate",
       width: 100,
+    },
+    {
+      title: "Project",
+      dataIndex: "project",
+      width: 150,
     },
     {
       title: "Tags",
@@ -71,26 +78,34 @@ export const CEmployeesTable: FC<PropsWithChildren<{
       width: 150,
     },
   ];
+  // function onChange(pagination, filters, sorter, extra) {
+  //   console.log("params", pagination, filters, sorter, extra);
+  // }
+  const getFullDate = (date: string) => new Date(date).toLocaleDateString();
 
-  const formatDate = (date: Date) =>
-    `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+  const data = employees
+    .sort((a, b) => {
+      return getYear(b.startWorkDate) - getYear(a.startWorkDate);
+    })
+    .map((employee, index) => ({
+      key: index,
+      photo: employee.photo,
+      name: employee.name,
+      surname: employee.surname,
+      startWorkDate: getYear(employee.startWorkDate),
+      evaluationDate: getFullDate(employee.evaluationDate),
+      tags: employee.tags,
+      level: employee.level,
+      position: employee.position,
+      project: employee.project,
+    }));
 
-  const data = employees.map((employee, index) => ({
-    key: index,
-    photo: employee.photo,
-    name: employee.name,
-    surname: employee.surname,
-    startWorkDate: employee.startWorkDate.getFullYear(),
-    evaluationDate: formatDate(employee.evaluationDate),
-    tags: employee.tags,
-    level: employee.level,
-    position: employee.position,
-  }));
   return (
     <Table
       columns={columns}
       dataSource={data}
       pagination={{ pageSize: 5 }}
+      // onChange={onChange}
       // scroll={{ y: 240 }}
     />
   );
