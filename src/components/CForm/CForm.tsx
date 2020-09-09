@@ -1,22 +1,40 @@
-import React, { useState, useRef } from "react";
-
-import { useSelector, useDispatch } from "react-redux";
-import * as actions from "../../actions";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import styles from "./CForm.module.scss";
 
-import { IEmployee, EPositions, ELevels } from "../../models/IEmployee";
+import {
+  IEmployee,
+  EPositions,
+  ELevels,
+  IEmployeeDTO,
+} from "../../models/IEmployee";
 
 import { Form, Input, Button, Select, DatePicker, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 
+import { CAvatarUpload, uploadImage } from "../CAvatarUpload/CAvatarUpload";
+
 const { Option } = Select;
 
 const CForm = () => {
+  //Route
+
+  let { id } = useParams();
+
   //Variables
 
-  let employeeData: IEmployee;
+  let employeeData: IEmployeeDTO = {
+    name: "Brajan",
+    surname: "Baran",
+    startWorkDate: moment("2019-09-09T10:29:42.674Z"),
+    evaluationDate: moment("2019-09-09T10:29:42.674Z"),
+    level: ELevels.MID,
+    position: EPositions.QA,
+    project: "ptaki",
+    tags: ["elo", "melo"],
+  }; //Change it with back-end data
 
   /* eslint-disable no-template-curly-in-string */
   const validateMessages = {
@@ -30,20 +48,23 @@ const CForm = () => {
     },
   };
 
-  //State
-  const dispatch = useDispatch();
-  const initialForm = useSelector((state) => state);
-  console.log(initialForm);
-
   //Hooks
   const [form] = Form.useForm();
 
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
-  const [tags, setTags] = useState<string[]>([]);
   const [submitsAmount, setSubmitsAmount] = useState<number>(0);
+  const [tags, setTags] = useState<string[]>(
+    employeeData.tags && id ? employeeData.tags : []
+  );
 
-  const inputRef = useRef(null);
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    if (id) {
+      form.setFieldsValue(employeeData);
+      console.log(form.getFieldsValue());
+    }
+  }, []);
 
   //Services
   const disabledStartDate = (current: any) => {
@@ -54,14 +75,17 @@ const CForm = () => {
     return current && current > moment().startOf("day");
   };
 
-  const onFinish = (values: any) => {
-    employeeData = {
+  const onFinish = async (values: any) => {
+    const photo = await uploadImage(values.photo[0].originFileObj);
+
+    //implement logic involving the difference between creating new user and editing existing one
+    const formData: IEmployee = {
       ...values,
+      photo,
       startWorkDate: values.startWorkDate._d.toISOString(),
       evaluationDate: values.evaluationDate._d.toISOString(),
     };
-
-    dispatch(actions.addEmployee(employeeData));
+    console.log(formData);
     onReset();
   };
 
@@ -70,9 +94,9 @@ const CForm = () => {
   };
 
   const onReset = () => {
-    form.resetFields();
     setInputValue("");
     setTags([]);
+    form.resetFields();
   };
 
   return (
@@ -116,7 +140,7 @@ const CForm = () => {
         <Form.Item
           name="project"
           label="Name of current project"
-          rules={[{ required: true, whitespace: true }]}
+          rules={[{ whitespace: true }]}
         >
           <Input />
         </Form.Item>
@@ -146,6 +170,8 @@ const CForm = () => {
             <Option value={EPositions.PROJECT_MANAGER}>Project Manager</Option>
           </Select>
         </Form.Item>
+
+        <CAvatarUpload initialImage={employeeData.photo} />
 
         <Form.List name="tags">
           {(fields, { add, remove }) => {
@@ -178,7 +204,6 @@ const CForm = () => {
                     validateTrigger={["onBlur", "onChange", "onFinish"]}
                   >
                     <Input
-                      ref={inputRef}
                       type="text"
                       size="small"
                       className={styles.tagInput}

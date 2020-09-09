@@ -23,3 +23,16 @@ export interface IEmployee {
   photo?: string;
   project?: string;
 }
+
+export interface IEmployeeDTO {
+  id?: string;
+  name: string;
+  surname: string;
+  startWorkDate: moment.Moment | null;
+  evaluationDate: moment.Moment | null;
+  tags?: string[];
+  level: ELevels | null;
+  position: EPositions | null;
+  photo?: string;
+  project?: string;
+}
