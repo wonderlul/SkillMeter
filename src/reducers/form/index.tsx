@@ -1,22 +1,6 @@
 import { ACTION_TYPES, TFormAction } from "../../actions";
-import { IEmployee, ELevels, EPositions } from "../../models/IEmployee";
-
-export interface IFormState {
-  employeeData: IEmployee;
-  OPERATION_STATUS: EStatus;
-  OPERATION_TYPE: EOperation;
-}
-
-export enum EStatus {
-  LOADING = "LOADING",
-  DONE = "DONE",
-  FAILED = "FAILED",
-}
-
-export enum EOperation {
-  ADD = "ADD",
-  GET = "GET",
-}
+import { ELevels, EPositions } from "../../models/IEmployee";
+import { IFormState, EStatus, EOperation } from "../../models/IFormState";
 
 const initialState: IFormState = {
   employeeData: {
