@@ -20,20 +20,12 @@ app.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const query: { _id?: mongoose.Types.ObjectId } = req.query;
-      console.log(query);
-
-      // if ("_id" in query) {
-      //   console.log(query);
-      // }
 
       if (query._id && mongoose.Types.ObjectId.isValid(query._id)) {
-        console.log("\nVALID!!!!\n");
         query._id = mongoose.Types.ObjectId(`${query["_id"]}`);
       }
 
       const response = await EmployeeModel.find(query);
-
-      console.log(response);
 
       res.send(response);
     } catch (e) {
@@ -60,6 +52,7 @@ app.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const employee: IEmployee = req.body;
+      console.log(employee);
       const newEmployee = new EmployeeModel({ ...employee });
       const response = await newEmployee.save();
       res.status(201).send(response);
@@ -77,6 +70,19 @@ app.patch(
       const response = await EmployeeModel.findByIdAndUpdate(id, req.body, {
         new: true,
       });
+      res.status(200).send(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+app.delete(
+  "/employees/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    try {
+      const response = await EmployeeModel.findByIdAndDelete(id);
       res.status(200).send(response);
     } catch (e) {
       next(e);

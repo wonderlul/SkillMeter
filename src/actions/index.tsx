@@ -34,9 +34,7 @@ export const getEmployee = (data: IEmployee) => {
   return async (dispatch: any) => {
     try {
       setTimeout(() => console.log(data), 5000);
-    } catch (error) {
-      console.log(error.message);
-    }
+    } catch (error) {}
   };
 };
 

@@ -18,6 +18,12 @@ import moment from "moment";
 
 import { CAvatarUpload, uploadImage } from "../CAvatarUpload/CAvatarUpload";
 
+import {
+  getEmployee,
+  addEmployee,
+  updateEmployee,
+} from "../../services/employeesSvc";
+
 const { Option } = Select;
 
 const CForm = () => {
@@ -52,20 +58,8 @@ const CForm = () => {
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (id) {
-      const getEmployee = async function () {
-        try {
-          const response = await axios.get(
-            "http://10.254.0.57:8000/employees/?name=Rozgrubieusz"
-          );
-
-          return response.data[0];
-        } catch (error) {
-          console.log(error.message);
-        }
-      };
-
       (async () => {
-        const employee: IEmployeeDTO = await getEmployee();
+        const employee: IEmployeeDTO = await getEmployee(id);
 
         employee.startWorkDate = moment(employee.startWorkDate);
         employee.evaluationDate = moment(employee.evaluationDate);
@@ -95,7 +89,12 @@ const CForm = () => {
       startWorkDate: values.startWorkDate._d.toISOString(),
       evaluationDate: values.evaluationDate._d.toISOString(),
     };
-    console.log(formData);
+    console.log(id);
+    if (id) {
+      addEmployee(formData);
+    } else {
+      updateEmployee(id, formData);
+    }
     onReset();
   };
 
@@ -106,6 +105,7 @@ const CForm = () => {
   const onReset = () => {
     setInputValue("");
     setTags([]);
+    setEmployeePhoto("");
     form.resetFields();
   };
 

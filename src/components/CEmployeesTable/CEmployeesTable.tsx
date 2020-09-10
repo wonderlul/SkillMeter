@@ -4,9 +4,11 @@ import { NavLink } from "react-router-dom";
 import { IEmployee, ELevels, IEmployeeDTO } from "../../models/IEmployee";
 
 import { Tag, Table, Avatar, Button } from "antd";
-import { UserOutlined, EditOutlined } from "@ant-design/icons";
+import { UserOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import styles from "./CEmployeesTable.module.scss";
+
+import { deleteEmployee } from "../../services/employeesSvc";
 
 import axios from "axios";
 
@@ -46,7 +48,6 @@ const CEmployeesTable: FC<PropsWithChildren<{
       // defaultSortOrder: "descend",
       sorter: {
         compare: (a: any, b: any) => {
-          console.log(typeof a);
           return a.startWorkDate - b.startWorkDate;
         },
         multiple: 1,
@@ -89,14 +90,23 @@ const CEmployeesTable: FC<PropsWithChildren<{
     },
     {
       title: "Edit",
-      dataIndex: "position",
+      dataIndex: "id",
 
       width: 100,
-      render: (position: string) => (
+      render: (id: string) => (
         <>
-          <NavLink to={`/employees/${position}`}>
+          <NavLink to={`/employees/${id}`}>
             <EditOutlined />
           </NavLink>
+          <div
+            className={styles.delete}
+            onClick={() => {
+              console.log(id);
+              deleteEmployee(id);
+            }}
+          >
+            <DeleteOutlined />
+          </div>
         </>
       ),
     },
@@ -107,7 +117,8 @@ const CEmployeesTable: FC<PropsWithChildren<{
       return getYear(b.startWorkDate) - getYear(a.startWorkDate);
     })
     .map((employee, index) => ({
-      key: index,
+      id: employee._id,
+      key: `${index}${employee.name}`,
       photo: employee.photo,
       name: employee.name,
       surname: employee.surname,
