@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, Redirect } from "react-router-dom";
 
 import styles from "./CForm.module.scss";
 
@@ -50,6 +50,9 @@ const CForm = () => {
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
   const [submitsAmount, setSubmitsAmount] = useState<number>(0);
+  const [successfulSubmitsAmount, setSuccessfulSubmitsAmount] = useState<
+    number
+  >(0);
   const [tags, setTags] = useState<string[]>([]);
   const [employeePhoto, setEmployeePhoto] = useState("");
 
@@ -77,9 +80,11 @@ const CForm = () => {
   };
 
   const onFinish = async (values: any) => {
-    const photo = await uploadImage(values.photo[0].originFileObj);
+    const photo =
+      typeof values.photo[0] !== "string"
+        ? await uploadImage(values.photo[0].originFileObj)
+        : values.photo;
 
-    //implement logic involving the difference between creating new user and editing existing one
     const formData: IEmployeeDTO = {
       ...values,
       photo,
@@ -92,7 +97,8 @@ const CForm = () => {
     } else {
       addEmployee(formData);
     }
-    onReset();
+
+    setSuccessfulSubmitsAmount(1);
   };
 
   const onFinishFailed = () => {
@@ -105,6 +111,8 @@ const CForm = () => {
     setEmployeePhoto("");
     form.resetFields();
   };
+
+  if (successfulSubmitsAmount > 0) return <Redirect to="/employees/" />;
 
   return (
     <div className={styles.wrapper}>
