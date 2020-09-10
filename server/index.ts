@@ -2,6 +2,8 @@ require("dotenv").config();
 import express, { Request, Response, Application, NextFunction } from "express";
 import mongoose, { Error } from "mongoose";
 import EmployeeModel, { IEmployee } from "./models/employee.model";
+import { resolveSoa } from "dns";
+import { nextTick } from "process";
 
 const PORT = 8000;
 
@@ -14,21 +16,39 @@ mongoose.connect(`${process.env.MONGODB_CONNECTION}`, {
 const app: Application = express();
 app.use(express.json());
 
-app.get("/employees", async (req: Request, res: Response) => {
-  const query: typeof req.query | { _id?: mongoose.Types.ObjectId } = req.query;
-  // console.log(query);
-  if ("_id" in query) {
-    console.log(query);
-    query._id = mongoose.Types.ObjectId(`${query["_id"]}`);
-  }
-  await EmployeeModel.find(req.query, (error: Error, response) => {
-    if (error) {
-      throw error;
-    } else {
+app.get(
+  "/employees",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const query: { _id?: mongoose.Types.ObjectId } = req.query;
+      console.log(query);
+
+      if ("_id" in query) {
+        console.log(query);
+        query._id = mongoose.Types.ObjectId(`${query["_id"]}`);
+      }
+
+      if (query._id && mongoose.Types.ObjectId.isValid(query._id)) {
+        console.log("valid!!!!");
+      }
+
+      const response = await EmployeeModel.find(query);
+
+      console.log(response);
       res.send(response);
+
+      // (error: Error, response) => {
+      //   if (error) {
+      //     throw error;
+      //   } else {
+      //     res.send(response);
+      //   }
+      // }
+    } catch (e) {
+      next(e);
     }
-  });
-});
+  }
+);
 
 app.get("/employees/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
