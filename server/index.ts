@@ -1,7 +1,9 @@
 require("dotenv").config();
-import express, { Request, Response, Application } from "express";
+import express, { Request, Response, Application, NextFunction } from "express";
 import mongoose, { Error } from "mongoose";
 import EmployeeModel, { IEmployee } from "./models/employee.model";
+
+const PORT = 8000;
 
 mongoose.connect(`${process.env.MONGODB_CONNECTION}`, {
   useNewUrlParser: true,
@@ -12,25 +14,55 @@ mongoose.connect(`${process.env.MONGODB_CONNECTION}`, {
 const app: Application = express();
 app.use(express.json());
 
-app.get("/", async (req: Request, res: Response) => {
-  const employees = await EmployeeModel.find();
-  res.send(employees);
+app.get("/employees", async (req: Request, res: Response) => {
+  const query: typeof req.query | { _id?: mongoose.Types.ObjectId } = req.query;
+  // console.log(query);
+  if ("_id" in query) {
+    console.log(query);
+    query._id = mongoose.Types.ObjectId(`${query["_id"]}`);
+  }
+  await EmployeeModel.find(req.query, (error: Error, response) => {
+    if (error) {
+      throw error;
+    } else {
+      res.send(response);
+    }
+  });
 });
 
-app.post("/", async (req: Request, res: Response) => {
+app.get("/employees/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const ad = await EmployeeModel.findById(id, (error, response) => {
+    if (error) {
+      throw error;
+    } else {
+      res.send(response);
+    }
+  });
+});
+
+app.post("/employees", async (req: Request, res: Response) => {
   const employee: IEmployee = req.body;
-  // const newEmployee = new EmployeeModel({ ...employee });
-  // await newEmployee.save((error: Error, response) => {
-  //   if (error) {
-  //     throw error;
-  //   } else {
-  //     res.status(201).send(response);
-  //   }
-  // });
-  res.send(employee);
+  const newEmployee = new EmployeeModel({ ...employee });
+  await newEmployee.save((error: Error, response) => {
+    if (error) {
+      throw error;
+    } else {
+      res.status(201).send(response);
+    }
+  });
 });
 
-const PORT = 8000;
+app.patch("/:id", (req: Request, res: Response) => {});
+
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  console.log("Error:", error.message);
+  if (error.code) {
+    res.status(error.code);
+  }
+  res.send(`There was na error: ${error.message}`);
+});
+
 app.get("/", (req, res) => res.send("Express + TypeScript Server"));
 app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);

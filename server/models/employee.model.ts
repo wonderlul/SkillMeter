@@ -1,4 +1,6 @@
 import mongoose, { Schema, Document, mongo } from "mongoose";
+import { ELevels } from "./ELevels";
+import { EPositions } from "./EPositions";
 
 export interface IEmployee extends Document {
   name: string;
@@ -6,8 +8,8 @@ export interface IEmployee extends Document {
   startWorkDate: string;
   evaluationDate: string;
   tags?: string[];
-  level: mongoose.Schema.Types.ObjectId[];
-  position: mongoose.Schema.Types.ObjectId[];
+  level: ELevels;
+  position: EPositions;
   photo: string;
   project?: string;
 }
@@ -18,16 +20,8 @@ const EmployeeSchema: Schema = new Schema({
   startWorkDate: { type: String, required: true },
   evaluationDate: { type: String, required: true },
   tags: [{ type: String, required: false }],
-  level: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "seniority_level",
-    required: true,
-  },
-  position: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "positions",
-    required: true,
-  },
+  level: { type: ELevels, required: true },
+  position: { type: EPositions, required: true },
   photo: { type: String, required: true },
   project: { type: String, required: true },
 });
