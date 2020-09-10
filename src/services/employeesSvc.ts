@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IEmployee } from "../models/IEmployee";
+import { IEmployeeDTO } from "../models/IEmployee";
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
 export const getAllEmployees = async () => {
@@ -20,7 +20,7 @@ export const getEmployee = async (id: string) => {
   }
 };
 
-export const addEmployee = async (employee: IEmployee) => {
+export const addEmployee = async (employee: IEmployeeDTO) => {
   try {
     const { data } = await axios.post(`${SERVER_URL}/employees`, employee);
     return data;
@@ -29,7 +29,7 @@ export const addEmployee = async (employee: IEmployee) => {
   }
 };
 
-export const updateEmployee = async (id: string, employee: IEmployee) => {
+export const updateEmployee = async (id: string, employee: IEmployeeDTO) => {
   try {
     const { data } = await axios.patch(
       `${SERVER_URL}/employees/${id}`,

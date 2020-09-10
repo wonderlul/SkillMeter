@@ -1,7 +1,7 @@
-import React, { FC, PropsWithChildren } from "react";
+import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
 
-import { IEmployee, ELevels, IEmployeeDTO } from "../../models/IEmployee";
+import { IEmployee } from "../../models/IEmployee";
 
 import { Tag, Table, Avatar, Button } from "antd";
 import { UserOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -10,11 +10,10 @@ import styles from "./CEmployeesTable.module.scss";
 
 import { deleteEmployee } from "../../services/employeesSvc";
 
-import axios from "axios";
-
-const CEmployeesTable: FC<PropsWithChildren<{
+const CEmployeesTable: FC<{
   employees: IEmployee[];
-}>> = ({ employees }) => {
+  flagHandler: Function;
+}> = ({ employees, flagHandler }) => {
   const getYear = (date: string) => new Date(date).getFullYear();
   const getFullDate = (date: string) => new Date(date).toLocaleDateString();
 
@@ -101,8 +100,8 @@ const CEmployeesTable: FC<PropsWithChildren<{
           <div
             className={styles.delete}
             onClick={() => {
-              console.log(id);
               deleteEmployee(id);
+              flagHandler();
             }}
           >
             <DeleteOutlined />

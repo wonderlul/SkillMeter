@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
 
-import Form from "./Form";
 import CEmployeesTable from "../components/CEmployeesTable/CEmployeesTable";
 
-// import { employees } from "../components/CEmployeesTable/CEmployeesTable.stories";
 import { getAllEmployees } from "../services/employeesSvc";
 import { IEmployee } from "../models/IEmployee";
 
 export const Employees = () => {
   const [employees, setEmployees] = useState<IEmployee[]>([]);
-
-  // let employeesData: IEmployee[] = [];
+  const [flag, setFlag] = useState(false);
+  const flagHandler = () => {
+    setFlag(true);
+  };
 
   useEffect(() => {
     (async () => {
       const employeesData: IEmployee[] = await getAllEmployees();
       setEmployees(employeesData);
     })();
-  }, []);
+    setFlag(false);
+  }, [flag]);
 
   return (
     <>
-      <CEmployeesTable employees={employees} />
+      <CEmployeesTable employees={employees} flagHandler={flagHandler} />
     </>
   );
 };

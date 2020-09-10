@@ -14,7 +14,7 @@ export enum EPositions {
 }
 
 export interface IEmployee {
-  _id?: string;
+  _id: string;
   name: string;
   surname: string;
   startWorkDate: string;
@@ -26,15 +26,16 @@ export interface IEmployee {
   project?: string;
 }
 
-export interface IEmployeeDTO {
-  _id: string;
+export type IEmployeeDTO = Omit<IEmployee, "_id">;
+
+export interface IEmployeeForm {
   name: string;
   surname: string;
-  startWorkDate: moment.Moment | null;
-  evaluationDate: moment.Moment | null;
+  startWorkDate: string | moment.Moment;
+  evaluationDate: string | moment.Moment;
   tags?: string[];
-  level: ELevels | null;
-  position: EPositions | null;
+  level: ELevels;
+  position: EPositions;
   photo: string;
-  project: string;
+  project?: string;
 }

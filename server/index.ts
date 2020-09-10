@@ -1,8 +1,9 @@
-require("dotenv").config();
 import express, { Request, Response, Application, NextFunction } from "express";
-import mongoose, { Error } from "mongoose";
+import mongoose from "mongoose";
 import EmployeeModel, { IEmployee } from "./models/employee.model";
 import cors from "cors";
+
+require("dotenv").config();
 
 mongoose.connect(`${process.env.MONGODB_CONNECTION}`, {
   useNewUrlParser: true,

@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
-import axios from "axios";
-
 import styles from "./CForm.module.scss";
 
 import {
-  IEmployee,
   EPositions,
   ELevels,
   IEmployeeDTO,
+  IEmployeeForm,
 } from "../../models/IEmployee";
 
 import { Form, Input, Button, Select, DatePicker, Tag } from "antd";
@@ -59,8 +57,7 @@ const CForm = () => {
   useEffect(() => {
     if (id) {
       (async () => {
-        const employee: IEmployeeDTO = await getEmployee(id);
-
+        const employee: IEmployeeForm = await getEmployee(id);
         employee.startWorkDate = moment(employee.startWorkDate);
         employee.evaluationDate = moment(employee.evaluationDate);
         setEmployeePhoto(employee.photo);
@@ -83,17 +80,17 @@ const CForm = () => {
     const photo = await uploadImage(values.photo[0].originFileObj);
 
     //implement logic involving the difference between creating new user and editing existing one
-    const formData: IEmployee = {
+    const formData: IEmployeeDTO = {
       ...values,
       photo,
       startWorkDate: values.startWorkDate._d.toISOString(),
       evaluationDate: values.evaluationDate._d.toISOString(),
     };
-    console.log(id);
+
     if (id) {
-      addEmployee(formData);
-    } else {
       updateEmployee(id, formData);
+    } else {
+      addEmployee(formData);
     }
     onReset();
   };
