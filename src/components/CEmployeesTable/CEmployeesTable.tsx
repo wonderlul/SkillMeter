@@ -7,6 +7,7 @@ export const CEmployeesTable: FC<PropsWithChildren<{
   employees: IEmployee[];
 }>> = ({ employees }) => {
   const getYear = (date: string) => new Date(date).getFullYear();
+  const getFullDate = (date: string) => new Date(date).toLocaleDateString();
 
   const columns = [
     {
@@ -80,7 +81,6 @@ export const CEmployeesTable: FC<PropsWithChildren<{
       width: 150,
     },
   ];
-  const getFullDate = (date: string) => new Date(date).toLocaleDateString();
 
   const data = employees
     .sort((a, b) => {
