@@ -1,18 +1,19 @@
 export enum ELevels {
-  JUNIOR = "Junior",
-  MID = "Mid",
-  SENIOR = "Senior",
-  NOT_DEFINED = "Not defined",
+  TRAINEE,
+  JUNIOR,
+  MID,
+  SENIOR,
+  NOT_DEFINED,
 }
+
 export enum EPositions {
-  SOFTWARE_DEVELOPER = "Software Developer",
-  QA = "QA",
-  PROJECT_MANAGER = "Project Manager",
-  NOT_DEFINED = "Not defined",
+  SOFTWARE_DEVELOPER,
+  QA,
+  PROJECT_MANAGER,
+  NOT_DEFINED,
 }
 
 export interface IEmployee {
-  id?: string;
   name: string;
   surname: string;
   startWorkDate: string;
@@ -20,12 +21,12 @@ export interface IEmployee {
   tags?: string[];
   level: ELevels;
   position: EPositions;
-  photo?: string;
+  photo: string;
   project?: string;
 }
 
 export interface IEmployeeDTO {
-  id?: string;
+  _id: string;
   name: string;
   surname: string;
   startWorkDate: moment.Moment | null;
@@ -33,6 +34,6 @@ export interface IEmployeeDTO {
   tags?: string[];
   level: ELevels | null;
   position: EPositions | null;
-  photo?: string;
-  project?: string;
+  photo: string;
+  project: string;
 }

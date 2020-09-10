@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Upload, Form } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 
@@ -7,8 +7,12 @@ interface IImage {
 }
 
 export const CAvatarUpload: React.FC<IImage> = ({ initialImage }) => {
-  const [photo, setPhoto] = useState<any>(initialImage ? initialImage : "");
+  const [photo, setPhoto] = useState<any>(initialImage);
   const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setPhoto(initialImage);
+  }, [initialImage]);
 
   const handleChange = async (info: any) => {
     if (info.file.status === "uploading") {

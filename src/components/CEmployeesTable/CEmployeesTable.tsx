@@ -1,9 +1,16 @@
 import React, { FC, PropsWithChildren } from "react";
-import { IEmployee, ELevels } from "../../models/IEmployee";
-import { Tag, Table, Avatar } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { NavLink } from "react-router-dom";
 
-export const CEmployeesTable: FC<PropsWithChildren<{
+import { IEmployee, ELevels, IEmployeeDTO } from "../../models/IEmployee";
+
+import { Tag, Table, Avatar, Button } from "antd";
+import { UserOutlined, EditOutlined } from "@ant-design/icons";
+
+import styles from "./CEmployeesTable.module.scss";
+
+import axios from "axios";
+
+const CEmployeesTable: FC<PropsWithChildren<{
   employees: IEmployee[];
 }>> = ({ employees }) => {
   const getYear = (date: string) => new Date(date).getFullYear();
@@ -79,10 +86,23 @@ export const CEmployeesTable: FC<PropsWithChildren<{
       dataIndex: "position",
       width: 150,
     },
+    {
+      title: "Edit",
+      dataIndex: "position",
+
+      width: 100,
+      render: (position: string) => (
+        <>
+          <NavLink to={`/employees/${position}`}>
+            <EditOutlined />
+          </NavLink>
+        </>
+      ),
+    },
   ];
   const getFullDate = (date: string) => new Date(date).toLocaleDateString();
 
-  const data = employees
+  const employeeData = employees
     .sort((a, b) => {
       return getYear(b.startWorkDate) - getYear(a.startWorkDate);
     })
@@ -100,12 +120,21 @@ export const CEmployeesTable: FC<PropsWithChildren<{
     }));
 
   return (
-    <Table
-      columns={columns}
-      dataSource={data}
-      pagination={{ pageSize: 5 }}
-      // onChange={onChange}
-      // scroll={{ y: 240 }}
-    />
+    <div className={styles.tableWrapper}>
+      <NavLink className={styles.tableButton} to="/employees/add">
+        <Button type="primary" shape="round">
+          Add employee
+        </Button>
+      </NavLink>
+      <Table
+        columns={columns}
+        dataSource={employeeData}
+        pagination={{ pageSize: 5 }}
+        // onChange={onChange}
+        // scroll={{ y: 240 }}
+      />
+    </div>
   );
 };
+
+export default CEmployeesTable;

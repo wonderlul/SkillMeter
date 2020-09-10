@@ -9,9 +9,7 @@ export const App = () => {
   return (
     <>
       <Router>
-        <Switch>
-          <Layout />
-        </Switch>
+        <Layout />
       </Router>
     </>
   );

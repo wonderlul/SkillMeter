@@ -2,21 +2,21 @@ import { ACTION_TYPES, TFormAction } from "../../actions";
 import { ELevels, EPositions } from "../../models/IEmployee";
 import { IFormState, EStatus, EOperation } from "../../models/IFormState";
 
-const initialState: IFormState = {
-  employeeData: {
-    name: "",
-    surname: "",
-    startWorkDate: "",
-    evaluationDate: "",
-    level: ELevels.NOT_DEFINED,
-    position: EPositions.NOT_DEFINED,
-    project: "",
-  },
-  OPERATION_STATUS: EStatus.LOADING,
-  OPERATION_TYPE: EOperation.ADD,
-};
+// const initialState: IFormState = {
+//   employeeData: {
+//     name: "",
+//     surname: "",
+//     startWorkDate: "",
+//     evaluationDate: "",
+//     level: ELevels.NOT_DEFINED,
+//     position: EPositions.NOT_DEFINED,
+//     project: "",
+//   },
+//   OPERATION_STATUS: EStatus.LOADING,
+//   OPERATION_TYPE: EOperation.ADD,
+// };
 
-export default (state = initialState, action: TFormAction) => {
+export default (state = [], action: TFormAction) => {
   switch (action.type) {
     case ACTION_TYPES.GET_EMPLOYEE_REQUESTED:
       return {

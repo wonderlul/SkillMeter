@@ -1,12 +1,16 @@
 import React from "react";
-import Form from "./Form";
 
-export const App = () => {
+import Form from "./Form";
+import CEmployeesTable from "../components/CEmployeesTable/CEmployeesTable";
+
+import { employees } from "../components/CEmployeesTable/CEmployeesTable.stories";
+
+export const Employees = () => {
   return (
     <>
-      <Form />
+      <CEmployeesTable employees={employees} />
     </>
   );
 };
 
-export default App;
+export default Employees;
