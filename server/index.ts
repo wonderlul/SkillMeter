@@ -2,10 +2,7 @@ require("dotenv").config();
 import express, { Request, Response, Application, NextFunction } from "express";
 import mongoose, { Error } from "mongoose";
 import EmployeeModel, { IEmployee } from "./models/employee.model";
-import { resolveSoa } from "dns";
-import { nextTick } from "process";
-
-const PORT = 8000;
+import cors from "cors";
 
 mongoose.connect(`${process.env.MONGODB_CONNECTION}`, {
   useNewUrlParser: true,
@@ -14,6 +11,8 @@ mongoose.connect(`${process.env.MONGODB_CONNECTION}`, {
 });
 
 const app: Application = express();
+
+app.use(cors());
 app.use(express.json());
 
 app.get(
@@ -23,67 +22,75 @@ app.get(
       const query: { _id?: mongoose.Types.ObjectId } = req.query;
       console.log(query);
 
-      if ("_id" in query) {
-        console.log(query);
-        query._id = mongoose.Types.ObjectId(`${query["_id"]}`);
-      }
+      // if ("_id" in query) {
+      //   console.log(query);
+      // }
 
       if (query._id && mongoose.Types.ObjectId.isValid(query._id)) {
-        console.log("valid!!!!");
+        console.log("\nVALID!!!!\n");
+        query._id = mongoose.Types.ObjectId(`${query["_id"]}`);
       }
 
       const response = await EmployeeModel.find(query);
 
       console.log(response);
-      res.send(response);
 
-      // (error: Error, response) => {
-      //   if (error) {
-      //     throw error;
-      //   } else {
-      //     res.send(response);
-      //   }
-      // }
+      res.send(response);
     } catch (e) {
       next(e);
     }
   }
 );
 
-app.get("/employees/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const ad = await EmployeeModel.findById(id, (error, response) => {
-    if (error) {
-      throw error;
-    } else {
+app.get(
+  "/employees/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const response = await EmployeeModel.findById(id);
       res.send(response);
+    } catch (e) {
+      next(e);
     }
-  });
-});
+  }
+);
 
-app.post("/employees", async (req: Request, res: Response) => {
-  const employee: IEmployee = req.body;
-  const newEmployee = new EmployeeModel({ ...employee });
-  await newEmployee.save((error: Error, response) => {
-    if (error) {
-      throw error;
-    } else {
+app.post(
+  "/employees",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const employee: IEmployee = req.body;
+      const newEmployee = new EmployeeModel({ ...employee });
+      const response = await newEmployee.save();
       res.status(201).send(response);
+    } catch (e) {
+      next(e);
     }
-  });
-});
+  }
+);
 
-app.patch("/:id", (req: Request, res: Response) => {});
+app.patch(
+  "/employees/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    try {
+      const response = await EmployeeModel.findByIdAndUpdate(id, req.body, {
+        new: true,
+      });
+      res.status(200).send(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  console.log("Error:", error.message);
-  if (error.code) {
-    res.status(error.code);
-  }
+  console.log("Error:", error);
   res.send(`There was na error: ${error.message}`);
 });
 
-app.get("/", (req, res) => res.send("Express + TypeScript Server"));
-app.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(
+    `⚡️[server]: Server is running at http://localhost:${process.env.PORT}`
+  );
 });
