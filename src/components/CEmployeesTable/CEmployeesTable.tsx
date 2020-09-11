@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import { IEmployee, IEmployeeForm } from "../../models/IEmployee";
 
-import { Tag, Table, Avatar, Button, Modal } from "antd";
+import { Tag, Table, Avatar, Button, Modal, notification } from "antd";
 import { UserOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import styles from "./CEmployeesTable.module.scss";
@@ -135,13 +135,32 @@ const CEmployeesTable: FC<{
     },
   ];
 
+  const openNotificationFailed = () =>
+    notification.error({
+      message: "Error!",
+      description: "Something went wrong. Please try again. ",
+    });
+
+  const openNotificationSuccess = (user: typeof employeeData[0]): void => {
+    notification.success({
+      message: "Success!",
+      description: `You have successfully deleted employee ${user.name} ${user.surname}! `,
+    });
+  };
+
   return (
     <div className={styles.tableWrapper}>
       <Modal
         title="Delete employee"
         visible={!!userToDelete}
         onOk={async () => {
-          deleteEmployee(userToDelete?.id!);
+          const deletedEmployee = deleteEmployee(userToDelete?.id!);
+          if (deletedEmployee) {
+            openNotificationSuccess(userToDelete!);
+          } else {
+            openNotificationFailed();
+          }
+          setUserToDelete(undefined);
           flagHandler(true);
         }}
         onCancel={() => {
