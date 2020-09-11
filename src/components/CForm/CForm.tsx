@@ -5,7 +5,15 @@ import styles from "./CForm.module.scss";
 
 import { IEmployeeDTO, IEmployeeForm } from "../../models/IEmployee";
 
-import { Form, Input, Button, Select, DatePicker, Tag } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  DatePicker,
+  Tag,
+  notification,
+} from "antd";
 import { PlusOutlined, LeftOutlined } from "@ant-design/icons";
 import moment from "moment";
 
@@ -72,6 +80,26 @@ const CForm = () => {
   }, []);
 
   //Services
+
+  const openNotificationFailed = () =>
+    notification.error({
+      message: "Error!",
+      description: "Something went wrong. Please try again. ",
+    });
+
+  const openNotificationSuccess = (formData: IEmployeeDTO): void => {
+    if (id) {
+      notification.success({
+        message: "Success!",
+        description: `You have successfully edit employee ${formData.name} ${formData.surname}! `,
+      });
+    } else {
+      notification.success({
+        message: "Success!",
+        description: `You have successfully added employee ${formData.name} ${formData.surname}! `,
+      });
+    }
+  };
   const disabledStartDate = (current: any) => {
     return current && current > moment().endOf("day");
   };
@@ -98,11 +126,12 @@ const CForm = () => {
     } else {
       addEmployee(formData);
     }
-
+    openNotificationSuccess(formData);
     setSuccessfulSubmitsAmount(1);
   };
 
   const onFinishFailed = () => {
+    openNotificationFailed();
     setSubmitsAmount(submitsAmount + 1);
   };
 
@@ -110,6 +139,7 @@ const CForm = () => {
     setInputValue("");
     setTags([]);
     setEmployeePhoto("");
+
     form.resetFields();
   };
 
