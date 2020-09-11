@@ -33,8 +33,11 @@ const { Option } = Select;
 
 const CForm = () => {
   //Route
+  interface ParamTypes {
+    id: string;
+  }
 
-  let { id } = useParams();
+  let { id } = useParams<ParamTypes>();
   const history = useHistory();
 
   //Variables
@@ -122,11 +125,20 @@ const CForm = () => {
     };
 
     if (id) {
-      updateEmployee(id, formData);
+      const response = updateEmployee(id, formData);
+      if (response) {
+        openNotificationSuccess(formData);
+      } else {
+        openNotificationFailed();
+      }
     } else {
-      addEmployee(formData);
+      const response = addEmployee(formData);
+      if (response) {
+        openNotificationSuccess(formData);
+      } else {
+        openNotificationFailed();
+      }
     }
-    openNotificationSuccess(formData);
     setSuccessfulSubmitsAmount(1);
   };
 
