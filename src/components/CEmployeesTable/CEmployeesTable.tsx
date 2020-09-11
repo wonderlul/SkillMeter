@@ -1,25 +1,46 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { NavLink } from "react-router-dom";
 
-import { IEmployee } from "../../models/IEmployee";
+import { IEmployee, IEmployeeForm } from "../../models/IEmployee";
 
-import { Tag, Table, Avatar, Button } from "antd";
+import { Tag, Table, Avatar, Button, Modal } from "antd";
 import { UserOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import styles from "./CEmployeesTable.module.scss";
 
 import {
   deleteEmployee,
+  getEmployee,
   levelsMap,
   positionsMap,
 } from "../../services/employeesSvc";
+
+const getYear = (date: string) => new Date(date).getFullYear();
+const getFullDate = (date: string) => new Date(date).toLocaleDateString();
 
 const CEmployeesTable: FC<{
   employees: IEmployee[];
   flagHandler: Function;
 }> = ({ employees, flagHandler }) => {
-  const getYear = (date: string) => new Date(date).getFullYear();
-  const getFullDate = (date: string) => new Date(date).toLocaleDateString();
+  const employeeData = employees
+    .sort((a, b) => {
+      return getYear(b.startWorkDate) - getYear(a.startWorkDate);
+    })
+    .map((employee, index) => ({
+      id: employee._id,
+      key: `${index}${employee.name}`,
+      photo: employee.photo,
+      name: employee.name,
+      surname: employee.surname,
+      startWorkDate: getYear(employee.startWorkDate),
+      evaluationDate: getFullDate(employee.evaluationDate),
+      tags: employee.tags,
+      level: levelsMap(employee.level).value,
+      position: positionsMap(employee.position).value,
+      project: employee.project,
+    }));
+
+  const [userToDelete, setUserToDelete] = useState<typeof employeeData[0]>();
 
   const columns = [
     {
@@ -96,7 +117,7 @@ const CEmployeesTable: FC<{
       dataIndex: "id",
 
       width: 100,
-      render: (id: string) => (
+      render: (id: string, record: typeof employeeData[0]) => (
         <>
           <NavLink to={`/employees/${id}`}>
             <EditOutlined />
@@ -104,8 +125,7 @@ const CEmployeesTable: FC<{
           <div
             className={styles.delete}
             onClick={() => {
-              deleteEmployee(id);
-              flagHandler();
+              setUserToDelete(record);
             }}
           >
             <DeleteOutlined />
@@ -115,26 +135,24 @@ const CEmployeesTable: FC<{
     },
   ];
 
-  const employeeData = employees
-    .sort((a, b) => {
-      return getYear(b.startWorkDate) - getYear(a.startWorkDate);
-    })
-    .map((employee, index) => ({
-      id: employee._id,
-      key: `${index}${employee.name}`,
-      photo: employee.photo,
-      name: employee.name,
-      surname: employee.surname,
-      startWorkDate: getYear(employee.startWorkDate),
-      evaluationDate: getFullDate(employee.evaluationDate),
-      tags: employee.tags,
-      level: levelsMap(employee.level).value,
-      position: positionsMap(employee.position).value,
-      project: employee.project,
-    }));
-
   return (
     <div className={styles.tableWrapper}>
+      <Modal
+        title="Delete employee"
+        visible={!!userToDelete}
+        onOk={async () => {
+          deleteEmployee(userToDelete?.id!);
+          flagHandler(true);
+        }}
+        onCancel={() => {
+          setUserToDelete(undefined);
+        }}
+      >
+        <p>
+          Are you sure you want to delete employee {userToDelete?.name}{" "}
+          {userToDelete?.surname}?
+        </p>
+      </Modal>
       <NavLink className={styles.tableButton} to="/employees/add">
         <Button type="primary" shape="round">
           Add employee
