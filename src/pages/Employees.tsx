@@ -14,8 +14,12 @@ export const Employees = () => {
 
   useEffect(() => {
     (async () => {
-      const employeesData: IEmployee[] = await getAllEmployees();
-      setEmployees(employeesData);
+      try {
+        const employeesData: IEmployee[] = await getAllEmployees();
+        setEmployees(employeesData);
+      } catch (error) {
+        console.log(error);
+      }
     })();
     setFlag(false);
   }, [flag]);

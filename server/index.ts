@@ -53,7 +53,6 @@ app.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const employee: IEmployee = req.body;
-      console.log(employee);
       const newEmployee = new EmployeeModel({ ...employee });
       const response = await newEmployee.save();
       res.status(201).send(response);

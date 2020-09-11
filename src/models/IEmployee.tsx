@@ -34,8 +34,8 @@ export interface IEmployeeForm {
   startWorkDate: string | moment.Moment;
   evaluationDate: string | moment.Moment;
   tags?: string[];
-  level: ELevels;
-  position: EPositions;
+  level: any;
+  position: any;
   photo: string;
   project?: string;
 }

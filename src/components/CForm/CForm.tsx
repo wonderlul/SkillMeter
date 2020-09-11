@@ -3,12 +3,7 @@ import { useParams, useHistory, Redirect } from "react-router-dom";
 
 import styles from "./CForm.module.scss";
 
-import {
-  EPositions,
-  ELevels,
-  IEmployeeDTO,
-  IEmployeeForm,
-} from "../../models/IEmployee";
+import { IEmployeeDTO, IEmployeeForm } from "../../models/IEmployee";
 
 import { Form, Input, Button, Select, DatePicker, Tag } from "antd";
 import { PlusOutlined, LeftOutlined } from "@ant-design/icons";
@@ -20,6 +15,10 @@ import {
   getEmployee,
   addEmployee,
   updateEmployee,
+  levelsValues,
+  levelsMap,
+  positionsMap,
+  positionsValues,
 } from "../../services/employeesSvc";
 
 const { Option } = Select;
@@ -63,6 +62,8 @@ const CForm = () => {
         const employee: IEmployeeForm = await getEmployee(id);
         employee.startWorkDate = moment(employee.startWorkDate);
         employee.evaluationDate = moment(employee.evaluationDate);
+        employee.level = levelsMap(employee.level);
+        employee.position = positionsMap(employee.position);
         setEmployeePhoto(employee.photo);
         employee.tags ? setTags(employee.tags) : setTags([]);
         form.setFieldsValue(employee);
@@ -171,9 +172,11 @@ const CForm = () => {
             rules={[{ required: true }]}
           >
             <Select placeholder="Select the seniority level" allowClear>
-              <Option value={ELevels.JUNIOR}>Junior</Option>
-              <Option value={ELevels.MID}>Mid</Option>
-              <Option value={ELevels.SENIOR}>Senior</Option>
+              {Object.entries(levelsValues).map(([key, value]) => (
+                <Option value={key} key={`${key}+${value}`}>
+                  {value}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
 
@@ -183,13 +186,11 @@ const CForm = () => {
             rules={[{ required: true }]}
           >
             <Select placeholder="Select your position" allowClear>
-              <Option value={EPositions.SOFTWARE_DEVELOPER}>
-                Software Developer
-              </Option>
-              <Option value={EPositions.QA}>QA</Option>
-              <Option value={EPositions.PROJECT_MANAGER}>
-                Project Manager
-              </Option>
+              {Object.entries(positionsValues).map(([key, value]) => (
+                <Option value={key} key={`${key}+${value}`}>
+                  {value}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
 

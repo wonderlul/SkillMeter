@@ -34,7 +34,7 @@ export const CAvatarUpload: React.FC<IImage> = ({ initialImage }) => {
   );
   return (
     <Form.Item
-      valuePropName="fileList"
+      // valuePropName="fileList"
       getValueFromEvent={(e) => e && e.fileList}
       name="photo"
       label="Avatar"

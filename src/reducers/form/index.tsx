@@ -1,6 +1,5 @@
 import { ACTION_TYPES, TFormAction } from "../../actions";
-import { ELevels, EPositions } from "../../models/IEmployee";
-import { IFormState, EStatus, EOperation } from "../../models/IFormState";
+import { EStatus, EOperation } from "../../models/IFormState";
 
 // const initialState: IFormState = {
 //   employeeData: {

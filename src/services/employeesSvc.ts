@@ -1,5 +1,6 @@
 import axios from "axios";
-import { IEmployeeDTO } from "../models/IEmployee";
+import { IEmployeeDTO, ELevels, EPositions } from "../models/IEmployee";
+
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
 export const getAllEmployees = async () => {
@@ -48,4 +49,25 @@ export const deleteEmployee = async (id: string) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const levelsValues: { [key: number]: string } = {
+  [ELevels.JUNIOR]: "Junior",
+  [ELevels.MID]: "Mid",
+  [ELevels.SENIOR]: "Senior",
+  [ELevels.TRAINEE]: "Trainee",
+};
+
+export const levelsMap = (param: number): string => {
+  return levelsValues[param];
+};
+
+export const positionsValues: { [key: number]: string } = {
+  [EPositions.PROJECT_MANAGER]: "Project Manager",
+  [EPositions.QA]: "QA",
+  [EPositions.SOFTWARE_DEVELOPER]: "Software Developer",
+};
+
+export const positionsMap = (param: EPositions): string => {
+  return positionsValues[param];
 };

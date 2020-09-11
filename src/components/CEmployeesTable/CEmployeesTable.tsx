@@ -8,7 +8,11 @@ import { UserOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 import styles from "./CEmployeesTable.module.scss";
 
-import { deleteEmployee } from "../../services/employeesSvc";
+import {
+  deleteEmployee,
+  levelsMap,
+  positionsMap,
+} from "../../services/employeesSvc";
 
 const CEmployeesTable: FC<{
   employees: IEmployee[];
@@ -124,8 +128,8 @@ const CEmployeesTable: FC<{
       startWorkDate: getYear(employee.startWorkDate),
       evaluationDate: getFullDate(employee.evaluationDate),
       tags: employee.tags,
-      level: employee.level,
-      position: employee.position,
+      level: levelsMap(employee.level),
+      position: positionsMap(employee.position),
       project: employee.project,
     }));
 
