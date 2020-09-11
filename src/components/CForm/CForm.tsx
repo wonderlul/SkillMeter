@@ -73,8 +73,8 @@ const CForm = () => {
         const employee: IEmployeeForm = await getEmployee(id);
         employee.startWorkDate = moment(employee.startWorkDate);
         employee.evaluationDate = moment(employee.evaluationDate);
-        employee.level = levelsMap(employee.level);
-        employee.position = positionsMap(employee.position);
+        employee.level = levelsMap(employee.level).key;
+        employee.position = positionsMap(employee.position).key;
         setEmployeePhoto(employee.photo);
         employee.tags ? setTags(employee.tags) : setTags([]);
         form.setFieldsValue(employee);

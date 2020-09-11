@@ -58,8 +58,11 @@ export const levelsValues: { [key: number]: string } = {
   [ELevels.TRAINEE]: "Trainee",
 };
 
-export const levelsMap = (param: number): string => {
-  return levelsValues[param];
+export const levelsMap = (param: number) => {
+  return {
+    value: levelsValues[param],
+    key: param,
+  };
 };
 
 export const positionsValues: { [key: number]: string } = {
@@ -68,6 +71,9 @@ export const positionsValues: { [key: number]: string } = {
   [EPositions.SOFTWARE_DEVELOPER]: "Software Developer",
 };
 
-export const positionsMap = (param: EPositions): string => {
-  return positionsValues[param];
+export const positionsMap = (param: EPositions) => {
+  return {
+    value: positionsValues[param],
+    key: param,
+  };
 };

@@ -128,8 +128,8 @@ const CEmployeesTable: FC<{
       startWorkDate: getYear(employee.startWorkDate),
       evaluationDate: getFullDate(employee.evaluationDate),
       tags: employee.tags,
-      level: levelsMap(employee.level),
-      position: positionsMap(employee.position),
+      level: levelsMap(employee.level).value,
+      position: positionsMap(employee.position).value,
       project: employee.project,
     }));
 
