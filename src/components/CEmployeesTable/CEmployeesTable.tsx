@@ -113,7 +113,7 @@ const CEmployeesTable: FC<{
       width: 150,
     },
     {
-      title: "Edit",
+      title: "Actions",
       dataIndex: "id",
 
       width: 100,
@@ -154,7 +154,8 @@ const CEmployeesTable: FC<{
         title="Delete employee"
         visible={!!userToDelete}
         onOk={async () => {
-          const deletedEmployee = deleteEmployee(userToDelete?.id!);
+          const deletedEmployee = await deleteEmployee(userToDelete?.id!);
+
           if (deletedEmployee) {
             openNotificationSuccess(userToDelete!);
           } else {

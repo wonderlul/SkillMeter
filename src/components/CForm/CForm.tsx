@@ -103,12 +103,8 @@ const CForm = () => {
       });
     }
   };
-  const disabledStartDate = (current: any) => {
+  const disabledDate = (current: moment.Moment) => {
     return current && current > moment().endOf("day");
-  };
-
-  const disabledEvaluationDate = (current: any) => {
-    return current && current > moment().startOf("day");
   };
 
   const onFinish = async (values: any) => {
@@ -191,14 +187,14 @@ const CForm = () => {
             label="Year of starting work in industry"
             rules={[{ required: true }]}
           >
-            <DatePicker picker="year" disabledDate={disabledStartDate} />
+            <DatePicker picker="year" disabledDate={disabledDate} />
           </Form.Item>
           <Form.Item
             name="evaluationDate"
             label="Date of last evaluation talk"
             rules={[{ required: true }]}
           >
-            <DatePicker disabledDate={disabledEvaluationDate} />
+            <DatePicker disabledDate={disabledDate} />
           </Form.Item>
           <Form.Item
             name="project"
