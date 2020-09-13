@@ -1,6 +1,19 @@
-import mongoose, { Schema, Document, mongo } from "mongoose";
-import { ELevels } from "./ELevels";
-import { EPositions } from "./EPositions";
+import mongoose, { Schema, Document } from "mongoose";
+
+export enum ELevels {
+  TRAINEE,
+  JUNIOR,
+  MID,
+  SENIOR,
+  NOT_DEFINED,
+}
+
+export enum EPositions {
+  SOFTWARE_DEVELOPER,
+  QA,
+  PROJECT_MANAGER,
+  NOT_DEFINED,
+}
 
 export interface IEmployee extends Document {
   name: string;
@@ -23,7 +36,7 @@ const EmployeeSchema: Schema = new Schema({
   level: { type: ELevels, required: true },
   position: { type: EPositions, required: true },
   photo: { type: String, required: true },
-  project: { type: String, required: true },
+  project: { type: String, required: false },
 });
 
 export default mongoose.model<IEmployee>("employees", EmployeeSchema);
