@@ -1,19 +1,18 @@
-import React, { FC, useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { FC, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { IEmployee, IEmployeeForm } from "../../models/IEmployee";
+import { IEmployee } from '../../models/IEmployee';
 
-import { Tag, Table, Avatar, Button, Modal, notification } from "antd";
-import { UserOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Tag, Table, Avatar, Button, Modal, notification } from 'antd';
+import { UserOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
-import styles from "./CEmployeesTable.module.scss";
+import styles from './CEmployeesTable.module.scss';
 
 import {
   deleteEmployee,
-  getEmployee,
   levelsMap,
   positionsMap,
-} from "../../services/employeesSvc";
+} from '../../services/employeesSvc';
 
 const getYear = (date: string) => new Date(date).getFullYear();
 const getFullDate = (date: string) => new Date(date).toLocaleDateString();
@@ -44,8 +43,8 @@ const CEmployeesTable: FC<{
 
   const columns = [
     {
-      title: "Photo",
-      dataIndex: "photo",
+      title: 'Photo',
+      dataIndex: 'photo',
       width: 80,
       render: (photo: string) => {
         return photo ? (
@@ -56,18 +55,18 @@ const CEmployeesTable: FC<{
       },
     },
     {
-      title: "Name",
-      dataIndex: "name",
+      title: 'Name',
+      dataIndex: 'name',
       width: 100,
     },
     {
-      title: "Surname",
-      dataIndex: "surname",
+      title: 'Surname',
+      dataIndex: 'surname',
       width: 100,
     },
     {
-      title: "Start working",
-      dataIndex: "startWorkDate",
+      title: 'Start working',
+      dataIndex: 'startWorkDate',
       width: 100,
       // defaultSortOrder: "descend",
       sorter: {
@@ -75,22 +74,22 @@ const CEmployeesTable: FC<{
           return a.startWorkDate - b.startWorkDate;
         },
         multiple: 1,
-        sortDirections: ["descend", "ascend"],
+        sortDirections: ['descend', 'ascend'],
       },
     },
     {
-      title: "Last evaluation",
-      dataIndex: "evaluationDate",
+      title: 'Last evaluation',
+      dataIndex: 'evaluationDate',
       width: 100,
     },
     {
-      title: "Project",
-      dataIndex: "project",
+      title: 'Project',
+      dataIndex: 'project',
       width: 150,
     },
     {
-      title: "Tags",
-      dataIndex: "tags",
+      title: 'Tags',
+      dataIndex: 'tags',
       width: 150,
       render: (tags: string[]) => (
         <>
@@ -103,18 +102,18 @@ const CEmployeesTable: FC<{
       ),
     },
     {
-      title: "Level",
-      dataIndex: "level",
+      title: 'Level',
+      dataIndex: 'level',
       width: 100,
     },
     {
-      title: "Position",
-      dataIndex: "position",
+      title: 'Position',
+      dataIndex: 'position',
       width: 150,
     },
     {
-      title: "Actions",
-      dataIndex: "id",
+      title: 'Actions',
+      dataIndex: 'id',
 
       width: 100,
       render: (id: string, record: typeof employeeData[0]) => (
@@ -137,13 +136,13 @@ const CEmployeesTable: FC<{
 
   const openNotificationFailed = () =>
     notification.error({
-      message: "Error!",
-      description: "Something went wrong. Please try again. ",
+      message: 'Error!',
+      description: 'Something went wrong. Please try again. ',
     });
 
   const openNotificationSuccess = (user: typeof employeeData[0]): void => {
     notification.success({
-      message: "Success!",
+      message: 'Success!',
       description: `You have successfully deleted employee ${user.name} ${user.surname}! `,
     });
   };
@@ -169,7 +168,7 @@ const CEmployeesTable: FC<{
         }}
       >
         <p>
-          Are you sure you want to delete employee {userToDelete?.name}{" "}
+          Are you sure you want to delete employee {userToDelete?.name}{' '}
           {userToDelete?.surname}?
         </p>
       </Modal>
