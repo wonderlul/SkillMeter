@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { ISkills } from "../../skills/models/skills.model";
 
 export enum ELevels {
   TRAINEE,
@@ -25,6 +26,7 @@ export interface IEmployee extends Document {
   position: EPositions;
   photo: string;
   project?: string;
+  skills: ISkills[];
 }
 
 const EmployeeSchema: Schema = new Schema({
