@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from "express";
 import EmployeeModel, { IEmployee } from "../models/employee.model";
 import mongoose from "mongoose";
 
+import isEmployeeMiddleware from "../middlewares/isEmployee";
+
 const router = express.Router();
 
 router.get(
@@ -38,6 +40,7 @@ router.get(
 
 router.post(
   "/employees",
+  isEmployeeMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const employee: IEmployee = req.body;

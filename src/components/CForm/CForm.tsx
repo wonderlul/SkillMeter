@@ -121,14 +121,15 @@ const CForm = () => {
     };
 
     if (id) {
-      const response = updateEmployee(id, formData);
+      const response = await updateEmployee(id, formData);
       if (response) {
         openNotificationSuccess(formData);
       } else {
         openNotificationFailed();
       }
     } else {
-      const response = addEmployee(formData);
+      const response = await addEmployee(formData);
+
       if (response) {
         openNotificationSuccess(formData);
       } else {

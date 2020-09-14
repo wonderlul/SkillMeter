@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import SkillsModel, { ISkills } from "../models/skills.model";
-import mongoose from "mongoose";
+import isSkillMiddleware from "../middlewares/isSkill";
 
 const router = express.Router();
 
@@ -17,21 +17,9 @@ router.get(
   }
 );
 
-// router.get(
-//   "/employees/:id",
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//       const { id } = req.params;
-//       const response = await EmployeeModel.findById(id);
-//       res.send(response);
-//     } catch (e) {
-//       next(e);
-//     }
-//   }
-// );
-
 router.post(
   "/skills",
+  isSkillMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const skill: ISkills = req.body;
