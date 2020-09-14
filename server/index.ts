@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 import cors from "cors";
 
-import employeeRouter from "./routers/employee";
+import employeeRouter from "./employees/routers/employee";
 
 require("dotenv").config();
 
