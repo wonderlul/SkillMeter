@@ -37,6 +37,12 @@ const EmployeeSchema: Schema = new Schema({
   position: { type: EPositions, required: true },
   photo: { type: String, required: true },
   project: { type: String, required: false },
+  skills: [
+    {
+      ref: "skills",
+      type: mongoose.Schema.Types.ObjectId,
+    },
+  ],
 });
 
 export default mongoose.model<IEmployee>("employees", EmployeeSchema);
