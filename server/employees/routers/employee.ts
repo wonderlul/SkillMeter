@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
 import EmployeeModel, { IEmployee } from "../models/employee.model";
-import mongoose from "mongoose";
 
 import isEmployeeMiddleware from "../middlewares/isEmployee";
 
@@ -10,15 +9,20 @@ router.get(
   "/employees",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const query: { _id?: mongoose.Types.ObjectId } = req.query;
+      const { page = 1 } = req.query;
+      const limit = 5;
 
-      if (query._id && mongoose.Types.ObjectId.isValid(query._id)) {
-        query._id = mongoose.Types.ObjectId(`${query["_id"]}`);
-      }
+      const employees = await EmployeeModel.find()
+        .limit(limit)
+        .skip((+page - 1) * limit)
+        .sort({ startWorkDate: -1 });
 
-      const response = await EmployeeModel.find(query);
+      const count = await EmployeeModel.countDocuments();
 
-      res.send(response);
+      res.send({
+        employees,
+        count,
+      });
     } catch (e) {
       next(e);
     }
