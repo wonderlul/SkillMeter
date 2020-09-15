@@ -1,6 +1,6 @@
-import { ISkills } from '../skillsSvc';
+import { ISkill } from '../skillsSvc';
 
-export const skills: ISkills[] = [
+export const skills: ISkill[] = [
   {
     id: '1231werqw',
     name: 'Health & Safety (Occupation)',

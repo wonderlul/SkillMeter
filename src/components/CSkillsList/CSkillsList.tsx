@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import { ISkills } from '../../services/skillsSvc';
+import { ISkill } from '../../services/skillsSvc';
 import { Table, Button } from 'antd';
 import { NavLink } from 'react-router-dom';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const CSkillList: FC<{
-  skills: ISkills[];
+  skills: ISkill[];
   deleteCallbackFunction: Function;
 }> = ({ skills, deleteCallbackFunction = () => {} }) => {
   const columns = [
@@ -27,7 +27,7 @@ const CSkillList: FC<{
     {
       title: 'Actions',
       key: 'action',
-      render: (date: string, record: ISkills) => (
+      render: (date: string, record: ISkill) => (
         <>
           <NavLink to={`/skills/${record.id}`}>
             <Button type="ghost" icon={<EditOutlined />} />

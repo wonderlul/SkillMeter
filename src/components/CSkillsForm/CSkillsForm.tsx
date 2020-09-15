@@ -1,13 +1,51 @@
-import React, { FC } from 'react';
-import { Form, Input, Button, Select } from 'antd';
+import React, { FC, useEffect, useState } from 'react';
+import { Form, Input, Button, Select, Divider } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+
+import {
+  ISkill,
+  ESkills,
+  getAllSkills,
+  getSkill,
+  getCategories,
+  getConfigFormData,
+} from '../../services/skillsSvc';
+import { useParams } from 'react-router-dom';
 
 const CSkillsForm = () => {
   const [form] = Form.useForm();
   const { Option } = Select;
-  const onCategoryChange = () => {};
+
+  const [newCategory, setNewCategory] = useState<string>('');
+  const [configForm, setConfigForm] = useState(getConfigFormData());
+
+  const onWeightChange = () => {};
+  const addItem = () => {
+    const newCategories = [...configForm.categories, newCategory as string];
+    setConfigForm({ ...configForm, categories: newCategories });
+  };
+
+  let { id } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    (async () => {
+      const skill: ISkill | undefined = await getSkill(id);
+      if (skill) {
+        form.setFieldsValue(skill);
+      }
+    })();
+  }, []);
+
+  const onFinish = (values: ISkill) => {
+    console.log(values);
+  };
+
   return (
     <>
       <Form
+        onFinish={(values) => {
+          onFinish(values);
+        }}
         validateTrigger={['onSubmit']}
         form={form}
         name="skillForm"
@@ -21,12 +59,14 @@ const CSkillsForm = () => {
         <Form.Item name="weight" label="Weight" rules={[{ required: true }]}>
           <Select
             placeholder="Select a option and change input text above"
-            onChange={onCategoryChange}
+            onChange={onWeightChange}
             allowClear
           >
-            <Option value="male">male</Option>
-            <Option value="female">female</Option>
-            <Option value="other">other</Option>
+            {configForm.weights.map((item, index) => (
+              <Option value={item} key={`${item}${index}`}>
+                {item}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item
@@ -35,13 +75,42 @@ const CSkillsForm = () => {
           rules={[{ required: true }]}
         >
           <Select
-            placeholder="Select a option and change input text above"
-            onChange={onCategoryChange}
-            allowClear
+            style={{ width: 240 }}
+            placeholder="custom dropdown render"
+            dropdownRender={(menu) => (
+              <div>
+                {menu}
+                <Divider style={{ margin: '4px 0' }} />
+                <div
+                  style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}
+                >
+                  <Input
+                    style={{ flex: 'auto' }}
+                    value={newCategory}
+                    onChange={(event) => {
+                      setNewCategory(event.target.value);
+                    }}
+                  />
+                  <a
+                    style={{
+                      flex: 'none',
+                      padding: '8px',
+                      display: 'block',
+                      cursor: 'pointer',
+                    }}
+                    onClick={addItem}
+                  >
+                    <PlusOutlined /> Add item
+                  </a>
+                </div>
+              </div>
+            )}
           >
-            <Option value="male">male</Option>
-            <Option value="female">female</Option>
-            <Option value="other">other</Option>
+            {configForm.categories.map((item) => (
+              <Option key={item} value={item}>
+                {item}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 4, span: 16 }}>

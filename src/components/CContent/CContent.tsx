@@ -21,6 +21,7 @@ export const CContent = () => {
           <Route exact path="/" component={Home} />
           <Route exact path="/skills" component={Skillsets} />
           <Route exact path="/skills/:id" component={CSkillsForm} />
+          <Route exact path="/skills/add" component={CSkillsForm} />
           <Route exact path="/employees" component={Employees} />
           <Route exact path="/employees/add" component={Form} />
           <Route path="/employees/:id" component={Form} />
