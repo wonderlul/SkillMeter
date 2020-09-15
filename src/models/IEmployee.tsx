@@ -26,6 +26,12 @@ export interface IEmployee {
   project?: string;
 }
 
+export interface IGetEmployees {
+  employees: IEmployee[];
+  count: number;
+  currentPage: number;
+}
+
 export type IEmployeeDTO = Omit<IEmployee, "_id">;
 
 export interface IEmployeeForm {

@@ -3,9 +3,9 @@ import { IEmployeeDTO, ELevels, EPositions } from "../models/IEmployee";
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
-export const getAllEmployees = async () => {
+export const getAllEmployees = async (page: number) => {
   try {
-    const { data } = await axios.get(`${SERVER_URL}/employees`);
+    const { data } = await axios.get(`${SERVER_URL}/employees/?page=${page}`);
     return data;
   } catch (error) {
     console.log(error.message);
