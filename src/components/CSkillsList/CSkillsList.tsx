@@ -1,13 +1,14 @@
 import React, { FC } from 'react';
 import { ISkill } from '../../services/skillsSvc';
 import { Table, Button } from 'antd';
-import { NavLink } from 'react-router-dom';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
 
 const CSkillList: FC<{
   skills: ISkill[];
   deleteCallbackFunction: Function;
 }> = ({ skills, deleteCallbackFunction = () => {} }) => {
+  const history = useHistory();
   const columns = [
     {
       title: 'Skill',
@@ -29,10 +30,15 @@ const CSkillList: FC<{
       key: 'action',
       render: (date: string, record: ISkill) => (
         <>
-          <NavLink to={`/skills/${record.id}`}>
-            <Button type="ghost" icon={<EditOutlined />} />
-          </NavLink>
           <Button
+            type="ghost"
+            icon={<EditOutlined />}
+            onClick={() => {
+              history.push(`/skills/${record.id}`);
+            }}
+          />
+          <Button
+            style={{ marginLeft: 5 }}
             type="ghost"
             danger
             onClick={() => {

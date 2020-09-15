@@ -91,17 +91,11 @@ const CSkillsForm = () => {
                       setNewCategory(event.target.value);
                     }}
                   />
-                  <a
-                    style={{
-                      flex: 'none',
-                      padding: '8px',
-                      display: 'block',
-                      cursor: 'pointer',
-                    }}
+                  <Button
+                    style={{ marginLeft: 5 }}
                     onClick={addItem}
-                  >
-                    <PlusOutlined /> Add item
-                  </a>
+                    icon={<PlusOutlined />}
+                  />
                 </div>
               </div>
             )}
