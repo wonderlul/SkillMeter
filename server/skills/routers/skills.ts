@@ -8,9 +8,16 @@ router.get(
   "/skills",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const response = await SkillsModel.find();
+      const { page = 1 } = req.query;
+      const limit = 5;
 
-      res.send(response);
+      const skills = await SkillsModel.find()
+        .limit(limit)
+        .skip((+page - 1) * limit);
+
+      const count = await SkillsModel.countDocuments();
+
+      res.send({ skills, count });
     } catch (e) {
       next(e);
     }

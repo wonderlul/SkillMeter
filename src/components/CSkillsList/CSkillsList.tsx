@@ -1,40 +1,40 @@
-import React, { FC } from 'react';
-import { ISkill } from '../../services/skillsSvc';
-import { Table, Button } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
+import React, { FC } from "react";
+import { ISkills } from "../../models/ISkills";
+import { Table, Button } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useHistory } from "react-router-dom";
 
 const CSkillList: FC<{
-  skills: ISkill[];
+  skills: ISkills[];
   deleteCallbackFunction: Function;
 }> = ({ skills, deleteCallbackFunction = () => {} }) => {
   const history = useHistory();
   const columns = [
     {
-      title: 'Skill',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Skill",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
     },
     {
-      title: 'Weight',
-      dataIndex: 'weight',
-      key: 'weight',
+      title: "Weight",
+      dataIndex: "weight",
+      key: "weight",
     },
     {
-      title: 'Actions',
-      key: 'action',
-      render: (date: string, record: ISkill) => (
+      title: "Actions",
+      key: "action",
+      render: (date: string, record: ISkills) => (
         <>
           <Button
             type="ghost"
             icon={<EditOutlined />}
             onClick={() => {
-              history.push(`/skills/${record.id}`);
+              history.push(`/skills/${record._id}`);
             }}
           />
           <Button

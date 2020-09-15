@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 
 import employeeRouter from "./employees/routers/employee";
+import skillsRouter from "./skills/routers/skills";
 
 require("dotenv").config();
 
@@ -19,6 +20,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/", employeeRouter);
+app.use("/", skillsRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log("Error:", error);
