@@ -1,5 +1,5 @@
-import { skills } from './mocks/skillsMock';
-import axios from 'axios';
+import { skills } from "./mocks/skillsMock";
+import axios from "axios";
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 

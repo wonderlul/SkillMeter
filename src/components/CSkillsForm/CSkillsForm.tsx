@@ -1,6 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Divider } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import React, { FC, useEffect, useState } from "react";
+import { Form, Input, Button, Select, Divider } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 import {
   ISkill,
@@ -9,14 +9,14 @@ import {
   getSkill,
   getCategories,
   getConfigFormData,
-} from '../../services/skillsSvc';
-import { useParams } from 'react-router-dom';
+} from "../../services/skillsSvc";
+import { useParams } from "react-router-dom";
 
 const CSkillsForm = () => {
   const [form] = Form.useForm();
   const { Option } = Select;
 
-  const [newCategory, setNewCategory] = useState<string>('');
+  const [newCategory, setNewCategory] = useState<string>("");
   const [configForm, setConfigForm] = useState(getConfigFormData());
 
   const onWeightChange = () => {};
@@ -46,7 +46,7 @@ const CSkillsForm = () => {
         onFinish={(values) => {
           onFinish(values);
         }}
-        validateTrigger={['onSubmit']}
+        validateTrigger={["onSubmit"]}
         form={form}
         name="skillForm"
         labelCol={{ span: 4 }}
@@ -80,23 +80,24 @@ const CSkillsForm = () => {
             dropdownRender={(menu) => (
               <div>
                 {menu}
-                <Divider style={{ margin: '4px 0' }} />
+                <Divider style={{ margin: "4px 0" }} />
                 <div
-                  style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}
+                  style={{ display: "flex", flexWrap: "nowrap", padding: 8 }}
                 >
                   <Input
-                    style={{ flex: 'auto' }}
+                    style={{ flex: "auto" }}
                     value={newCategory}
                     onChange={(event) => {
                       setNewCategory(event.target.value);
                     }}
                   />
+
                   <a
                     style={{
-                      flex: 'none',
-                      padding: '8px',
-                      display: 'block',
-                      cursor: 'pointer',
+                      flex: "none",
+                      padding: "8px",
+                      display: "block",
+                      cursor: "pointer",
                     }}
                     onClick={addItem}
                   >
