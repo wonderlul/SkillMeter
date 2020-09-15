@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-import CEmployeesTable from "../components/CEmployeesTable/CEmployeesTable";
+import CEmployeesList from "../../components/CEmployeesList/CEmployeesList";
 
-import { getAllEmployees } from "../services/employeesSvc";
-import { IEmployee, IGetEmployees } from "../models/IEmployee";
+import { getAllEmployees } from "../../services/employeesSvc";
+import { IEmployee, IGetEmployees } from "../../models/IEmployee";
+import { Button, PageHeader } from "antd";
+
+import { useHistory } from "react-router-dom";
 
 export const Employees = () => {
+  const history = useHistory();
+
   const [employees, setEmployees] = useState<IEmployee[]>([]);
   const [employeesAmount, setEmployeesAmount] = useState(0);
 
@@ -36,7 +41,22 @@ export const Employees = () => {
 
   return (
     <>
-      <CEmployeesTable
+      <PageHeader
+        className="site-page-header"
+        title="Employees"
+        extra={
+          <Button
+            type="primary"
+            shape="round"
+            onClick={() => {
+              history.push("employees/add");
+            }}
+          >
+            Add employee
+          </Button>
+        }
+      />
+      <CEmployeesList
         employees={employees}
         employeesAmount={employeesAmount}
         pageHandler={pageHandler}

@@ -13,7 +13,8 @@ router.get(
 
       const skills = await SkillsModel.find()
         .limit(limit)
-        .skip((+page - 1) * limit);
+        .skip((+page - 1) * limit)
+        .sort({ _id: -1 });
 
       const count = await SkillsModel.countDocuments();
 

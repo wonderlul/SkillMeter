@@ -3,16 +3,17 @@ import { Form, Input, Button, Select, Divider } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import {
+  addSkill,
   getAllSkills,
   getCategories,
   getConfigFormData,
 } from "../../services/skillsSvc";
 
-import { ISkills } from "../../models/ISkills";
+import { ISkillsDTO } from "../../models/ISkills";
 
 import { useParams } from "react-router-dom";
 
-const CSkillsForm = () => {
+const SkillsetsForm = () => {
   const [form] = Form.useForm();
   const { Option } = Select;
 
@@ -25,7 +26,10 @@ const CSkillsForm = () => {
     setConfigForm({ ...configForm, categories: newCategories });
   };
 
-  let { id } = useParams<{ id: string }>();
+  interface ParamTypes {
+    id: string;
+  }
+  let { id } = useParams<ParamTypes>();
 
   // useEffect(() => {
   //   (async () => {
@@ -36,8 +40,11 @@ const CSkillsForm = () => {
   //   })();
   // }, []);
 
-  const onFinish = (values: ISkills) => {
-    console.log(values);
+  const onFinish = async (values: ISkillsDTO) => {
+    if (id) {
+    } else {
+      const response = await addSkill(values);
+    }
   };
 
   return (
@@ -125,4 +132,4 @@ const CSkillsForm = () => {
   );
 };
 
-export default CSkillsForm;
+export default SkillsetsForm;

@@ -6,9 +6,19 @@ import { useHistory } from "react-router-dom";
 
 const CSkillList: FC<{
   skills: ISkills[];
+  skillsAmount: number;
   deleteCallbackFunction: Function;
-}> = ({ skills, deleteCallbackFunction = () => {} }) => {
+  pageHandler: Function;
+  flagHandler: Function;
+}> = ({
+  skills,
+  skillsAmount,
+  flagHandler,
+  pageHandler,
+  deleteCallbackFunction = () => {},
+}) => {
   const history = useHistory();
+
   const columns = [
     {
       title: "Skill",
@@ -33,10 +43,9 @@ const CSkillList: FC<{
           <Button
             type="ghost"
             icon={<EditOutlined />}
-            onClick={() => {
-              history.push(`/skills/${record._id}`);
-            }}
+            onClick={() => history.push(`/skills/${record._id}`)}
           />
+
           <Button
             style={{ marginLeft: 5 }}
             type="ghost"
@@ -52,7 +61,18 @@ const CSkillList: FC<{
   ];
   return (
     <>
-      <Table columns={columns} dataSource={skills} />
+      <Table
+        columns={columns}
+        dataSource={skills}
+        pagination={{
+          pageSize: 5,
+          total: skillsAmount,
+          onChange: (page) => {
+            pageHandler(page);
+            flagHandler();
+          },
+        }}
+      />
     </>
   );
 };

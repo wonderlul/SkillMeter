@@ -6,7 +6,7 @@ import { IEmployee } from "../../models/IEmployee";
 import { Tag, Table, Avatar, Button, Modal, notification } from "antd";
 import { UserOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import styles from "./CEmployeesTable.module.scss";
+import styles from "./CEmployeesList.module.scss";
 
 import {
   deleteEmployee,
@@ -17,7 +17,7 @@ import {
 const getYear = (date: string) => new Date(date).getFullYear();
 const getFullDate = (date: string) => new Date(date).toLocaleDateString();
 
-const CEmployeesTable: FC<{
+const CEmployeesList: FC<{
   employees: IEmployee[];
   employeesAmount: number;
   flagHandler: Function;
@@ -83,7 +83,7 @@ const CEmployeesTable: FC<{
     {
       title: "Project",
       dataIndex: "project",
-      width: 150,
+      width: 100,
     },
     {
       title: "Tags",
@@ -113,20 +113,21 @@ const CEmployeesTable: FC<{
       title: "Actions",
       dataIndex: "id",
 
-      width: 100,
+      width: 150,
       render: (id: string, record: typeof employeeData[0]) => (
         <>
           <NavLink to={`/employees/${id}`}>
-            <EditOutlined />
+            <Button type="ghost" icon={<EditOutlined />} />
           </NavLink>
-          <div
-            className={styles.delete}
+          <Button
+            style={{ marginLeft: 5 }}
+            type="ghost"
+            danger
             onClick={() => {
               setUserToDelete(record);
             }}
-          >
-            <DeleteOutlined />
-          </div>
+            icon={<DeleteOutlined />}
+          />
         </>
       ),
     },
@@ -170,11 +171,7 @@ const CEmployeesTable: FC<{
           {userToDelete?.surname}?
         </p>
       </Modal>
-      <NavLink className={styles.tableButton} to="/employees/add">
-        <Button type="primary" shape="round">
-          Add employee
-        </Button>
-      </NavLink>
+
       <Table
         columns={columns}
         dataSource={employeeData}
@@ -191,4 +188,4 @@ const CEmployeesTable: FC<{
   );
 };
 
-export default CEmployeesTable;
+export default CEmployeesList;

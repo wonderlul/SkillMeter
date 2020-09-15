@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory, Redirect } from "react-router-dom";
 
-import styles from "./CForm.module.scss";
+import styles from "./EmployeesForm.module.scss";
 
 import { IEmployeeDTO, IEmployeeForm } from "../../models/IEmployee";
 
@@ -17,7 +17,10 @@ import {
 import { PlusOutlined, LeftOutlined } from "@ant-design/icons";
 import moment from "moment";
 
-import { CAvatarUpload, uploadImage } from "../CAvatarUpload/CAvatarUpload";
+import {
+  CAvatarUpload,
+  uploadImage,
+} from "../../components/CAvatarUpload/CAvatarUpload";
 
 import {
   getEmployee,
@@ -31,7 +34,7 @@ import {
 
 const { Option } = Select;
 
-const CForm = () => {
+const EmployeesForm = () => {
   //Route
   interface ParamTypes {
     id: string;
@@ -321,4 +324,4 @@ const CForm = () => {
   );
 };
 
-export default CForm;
+export default EmployeesForm;

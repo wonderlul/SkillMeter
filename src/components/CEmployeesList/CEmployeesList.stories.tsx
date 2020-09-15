@@ -2,12 +2,12 @@ import React from "react";
 // // // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 // // import { Story, Meta } from "@storybook/react/types-6-0";
 
-// // import { CEmployeesTable } from "./CEmployeesTable";
+// // import { CEmployeesList } from "./CEmployeesList";
 // import { ELevels, IEmployee, EPositions } from "../../models/IEmployee";
 
 // // export default {
-// //   title: "Storybook/CEmployeesTable",
-// //   component: CEmployeesTable,
+// //   title: "Storybook/CEmployeesList",
+// //   component: CEmployeesList,
 // // } as Meta;
 
 // export const employees: IEmployee[] = [
@@ -122,5 +122,5 @@ import React from "react";
 // ];
 
 // // export const TableOfEmployees: Story<IEmployee[]> = () => (
-// //   <CEmployeesTable employees={employees} />
+// //   <CEmployeesList employees={employees} />
 // // );

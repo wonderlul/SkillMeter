@@ -23,6 +23,24 @@ export const addSkill = async (skill: ISkillsDTO) => {
   }
 };
 
+export const deleteSkill = async (id: string) => {
+  try {
+    const { data } = await axios.delete(`${SERVER_URL}/skills/${id}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateSkill = async (id: string, employee: ISkillsDTO) => {
+  try {
+    const { data } = await axios.patch(`${SERVER_URL}/skills/${id}`, employee);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // export const getSkill = (id: string): ISkill | undefined => {
 //   return skills.find((elem) => elem.id === id);
 // };
