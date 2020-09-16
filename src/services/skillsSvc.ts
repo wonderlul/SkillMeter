@@ -1,13 +1,24 @@
-import { skills } from "./mocks/skillsMock";
-
-import { ISkillsDTO, ESkills } from "../models/ISkills";
-import axios from "axios";
+import { ISkillsDTO, ESkills } from '../models/ISkills';
+import axios from 'axios';
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
-export const getAllSkills = async (page: number) => {
+export const getAllSkills = async (page?: number) => {
+  let url = '';
+  if (page) {
+    url = `?page=${page}`;
+  }
   try {
-    const { data } = await axios.get(`${SERVER_URL}/skills/?page=${page}`);
+    const { data } = await axios.get(`${SERVER_URL}/skills/${url}`);
+    return data;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+export const getSkill = async (id: string) => {
+  try {
+    const { data } = await axios.get(`${SERVER_URL}/skills/${id}`);
+    console.log(data);
     return data;
   } catch (error) {
     console.log(error.message);
@@ -41,11 +52,7 @@ export const updateSkill = async (id: string, employee: ISkillsDTO) => {
   }
 };
 
-// export const getSkill = (id: string): ISkill | undefined => {
-//   return skills.find((elem) => elem.id === id);
-// };
-
-export const getCategories = (): string[] => {
+export const getCategories = (skills: ISkillsDTO[]): string[] => {
   let categories = skills.reduce<string[]>((previous, current) => {
     previous.push(current.category);
     return previous;
@@ -53,12 +60,16 @@ export const getCategories = (): string[] => {
   return Array.from(new Set<string>(categories));
 };
 
-export const getConfigFormData = (): {
+export interface IConfigFormDate {
   weights: number[];
   categories: string[];
-} => {
+}
+
+export const getConfigFormData = async () => {
+  const { skills } = await getAllSkills();
+  console.log(skills);
   const config = {
-    categories: getCategories(),
+    categories: getCategories(skills),
     weights: Object.values(ESkills).filter((elem) =>
       Number.isInteger(Number(elem))
     ) as number[],

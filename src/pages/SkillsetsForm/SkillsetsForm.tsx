@@ -1,28 +1,35 @@
-import React, { FC, useEffect, useState } from "react";
-import { Form, Input, Button, Select, Divider } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Button, Select, Divider, message } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
 import {
   addSkill,
-  getAllSkills,
-  getCategories,
+  getSkill,
   getConfigFormData,
-} from "../../services/skillsSvc";
+  IConfigFormDate,
+  updateSkill,
+} from '../../services/skillsSvc';
 
-import { ISkillsDTO } from "../../models/ISkills";
+import { ISkillsDTO } from '../../models/ISkills';
 
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from 'react-router-dom';
 
 const SkillsetsForm = () => {
+  const history = useHistory();
   const [form] = Form.useForm();
   const { Option } = Select;
 
-  const [newCategory, setNewCategory] = useState<string>("");
-  const [configForm, setConfigForm] = useState(getConfigFormData());
+  const [newCategory, setNewCategory] = useState<string>('');
+  const [configForm, setConfigForm] = useState<IConfigFormDate>({
+    categories: [],
+    weights: [],
+  });
 
   const onWeightChange = () => {};
   const addItem = () => {
-    const newCategories = [...configForm.categories, newCategory as string];
+    const newCategories = Array.from(
+      new Set([...configForm.categories, newCategory])
+    );
     setConfigForm({ ...configForm, categories: newCategories });
   };
 
@@ -31,19 +38,42 @@ const SkillsetsForm = () => {
   }
   let { id } = useParams<ParamTypes>();
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const skill: ISkill | undefined = await getSkill(id);
-  //     if (skill) {
-  //       form.setFieldsValue(skill);
-  //     }
-  //   })();
-  // }, []);
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    (async () => {
+      const config = await getConfigFormData();
+      if (config) {
+        setConfigForm(config);
+      }
+      if (id) {
+        const skill = await getSkill(id);
+        form.setFieldsValue(skill);
+      }
+    })();
+  }, []);
 
   const onFinish = async (values: ISkillsDTO) => {
+    let success = false;
+    let response: any;
     if (id) {
+      response = await updateSkill(id, values);
+      if (response) {
+        message.success(`Update "${values.name}" skill.`);
+        success = true;
+      } else {
+        message.error('Something goes wrong. Please try again.');
+      }
     } else {
-      const response = await addSkill(values);
+      response = await addSkill(values);
+      if (response) {
+        message.success(`Created "${values.name}" skill.`);
+        success = true;
+      } else {
+        message.error('Something goes wrong. Please try again.');
+      }
+    }
+    if (success) {
+      history.push('/skills');
     }
   };
 
@@ -53,7 +83,7 @@ const SkillsetsForm = () => {
         onFinish={(values) => {
           onFinish(values);
         }}
-        validateTrigger={["onSubmit"]}
+        validateTrigger={['onSubmit']}
         form={form}
         name="skillForm"
         labelCol={{ span: 4 }}
@@ -87,12 +117,12 @@ const SkillsetsForm = () => {
             dropdownRender={(menu) => (
               <div>
                 {menu}
-                <Divider style={{ margin: "4px 0" }} />
+                <Divider style={{ margin: '4px 0' }} />
                 <div
-                  style={{ display: "flex", flexWrap: "nowrap", padding: 8 }}
+                  style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}
                 >
                   <Input
-                    style={{ flex: "auto" }}
+                    style={{ flex: 'auto' }}
                     value={newCategory}
                     onChange={(event) => {
                       setNewCategory(event.target.value);

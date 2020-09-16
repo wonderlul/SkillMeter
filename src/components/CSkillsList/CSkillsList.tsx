@@ -1,19 +1,21 @@
-import React, { FC } from "react";
-import { ISkills } from "../../models/ISkills";
-import { Table, Button } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useHistory } from "react-router-dom";
+import React, { FC } from 'react';
+import { useHistory } from 'react-router-dom';
 
-const CSkillList: FC<{
+import { ISkills } from '../../models/ISkills';
+
+import { Table, Button } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+
+export interface ISkillsList {
   skills: ISkills[];
   skillsAmount: number;
   deleteCallbackFunction: Function;
   pageHandler: Function;
-  flagHandler: Function;
-}> = ({
+}
+
+const CSkillList: FC<ISkillsList> = ({
   skills,
   skillsAmount,
-  flagHandler,
   pageHandler,
   deleteCallbackFunction = () => {},
 }) => {
@@ -21,23 +23,23 @@ const CSkillList: FC<{
 
   const columns = [
     {
-      title: "Skill",
-      dataIndex: "name",
-      key: "name",
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
+      title: 'Category',
+      dataIndex: 'category',
+      key: 'category',
     },
     {
-      title: "Weight",
-      dataIndex: "weight",
-      key: "weight",
+      title: 'Weight',
+      dataIndex: 'weight',
+      key: 'weight',
     },
     {
-      title: "Actions",
-      key: "action",
+      title: 'Actions',
+      key: 'action',
       render: (date: string, record: ISkills) => (
         <>
           <Button
@@ -51,6 +53,7 @@ const CSkillList: FC<{
             type="ghost"
             danger
             onClick={() => {
+              console.log(record);
               deleteCallbackFunction(record);
             }}
             icon={<DeleteOutlined />}
@@ -65,11 +68,11 @@ const CSkillList: FC<{
         columns={columns}
         dataSource={skills}
         pagination={{
+          hideOnSinglePage: true,
           pageSize: 5,
           total: skillsAmount,
           onChange: (page) => {
             pageHandler(page);
-            flagHandler();
           },
         }}
       />

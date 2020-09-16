@@ -1,20 +1,25 @@
-import express, { Request, Response, NextFunction } from "express";
-import SkillsModel, { ISkills } from "../models/skills.model";
-import isSkillMiddleware from "../middlewares/isSkill";
+import express, { Request, Response, NextFunction } from 'express';
+import SkillsModel, { ISkills } from '../models/skills.model';
+import isSkillMiddleware from '../middlewares/isSkill';
 
 const router = express.Router();
 
 router.get(
-  "/skills",
+  '/skills',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { page = 1 } = req.query;
-      const limit = 5;
+      let skills: ISkills[];
+      if (req.query.page) {
+        const { page = 1 } = req.query;
+        const limit = 5;
 
-      const skills = await SkillsModel.find()
-        .limit(limit)
-        .skip((+page - 1) * limit)
-        .sort({ _id: -1 });
+        skills = await SkillsModel.find()
+          .limit(limit)
+          .skip((+page - 1) * limit)
+          .sort({ _id: -1 });
+      } else {
+        skills = await SkillsModel.find();
+      }
 
       const count = await SkillsModel.countDocuments();
 
@@ -25,8 +30,21 @@ router.get(
   }
 );
 
+router.get(
+  '/skills/:id',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const response = await SkillsModel.findById(id);
+      res.send(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
 router.post(
-  "/skills",
+  '/skills',
   isSkillMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -41,7 +59,7 @@ router.post(
 );
 
 router.patch(
-  "/skills/:id",
+  '/skills/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
@@ -56,7 +74,7 @@ router.patch(
 );
 
 router.delete(
-  "/skills/:id",
+  '/skills/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {

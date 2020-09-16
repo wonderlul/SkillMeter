@@ -1,34 +1,42 @@
-import express, { Request, Response, Application, NextFunction } from "express";
-import mongoose from "mongoose";
+import express, { Request, Response, Application, NextFunction } from 'express';
+import mongoose from 'mongoose';
 
-import cors from "cors";
+import cors from 'cors';
 
-import employeeRouter from "./employees/routers/employee";
-import skillsRouter from "./skills/routers/skills";
+import employeeRouter from './employees/routers/employee';
+import skillsRouter from './skills/routers/skills';
 
-require("dotenv").config();
+require('dotenv').config();
 
-mongoose.connect(`${process.env.MONGODB_CONNECTION}`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-});
+function run() {
+  if (!process.env.MONGODB_CONNECTION) {
+    console.error('MongoDB is not configured');
+    return;
+  }
 
-const app: Application = express();
+  mongoose.connect(process.env.MONGODB_CONNECTION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  });
 
-app.use(cors());
-app.use(express.json());
+  const app: Application = express();
 
-app.use("/", employeeRouter);
-app.use("/", skillsRouter);
+  app.use(cors());
+  app.use(express.json());
 
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  console.log("Error:", error);
-  res.send(`There was na error: ${error.message}`);
-});
+  app.use('/', employeeRouter);
+  app.use('/', skillsRouter);
 
-app.listen(process.env.PORT, () => {
-  console.log(
-    `⚡️[server]: Server is running at http://localhost:${process.env.PORT}`
-  );
-});
+  app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+    console.log('Error:', error);
+    res.send(`There was na error: ${error.message}`);
+  });
+
+  app.listen(process.env.PORT, () => {
+    console.log(
+      `⚡️[server]: Server is running at http://localhost:${process.env.PORT}`
+    );
+  });
+}
+run();
