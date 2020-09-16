@@ -25,6 +25,11 @@ export enum ESkills {
   SEVEN,
 }
 
+export interface IGetSkills {
+  skills: ISkills[];
+  count: number;
+}
+
 export interface ISkills {
   _id: string;
   name: string;

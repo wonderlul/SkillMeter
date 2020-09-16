@@ -1,10 +1,10 @@
-import { ISkillsDTO, ESkills, ISort, ESortSkills } from '../models/ISkills';
-import axios from 'axios';
+import { ISkillsDTO, ESkills, ISort, ESortSkills } from "../models/ISkills";
+import axios from "axios";
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
 export const getAllSkills = async (page?: number, sortBy?: ISort) => {
-  let url = '';
+  let url = "";
 
   if (page) {
     url.concat(`page=${page}&`);
@@ -81,9 +81,9 @@ export const getConfigFormData = async () => {
 };
 
 export const skillsTagsValues: { [key: number]: string } = {
-  [ESortSkills.NAME]: 'name',
-  [ESortSkills.CATEGORY]: 'category',
-  [ESortSkills.WEIGHT]: 'weight',
+  [ESortSkills.NAME]: "name",
+  [ESortSkills.CATEGORY]: "category",
+  [ESortSkills.WEIGHT]: "weight",
 };
 
 // export const skillsMap = (param: number) => {

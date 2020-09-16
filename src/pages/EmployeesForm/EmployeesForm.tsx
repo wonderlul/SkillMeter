@@ -66,9 +66,7 @@ const EmployeesForm = () => {
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
   const [submitsAmount, setSubmitsAmount] = useState<number>(0);
-  const [successfulSubmitsAmount, setSuccessfulSubmitsAmount] = useState<
-    number
-  >(0);
+
   const [tags, setTags] = useState<string[]>([]);
   const [employeePhoto, setEmployeePhoto] = useState("");
   // const [skills, setSkills] = useState<ISkills[]>([]);
@@ -115,11 +113,14 @@ const EmployeesForm = () => {
       });
     }
   };
+
   const disabledDate = (current: moment.Moment) => {
     return current && current > moment().endOf("day");
   };
 
   const onFinish = async (values: any) => {
+    let isSucces = false;
+
     const photo =
       typeof values.photo[0] !== "string"
         ? await uploadImage(values.photo[0].originFileObj)
@@ -136,6 +137,7 @@ const EmployeesForm = () => {
       const response = await updateEmployee(id, formData);
       if (response) {
         openNotificationSuccess(formData);
+        isSucces = true;
       } else {
         openNotificationFailed();
       }
@@ -144,11 +146,14 @@ const EmployeesForm = () => {
 
       if (response) {
         openNotificationSuccess(formData);
+        isSucces = true;
       } else {
         openNotificationFailed();
       }
     }
-    setSuccessfulSubmitsAmount(1);
+    if (isSucces) {
+      history.push("/employees");
+    }
   };
 
   const onFinishFailed = () => {
@@ -163,8 +168,6 @@ const EmployeesForm = () => {
 
     form.resetFields();
   };
-
-  if (successfulSubmitsAmount > 0) return <Redirect to="/employees/" />;
 
   return (
     <div className={styles.wrapper}>

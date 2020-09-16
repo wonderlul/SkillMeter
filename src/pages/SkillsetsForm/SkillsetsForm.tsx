@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Divider, message } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, Select, Divider, notification } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 import {
   addSkill,
@@ -8,18 +8,19 @@ import {
   getConfigFormData,
   IConfigFormDate,
   updateSkill,
-} from '../../services/skillsSvc';
+} from "../../services/skillsSvc";
 
-import { ISkillsDTO } from '../../models/ISkills';
+import { ISkillsDTO } from "../../models/ISkills";
 
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from "react-router-dom";
 
 const SkillsetsForm = () => {
   const history = useHistory();
+
   const [form] = Form.useForm();
   const { Option } = Select;
 
-  const [newCategory, setNewCategory] = useState<string>('');
+  const [newCategory, setNewCategory] = useState<string>("");
   const [configForm, setConfigForm] = useState<IConfigFormDate>({
     categories: [],
     weights: [],
@@ -27,7 +28,7 @@ const SkillsetsForm = () => {
 
   const onWeightChange = () => {};
 
-  const addItem = () => {
+  const addCategory = () => {
     const newCategories = Array.from(
       new Set([...configForm.categories, newCategory])
     );
@@ -53,28 +54,60 @@ const SkillsetsForm = () => {
     })();
   }, []);
 
-  const onFinish = async (values: ISkillsDTO) => {
-    let success = false;
-    let response: any;
+  /* eslint-disable no-template-curly-in-string */
+  const validateMessages = {
+    required: "${label} is required!",
+    types: {
+      email: "${label} is not validate email!",
+      number: "${label} is not a validate number!",
+    },
+    number: {
+      range: "${label} must be between ${min} and ${max}",
+    },
+  };
+
+  const openNotificationFailed = () =>
+    notification.error({
+      message: "Error!",
+      description: "Something went wrong. Please try again. ",
+    });
+
+  const openNotificationSuccess = (name: string): void => {
     if (id) {
-      response = await updateSkill(id, values);
+      notification.success({
+        message: "Success!",
+        description: `You have successfully edit skill ${name}!`,
+      });
+    } else {
+      notification.success({
+        message: "Success!",
+        description: `You have successfully added skill ${name}!`,
+      });
+    }
+  };
+
+  const onFinish = async (values: ISkillsDTO) => {
+    let isSucces = false;
+
+    if (id) {
+      const response = await updateSkill(id, values);
       if (response) {
-        message.success(`Update "${values.name}" skill.`);
-        success = true;
+        openNotificationSuccess(values.name);
+        isSucces = true;
       } else {
-        message.error('Something goes wrong. Please try again.');
+        openNotificationFailed();
       }
     } else {
-      response = await addSkill(values);
+      const response = await addSkill(values);
       if (response) {
-        message.success(`Created "${values.name}" skill.`);
-        success = true;
+        openNotificationSuccess(values.name);
+        isSucces = true;
       } else {
-        message.error('Something goes wrong. Please try again.');
+        openNotificationFailed();
       }
     }
-    if (success) {
-      history.push('/skills');
+    if (isSucces) {
+      history.push("/skills");
     }
   };
   return (
@@ -83,8 +116,9 @@ const SkillsetsForm = () => {
         onFinish={(values) => {
           onFinish(values);
         }}
-        validateTrigger={['onSubmit']}
+        validateTrigger={["onSubmit"]}
         form={form}
+        validateMessages={validateMessages}
         name="skillForm"
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 5 }}
@@ -95,7 +129,7 @@ const SkillsetsForm = () => {
         </Form.Item>
         <Form.Item name="weight" label="Weight" rules={[{ required: true }]}>
           <Select
-            placeholder="Select a option and change input text above"
+            placeholder="Select weight"
             onChange={onWeightChange}
             allowClear
           >
@@ -113,16 +147,16 @@ const SkillsetsForm = () => {
         >
           <Select
             style={{ width: 240 }}
-            placeholder="custom dropdown render"
+            placeholder="Select category"
             dropdownRender={(menu) => (
               <div>
                 {menu}
-                <Divider style={{ margin: '4px 0' }} />
+                <Divider style={{ margin: "4px 0" }} />
                 <div
-                  style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}
+                  style={{ display: "flex", flexWrap: "nowrap", padding: 8 }}
                 >
                   <Input
-                    style={{ flex: 'auto' }}
+                    style={{ flex: "auto" }}
                     value={newCategory}
                     onChange={(event) => {
                       setNewCategory(event.target.value);
@@ -130,7 +164,7 @@ const SkillsetsForm = () => {
                   />
                   <Button
                     style={{ marginLeft: 5 }}
-                    onClick={addItem}
+                    onClick={addCategory}
                     icon={<PlusOutlined />}
                   />
                 </div>

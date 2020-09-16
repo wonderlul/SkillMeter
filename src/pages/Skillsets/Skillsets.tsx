@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
-import CSkillsList from '../../components/CSkillsList/CSkillsList';
+import CSkillsList from "../../components/CSkillsList/CSkillsList";
 
-import {
-  getAllSkills,
-  deleteSkill as deleteSkillSvc,
-} from '../../services/skillsSvc';
-import { ISkills } from '../../models/ISkills';
+import { getAllSkills, deleteSkill } from "../../services/skillsSvc";
+import { IGetSkills, ISkills, ISkillsDTO, ISort } from "../../models/ISkills";
 
-import { PageHeader, Button, Popconfirm, message } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { PageHeader, Button } from "antd";
 
 export const Skillsets = () => {
   const history = useHistory();
@@ -18,35 +14,31 @@ export const Skillsets = () => {
   const [skills, setSkills] = useState<ISkills[]>([]);
   const [skillsAmount, setSkillsAmount] = useState(0);
   const [page, setPage] = useState(1);
-  const [skillToDeleted, setSkillToDeleted] = useState<ISkills>();
 
-  const config = async () => {
-    const skillsData = await getAllSkills(page);
-    setSkills(skillsData.skills);
-    setSkillsAmount(skillsData.count);
+  const getSkillsData = async (currentPage?: number) => {
+    try {
+      if (currentPage) {
+        setPage(currentPage);
+      } else {
+        const skillsData: IGetSkills = await getAllSkills(page);
+        setSkills(skillsData.skills);
+        setSkillsAmount(skillsData.count);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     (async () => {
-      await config();
+      try {
+        await getSkillsData();
+      } catch (e) {
+        console.log(e);
+      }
     })();
   }, [page]);
-
-  const pageHandler = (page: number) => {
-    setPage(page);
-  };
-
-  const deleteSkill = async (skill: string) => {
-    const response = await deleteSkillSvc(skill);
-    if (response) {
-      message.success(`Deleted "${skillToDeleted?.name}" skill.`);
-      await config();
-    } else {
-      message.error('Something goes wrong. Please try again.');
-    }
-    setSkillToDeleted(undefined);
-  };
 
   return (
     <>
@@ -58,32 +50,18 @@ export const Skillsets = () => {
             type="primary"
             shape="round"
             onClick={() => {
-              history.push('skills/add');
+              history.push("skills/add");
             }}
           >
             Add skill
           </Button>
         }
       />
-      <Popconfirm
-        icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-        style={{ position: 'absolute' }}
-        visible={!!skillToDeleted}
-        title={`Are you sure delete ${skillToDeleted?.name}?`}
-        onConfirm={() => {
-          deleteSkill(skillToDeleted?._id!);
-        }}
-        onCancel={() => {
-          setSkillToDeleted(undefined);
-        }}
-        okText="Yes"
-        cancelText="No"
-      />
+
       <CSkillsList
+        getSkillsData={getSkillsData}
         skills={skills}
         skillsAmount={skillsAmount}
-        pageHandler={pageHandler}
-        deleteCallbackFunction={setSkillToDeleted}
       />
     </>
   );

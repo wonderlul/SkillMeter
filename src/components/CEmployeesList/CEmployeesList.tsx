@@ -18,11 +18,10 @@ const getYear = (date: string) => new Date(date).getFullYear();
 const getFullDate = (date: string) => new Date(date).toLocaleDateString();
 
 const CEmployeesList: FC<{
+  getEmployeesData: Function;
   employees: IEmployee[];
   employeesAmount: number;
-  flagHandler: Function;
-  pageHandler: Function;
-}> = ({ employees, flagHandler, employeesAmount, pageHandler }) => {
+}> = ({ getEmployeesData, employees, employeesAmount }) => {
   const employeeData = employees.map((employee, index) => ({
     id: employee._id,
     key: `${index}${employee.name}`,
@@ -160,7 +159,7 @@ const CEmployeesList: FC<{
             openNotificationFailed();
           }
           setUserToDelete(undefined);
-          flagHandler();
+          getEmployeesData();
         }}
         onCancel={() => {
           setUserToDelete(undefined);
@@ -179,8 +178,7 @@ const CEmployeesList: FC<{
           pageSize: 5,
           total: employeesAmount,
           onChange: (page) => {
-            pageHandler(page);
-            flagHandler();
+            getEmployeesData(page);
           },
         }}
       />

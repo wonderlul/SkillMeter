@@ -1,45 +1,46 @@
-import React, { FC } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { FC, useState } from "react";
+import { useHistory } from "react-router-dom";
 
-import { ISkills } from '../../models/ISkills';
+import { ISkills, ISkillsDTO } from "../../models/ISkills";
 
-import { Table, Button } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Table, Button, notification, Modal } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { deleteSkill } from "../../services/skillsSvc";
 
 export interface ISkillsList {
+  getSkillsData: Function;
   skills: ISkills[];
   skillsAmount: number;
-  deleteCallbackFunction: Function;
-  pageHandler: Function;
 }
 
 const CSkillList: FC<ISkillsList> = ({
+  getSkillsData,
   skills,
   skillsAmount,
-  pageHandler,
-  deleteCallbackFunction = () => {},
 }) => {
   const history = useHistory();
 
+  const [skillToDelete, setSkillToDelete] = useState<ISkills>();
+
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
     },
     {
-      title: 'Weight',
-      dataIndex: 'weight',
-      key: 'weight',
+      title: "Weight",
+      dataIndex: "weight",
+      key: "weight",
     },
     {
-      title: 'Actions',
-      key: 'action',
+      title: "Actions",
+      key: "action",
       render: (date: string, record: ISkills) => (
         <>
           <Button
@@ -53,8 +54,7 @@ const CSkillList: FC<ISkillsList> = ({
             type="ghost"
             danger
             onClick={() => {
-              console.log(record);
-              deleteCallbackFunction(record);
+              setSkillToDelete(record);
             }}
             icon={<DeleteOutlined />}
           />
@@ -62,8 +62,41 @@ const CSkillList: FC<ISkillsList> = ({
       ),
     },
   ];
+
+  const openNotificationFailed = (): void =>
+    notification.error({
+      message: "Error!",
+      description: "Something went wrong. Please try again. ",
+    });
+
+  const openNotificationSuccess = (skill: ISkillsDTO): void => {
+    notification.success({
+      message: "Success!",
+      description: `You have successfully deleted skill ${skill.name}`,
+    });
+  };
   return (
     <>
+      <Modal
+        title="Delete skill"
+        visible={!!skillToDelete}
+        onOk={async () => {
+          const deletedSkill = await deleteSkill(skillToDelete?._id!);
+
+          if (deletedSkill) {
+            openNotificationSuccess(deletedSkill!);
+          } else {
+            openNotificationFailed();
+          }
+          setSkillToDelete(undefined);
+          getSkillsData();
+        }}
+        onCancel={() => {
+          setSkillToDelete(undefined);
+        }}
+      >
+        <p>Are you sure you want to delete skill {skillToDelete?.name}?</p>
+      </Modal>
       <Table
         columns={columns}
         dataSource={skills}
@@ -72,7 +105,7 @@ const CSkillList: FC<ISkillsList> = ({
           pageSize: 5,
           total: skillsAmount,
           onChange: (page) => {
-            pageHandler(page);
+            getSkillsData(page);
           },
         }}
       />
