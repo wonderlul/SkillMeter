@@ -32,6 +32,9 @@ import {
   positionsValues,
 } from "../../services/employeesSvc";
 
+// import { getAllSkillsToForm } from "../../services/skillsSvc";
+// import { ISkills } from "../../models/ISkills";
+
 const { Option } = Select;
 
 const EmployeesForm = () => {
@@ -68,9 +71,15 @@ const EmployeesForm = () => {
   >(0);
   const [tags, setTags] = useState<string[]>([]);
   const [employeePhoto, setEmployeePhoto] = useState("");
+  // const [skills, setSkills] = useState<ISkills[]>([]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
+    // (async () => {
+    //   const { skills } = await getAllSkillsToForm();
+    //   setSkills(skills);
+    // })();
+
     if (id) {
       (async () => {
         const employee: IEmployeeForm = await getEmployee(id);
@@ -221,6 +230,18 @@ const EmployeesForm = () => {
               ))}
             </Select>
           </Form.Item>
+
+          {/* <Form.Item name="skills" label="Skills" rules={[{ required: true }]}>
+            <Select
+              mode="multiple"
+              placeholder="Select the employee skills"
+              allowClear
+            >
+              {skills!.map((skill) => (
+                <Option value={skill.name}>{skill.name}</Option>
+              ))}
+            </Select>
+          </Form.Item> */}
 
           <Form.Item
             name="position"

@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { ISkills } from "../../skills/models/skills.model";
+// import { ISkills } from "../../skills/models/skills.model";
 
 export enum ELevels {
   TRAINEE,
@@ -26,7 +26,7 @@ export interface IEmployee extends Document {
   position: EPositions;
   photo: string;
   project?: string;
-  skills: ISkills[];
+  // skills: ISkills[];
 }
 
 const EmployeeSchema: Schema = new Schema({
@@ -39,12 +39,12 @@ const EmployeeSchema: Schema = new Schema({
   position: { type: EPositions, required: true },
   photo: { type: String, required: true },
   project: { type: String, required: false },
-  skills: [
-    {
-      ref: "skills",
-      type: mongoose.Schema.Types.ObjectId,
-    },
-  ],
+  // skills: [
+  //   {
+  //     ref: "skills",
+  //     type: mongoose.Schema.Types.ObjectId,
+  //   },
+  // ],
 });
 
 export default mongoose.model<IEmployee>("employees", EmployeeSchema);

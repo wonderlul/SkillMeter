@@ -26,6 +26,7 @@ const SkillsetsForm = () => {
   });
 
   const onWeightChange = () => {};
+
   const addItem = () => {
     const newCategories = Array.from(
       new Set([...configForm.categories, newCategory])
@@ -76,7 +77,6 @@ const SkillsetsForm = () => {
       history.push('/skills');
     }
   };
-
   return (
     <>
       <Form
@@ -161,5 +161,4 @@ const SkillsetsForm = () => {
     </>
   );
 };
-
 export default SkillsetsForm;

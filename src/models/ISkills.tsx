@@ -1,3 +1,19 @@
+export enum ESortSkills {
+  NAME,
+  CATEGORY,
+  WEIGHT,
+}
+
+export enum ESortSkillsDirection {
+  ASCEND = 1,
+  DESCEND = -1,
+}
+
+export interface ISort {
+  tag: ESortSkills;
+  direction: ESortSkillsDirection;
+}
+
 export enum ESkills {
   ZERO,
   ONE,

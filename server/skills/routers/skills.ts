@@ -2,6 +2,12 @@ import express, { Request, Response, NextFunction } from 'express';
 import SkillsModel, { ISkills } from '../models/skills.model';
 import isSkillMiddleware from '../middlewares/isSkill';
 
+export interface IGetSkills {
+  page?: number;
+  sort?: string;
+  order?: number;
+}
+
 const router = express.Router();
 
 router.get(
@@ -9,27 +15,25 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       let skills: ISkills[];
-      if (req.query.page) {
-        const { page = 1 } = req.query;
-        const limit = 5;
 
+      if (req.query.page || req.query.tag || req.query.direction) {
+        const { page = 1, sort = '_id', order = -1 }: IGetSkills = req.query;
+
+        const limit = 5;
         skills = await SkillsModel.find()
           .limit(limit)
           .skip((+page - 1) * limit)
-          .sort({ _id: -1 });
+          .sort({ [sort]: order });
       } else {
         skills = await SkillsModel.find();
       }
-
       const count = await SkillsModel.countDocuments();
-
       res.send({ skills, count });
     } catch (e) {
       next(e);
     }
   }
 );
-
 router.get(
   '/skills/:id',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -42,7 +46,6 @@ router.get(
     }
   }
 );
-
 router.post(
   '/skills',
   isSkillMiddleware,
@@ -57,7 +60,6 @@ router.post(
     }
   }
 );
-
 router.patch(
   '/skills/:id',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -72,7 +74,6 @@ router.patch(
     }
   }
 );
-
 router.delete(
   '/skills/:id',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -85,5 +86,4 @@ router.delete(
     }
   }
 );
-
 export default router;
