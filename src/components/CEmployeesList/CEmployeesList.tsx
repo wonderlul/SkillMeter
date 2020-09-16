@@ -1,16 +1,15 @@
 import React, { FC, useState } from "react";
 import { NavLink } from "react-router-dom";
 
-import { IEmployee, IEmployeeForm } from "../../models/IEmployee";
+import { IEmployee } from "../../models/IEmployee";
 
 import { Tag, Table, Avatar, Button, Modal, notification } from "antd";
 import { UserOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import styles from "./CEmployeesTable.module.scss";
+import styles from "./CEmployeesList.module.scss";
 
 import {
   deleteEmployee,
-  getEmployee,
   levelsMap,
   positionsMap,
 } from "../../services/employeesSvc";
@@ -18,27 +17,25 @@ import {
 const getYear = (date: string) => new Date(date).getFullYear();
 const getFullDate = (date: string) => new Date(date).toLocaleDateString();
 
-const CEmployeesTable: FC<{
+const CEmployeesList: FC<{
   employees: IEmployee[];
+  employeesAmount: number;
   flagHandler: Function;
-}> = ({ employees, flagHandler }) => {
-  const employeeData = employees
-    .sort((a, b) => {
-      return getYear(b.startWorkDate) - getYear(a.startWorkDate);
-    })
-    .map((employee, index) => ({
-      id: employee._id,
-      key: `${index}${employee.name}`,
-      photo: employee.photo,
-      name: employee.name,
-      surname: employee.surname,
-      startWorkDate: getYear(employee.startWorkDate),
-      evaluationDate: getFullDate(employee.evaluationDate),
-      tags: employee.tags,
-      level: levelsMap(employee.level).value,
-      position: positionsMap(employee.position).value,
-      project: employee.project,
-    }));
+  pageHandler: Function;
+}> = ({ employees, flagHandler, employeesAmount, pageHandler }) => {
+  const employeeData = employees.map((employee, index) => ({
+    id: employee._id,
+    key: `${index}${employee.name}`,
+    photo: employee.photo,
+    name: employee.name,
+    surname: employee.surname,
+    startWorkDate: getYear(employee.startWorkDate),
+    evaluationDate: getFullDate(employee.evaluationDate),
+    tags: employee.tags,
+    level: levelsMap(employee.level).value,
+    position: positionsMap(employee.position).value,
+    project: employee.project,
+  }));
 
   const [userToDelete, setUserToDelete] = useState<typeof employeeData[0]>();
 
@@ -66,32 +63,32 @@ const CEmployeesTable: FC<{
       width: 100,
     },
     {
-      title: "Start working",
+      title: "Started working",
       dataIndex: "startWorkDate",
-      width: 100,
+      width: 150,
       // defaultSortOrder: "descend",
-      sorter: {
-        compare: (a: any, b: any) => {
-          return a.startWorkDate - b.startWorkDate;
-        },
-        multiple: 1,
-        sortDirections: ["descend", "ascend"],
-      },
+      // sorter: {
+      //   compare: (a: any, b: any) => {
+      //     return a.startWorkDate - b.startWorkDate;
+      //   },
+      //   multiple: 1,
+      //   sortDirections: ["descend", "ascend"],
+      // },
     },
     {
       title: "Last evaluation",
       dataIndex: "evaluationDate",
-      width: 100,
+      width: 150,
     },
     {
       title: "Project",
       dataIndex: "project",
-      width: 150,
+      width: 100,
     },
     {
       title: "Tags",
       dataIndex: "tags",
-      width: 150,
+      width: 100,
       render: (tags: string[]) => (
         <>
           {tags.map((tag) => (
@@ -110,26 +107,27 @@ const CEmployeesTable: FC<{
     {
       title: "Position",
       dataIndex: "position",
-      width: 150,
+      width: 100,
     },
     {
       title: "Actions",
       dataIndex: "id",
 
-      width: 100,
+      width: 150,
       render: (id: string, record: typeof employeeData[0]) => (
         <>
           <NavLink to={`/employees/${id}`}>
-            <EditOutlined />
+            <Button type="ghost" icon={<EditOutlined />} />
           </NavLink>
-          <div
-            className={styles.delete}
+          <Button
+            style={{ marginLeft: 5 }}
+            type="ghost"
+            danger
             onClick={() => {
               setUserToDelete(record);
             }}
-          >
-            <DeleteOutlined />
-          </div>
+            icon={<DeleteOutlined />}
+          />
         </>
       ),
     },
@@ -162,31 +160,32 @@ const CEmployeesTable: FC<{
             openNotificationFailed();
           }
           setUserToDelete(undefined);
-          flagHandler(true);
+          flagHandler();
         }}
         onCancel={() => {
           setUserToDelete(undefined);
         }}
       >
         <p>
-          Are you sure you want to delete employee {userToDelete?.name}{" "}
+          Are you sure you want to delete employee {userToDelete?.name}
           {userToDelete?.surname}?
         </p>
       </Modal>
-      <NavLink className={styles.tableButton} to="/employees/add">
-        <Button type="primary" shape="round">
-          Add employee
-        </Button>
-      </NavLink>
+
       <Table
         columns={columns}
         dataSource={employeeData}
-        pagination={{ pageSize: 5 }}
-        // onChange={onChange}
-        // scroll={{ y: 240 }}
+        pagination={{
+          pageSize: 5,
+          total: employeesAmount,
+          onChange: (page) => {
+            pageHandler(page);
+            flagHandler();
+          },
+        }}
       />
     </div>
   );
 };
 
-export default CEmployeesTable;
+export default CEmployeesList;

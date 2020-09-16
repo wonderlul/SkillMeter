@@ -1,6 +1,0 @@
-export enum EPositions {
-  SOFTWARE_DEVELOPER,
-  QA,
-  PROJECT_MANAGER,
-  NOT_DEFINED,
-}

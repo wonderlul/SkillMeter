@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory, Redirect } from "react-router-dom";
 
-import styles from "./CForm.module.scss";
+import styles from "./EmployeesForm.module.scss";
 
 import { IEmployeeDTO, IEmployeeForm } from "../../models/IEmployee";
 
@@ -17,7 +17,10 @@ import {
 import { PlusOutlined, LeftOutlined } from "@ant-design/icons";
 import moment from "moment";
 
-import { CAvatarUpload, uploadImage } from "../CAvatarUpload/CAvatarUpload";
+import {
+  CAvatarUpload,
+  uploadImage,
+} from "../../components/CAvatarUpload/CAvatarUpload";
 
 import {
   getEmployee,
@@ -29,9 +32,12 @@ import {
   positionsValues,
 } from "../../services/employeesSvc";
 
+// import { getAllSkillsToForm } from "../../services/skillsSvc";
+// import { ISkills } from "../../models/ISkills";
+
 const { Option } = Select;
 
-const CForm = () => {
+const EmployeesForm = () => {
   //Route
   interface ParamTypes {
     id: string;
@@ -65,9 +71,15 @@ const CForm = () => {
   >(0);
   const [tags, setTags] = useState<string[]>([]);
   const [employeePhoto, setEmployeePhoto] = useState("");
+  // const [skills, setSkills] = useState<ISkills[]>([]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
+    // (async () => {
+    //   const { skills } = await getAllSkillsToForm();
+    //   setSkills(skills);
+    // })();
+
     if (id) {
       (async () => {
         const employee: IEmployeeForm = await getEmployee(id);
@@ -121,14 +133,15 @@ const CForm = () => {
     };
 
     if (id) {
-      const response = updateEmployee(id, formData);
+      const response = await updateEmployee(id, formData);
       if (response) {
         openNotificationSuccess(formData);
       } else {
         openNotificationFailed();
       }
     } else {
-      const response = addEmployee(formData);
+      const response = await addEmployee(formData);
+
       if (response) {
         openNotificationSuccess(formData);
       } else {
@@ -217,6 +230,18 @@ const CForm = () => {
               ))}
             </Select>
           </Form.Item>
+
+          {/* <Form.Item name="skills" label="Skills" rules={[{ required: true }]}>
+            <Select
+              mode="multiple"
+              placeholder="Select the employee skills"
+              allowClear
+            >
+              {skills!.map((skill) => (
+                <Option value={skill.name}>{skill.name}</Option>
+              ))}
+            </Select>
+          </Form.Item> */}
 
           <Form.Item
             name="position"
@@ -320,4 +345,4 @@ const CForm = () => {
   );
 };
 
-export default CForm;
+export default EmployeesForm;
