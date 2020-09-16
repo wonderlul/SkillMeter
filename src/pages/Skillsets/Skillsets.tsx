@@ -3,7 +3,6 @@ import CSkillsList from "../../components/CSkillsList/CSkillsList";
 import { getAllSkills } from "../../services/skillsSvc";
 import { ISkills } from "../../models/ISkills";
 import { PageHeader, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 
 export const Skillsets = () => {

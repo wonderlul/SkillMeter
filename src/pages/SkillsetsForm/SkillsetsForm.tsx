@@ -1,28 +1,31 @@
-import React, { FC, useEffect, useState } from "react";
-import { Form, Input, Button, Select, Divider } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, Select, Divider, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-
 import {
   addSkill,
-  getAllSkills,
-  getCategories,
+  getSkill,
   getConfigFormData,
+  IConfigFormDate,
+  updateSkill,
 } from "../../services/skillsSvc";
-
 import { ISkillsDTO } from "../../models/ISkills";
-
 import { useParams } from "react-router-dom";
 
 const SkillsetsForm = () => {
   const [form] = Form.useForm();
   const { Option } = Select;
-
   const [newCategory, setNewCategory] = useState<string>("");
-  const [configForm, setConfigForm] = useState(getConfigFormData());
+  const [configForm, setConfigForm] = useState<IConfigFormDate>({
+    categories: [],
+    weights: [],
+  });
 
   const onWeightChange = () => {};
+
   const addItem = () => {
-    const newCategories = [...configForm.categories, newCategory as string];
+    const newCategories = Array.from(
+      new Set([...configForm.categories, newCategory])
+    );
     setConfigForm({ ...configForm, categories: newCategories });
   };
 
@@ -31,22 +34,29 @@ const SkillsetsForm = () => {
   }
   let { id } = useParams<ParamTypes>();
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const skill: ISkill | undefined = await getSkill(id);
-  //     if (skill) {
-  //       form.setFieldsValue(skill);
-  //     }
-  //   })();
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      const config = await getConfigFormData();
+      if (config) {
+        setConfigForm(config);
+      }
+      if (id) {
+        const skill = await getSkill(id);
+        form.setFieldsValue(skill);
+      }
+    })();
+  }, []);
 
   const onFinish = async (values: ISkillsDTO) => {
+    let response: any;
     if (id) {
+      response = await updateSkill(id, values);
+      console.log(response);
     } else {
-      const response = await addSkill(values);
+      response = await addSkill(values);
+      console.log(response);
     }
   };
-
   return (
     <>
       <Form
@@ -131,5 +141,4 @@ const SkillsetsForm = () => {
     </>
   );
 };
-
 export default SkillsetsForm;
