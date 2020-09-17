@@ -8,7 +8,7 @@ import skillsRouter from './skills/routers/skills';
 
 require('dotenv').config();
 
-function run() {
+(() => {
   if (!process.env.MONGODB_CONNECTION) {
     console.error('MongoDB is not configured');
     return;
@@ -35,8 +35,7 @@ function run() {
 
   app.listen(process.env.PORT, () => {
     console.log(
-      `⚡️[server]: Server is running at http://localhost:${process.env.PORT}`
+      `⚡️[server]⚡️: Server is running at \u269D \u269D http://localhost:${process.env.PORT} \u269D \u269D`
     );
   });
-}
-run();
+})();

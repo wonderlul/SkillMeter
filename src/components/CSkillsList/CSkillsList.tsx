@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ISkills, ISkillsDTO } from '../../models/ISkills';
 
-import { Table, Button, notification, Modal } from 'antd';
+import { Table, Button, notification, Modal, Space } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { deleteSkill } from '../../services/skillsSvc';
 import { TablePaginationConfig } from 'antd/lib/table';
@@ -49,15 +49,16 @@ const CSkillList: FC<ISkillsList> = ({
       title: 'Actions',
       key: 'action',
       render: (date: string, record: ISkills) => (
-        <>
+        <Space>
           <Button
+            title={`Edit: ${record.name}`}
             type="ghost"
             icon={<EditOutlined />}
             onClick={() => history.push(`/skills/${record._id}`)}
           />
 
           <Button
-            style={{ marginLeft: 5 }}
+            title={`Delete: ${record.name}`}
             type="ghost"
             danger
             onClick={() => {
@@ -65,7 +66,7 @@ const CSkillList: FC<ISkillsList> = ({
             }}
             icon={<DeleteOutlined />}
           />
-        </>
+        </Space>
       ),
     },
   ];

@@ -1,18 +1,18 @@
-import React, { FC, useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { FC, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { IEmployee } from "../../models/IEmployee";
+import { IEmployee } from '../../models/IEmployee';
 
-import { Tag, Table, Avatar, Button, Modal, notification } from "antd";
-import { UserOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Tag, Table, Avatar, Button, Modal, notification, Space } from 'antd';
+import { UserOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
-import styles from "./CEmployeesList.module.scss";
+import styles from './CEmployeesList.module.scss';
 
 import {
   deleteEmployee,
   levelsMap,
   positionsMap,
-} from "../../services/employeesSvc";
+} from '../../services/employeesSvc';
 
 const getYear = (date: string) => new Date(date).getFullYear();
 const getFullDate = (date: string) => new Date(date).toLocaleDateString();
@@ -22,9 +22,10 @@ const CEmployeesList: FC<{
   employees: IEmployee[];
   employeesAmount: number;
 }> = ({ getEmployeesData, employees, employeesAmount }) => {
+  const history = useHistory();
+
   const employeeData = employees.map((employee, index) => ({
     id: employee._id,
-    key: `${index}${employee.name}`,
     photo: employee.photo,
     name: employee.name,
     surname: employee.surname,
@@ -40,9 +41,8 @@ const CEmployeesList: FC<{
 
   const columns = [
     {
-      title: "Photo",
-      dataIndex: "photo",
-      width: 80,
+      title: 'Photo',
+      dataIndex: 'photo',
       render: (photo: string) => {
         return photo ? (
           <Avatar shape="square" size="large" src={photo} />
@@ -52,42 +52,34 @@ const CEmployeesList: FC<{
       },
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      width: 100,
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: "Surname",
-      dataIndex: "surname",
-      width: 100,
+      title: 'Surname',
+      dataIndex: 'surname',
+      key: 'surname',
     },
     {
-      title: "Started working",
-      dataIndex: "startWorkDate",
-      width: 150,
-      // defaultSortOrder: "descend",
-      // sorter: {
-      //   compare: (a: any, b: any) => {
-      //     return a.startWorkDate - b.startWorkDate;
-      //   },
-      //   multiple: 1,
-      //   sortDirections: ["descend", "ascend"],
-      // },
+      title: 'Started working',
+      dataIndex: 'startWorkDate',
+      key: 'startWorkDate',
     },
     {
-      title: "Last evaluation",
-      dataIndex: "evaluationDate",
-      width: 150,
+      title: 'Last evaluation',
+      dataIndex: 'evaluationDate',
+      key: 'evaluationDate',
     },
     {
-      title: "Project",
-      dataIndex: "project",
-      width: 100,
+      title: 'Project',
+      dataIndex: 'project',
+      key: 'project',
     },
     {
-      title: "Tags",
-      dataIndex: "tags",
-      width: 100,
+      title: 'Tags',
+      dataIndex: 'tags',
+      key: 'tags',
       render: (tags: string[]) => (
         <>
           {tags.map((tag) => (
@@ -99,27 +91,32 @@ const CEmployeesList: FC<{
       ),
     },
     {
-      title: "Level",
-      dataIndex: "level",
-      width: 100,
+      title: 'Level',
+      dataIndex: 'level',
+      key: 'level',
     },
     {
-      title: "Position",
-      dataIndex: "position",
-      width: 100,
+      title: 'Position',
+      dataIndex: 'position',
+      key: 'position',
     },
     {
-      title: "Actions",
-      dataIndex: "id",
+      title: 'Actions',
+      dataIndex: 'id',
+      key: 'actions',
 
-      width: 150,
       render: (id: string, record: typeof employeeData[0]) => (
-        <>
-          <NavLink to={`/employees/${id}`}>
-            <Button type="ghost" icon={<EditOutlined />} />
-          </NavLink>
+        <Space>
           <Button
-            style={{ marginLeft: 5 }}
+            title={`Edit: ${record.name}`}
+            type="ghost"
+            icon={<EditOutlined />}
+            onClick={() => {
+              history.push(`/employees/${id}`);
+            }}
+          />
+          <Button
+            title={`Delete: ${record.name}`}
             type="ghost"
             danger
             onClick={() => {
@@ -127,20 +124,20 @@ const CEmployeesList: FC<{
             }}
             icon={<DeleteOutlined />}
           />
-        </>
+        </Space>
       ),
     },
   ];
 
   const openNotificationFailed = () =>
     notification.error({
-      message: "Error!",
-      description: "Something went wrong. Please try again. ",
+      message: 'Error!',
+      description: 'Something went wrong. Please try again. ',
     });
 
   const openNotificationSuccess = (user: typeof employeeData[0]): void => {
     notification.success({
-      message: "Success!",
+      message: 'Success!',
       description: `You have successfully deleted employee ${user.name} ${user.surname}! `,
     });
   };

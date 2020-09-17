@@ -22,15 +22,7 @@ router.get(
           columnKey = '_id',
           order = 'asc',
         }: IGetSkills = req.query;
-        console.log(
-          new Date().toLocaleString(),
-          'page::',
-          page,
-          'columnKey::',
-          columnKey,
-          'order::',
-          order
-        );
+
         const limit = 5;
         skills = await SkillsModel.find()
           .limit(limit)
@@ -38,7 +30,6 @@ router.get(
           .sort({ [columnKey]: order });
       } else {
         skills = await SkillsModel.find();
-        console.log(req, query);
       }
       const count = await SkillsModel.countDocuments();
       res.send({ skills, count });
