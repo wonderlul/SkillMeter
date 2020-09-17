@@ -1,55 +1,63 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import CSkillsList from "../../components/CSkillsList/CSkillsList";
+import CSkillsList from '../../components/CSkillsList/CSkillsList';
+import { getAllSkills } from '../../services/skillsSvc';
+import { IGetSkills, ISkills } from '../../models/ISkills';
 
-import { getAllSkills, deleteSkill } from "../../services/skillsSvc";
-import { IGetSkills, ISkills, ISkillsDTO, ISort } from "../../models/ISkills";
-
-import { PageHeader, Button } from "antd";
+import { PageHeader, Button } from 'antd';
 
 export const Skillsets = () => {
   const history = useHistory();
 
-  const [skills, setSkills] = useState<ISkills[]>([]);
-  const [skillsAmount, setSkillsAmount] = useState(0);
-  const [page, setPage] = useState(1);
-  const [currentOrder, setCurrentOrder] = useState<string | undefined>();
-  const [currentColumnKey, setCurrentColumnKey] = useState<
-    string | undefined
-  >();
+  interface ISkillListConfig {
+    skills: ISkills[];
+    skillsAmount: number;
+    page: number;
+    order: string;
+    columnKey: string;
+  }
 
-  const getSkillsData = async (data: {
-    current?: number;
-    order?: string;
-    columnKey?: string;
+  interface IGetSkillsData {
+    (data: { current?: number; order?: string; columnKey?: string }): Promise<
+      void
+    >;
+  }
+
+  const [skillListConfig, setSkillListConfig] = useState<ISkillListConfig>({
+    skills: [],
+    skillsAmount: 0,
+    page: 0,
+    order: 'ascend',
+    columnKey: 'name',
+  });
+
+  const getSkillsData: IGetSkillsData = async ({
+    current = 1,
+    order = 'ascend',
+    columnKey = 'name',
   }) => {
-    const { current, order, columnKey } = data;
+    let currentPage = current;
+    if (
+      order !== skillListConfig.order ||
+      columnKey !== skillListConfig.columnKey
+    ) {
+      currentPage = 1;
+    }
 
     try {
-      if (order !== currentOrder || columnKey !== currentColumnKey) {
-        setCurrentOrder(order);
-        setCurrentColumnKey(columnKey);
-        setPage(1);
-        const skillsData: IGetSkills = await getAllSkills(1, {
-          order,
-          columnKey,
-        });
-        setSkills(skillsData.skills);
-        setSkillsAmount(skillsData.count);
-      } else if (current) {
-        setPage(current);
-        const skillsData: IGetSkills = await getAllSkills(current, {
-          order,
-          columnKey,
-        });
-        setSkills(skillsData.skills);
-        setSkillsAmount(skillsData.count);
-      } else {
-        const skillsData: IGetSkills = await getAllSkills(page);
-        setSkills(skillsData.skills);
-        setSkillsAmount(skillsData.count);
-      }
+      const skillsData: IGetSkills = await getAllSkills(currentPage, {
+        order,
+        columnKey,
+      });
+
+      setSkillListConfig({
+        page: currentPage,
+        skillsAmount: skillsData.count,
+        skills: skillsData.skills,
+        order,
+        columnKey,
+      });
     } catch (e) {
       console.log(e);
     }
@@ -59,7 +67,7 @@ export const Skillsets = () => {
   useEffect(() => {
     (async () => {
       try {
-        if (skills.length === 0) await getSkillsData({});
+        getSkillsData({});
       } catch (e) {
         console.log(e);
       }
@@ -76,7 +84,7 @@ export const Skillsets = () => {
             type="primary"
             shape="round"
             onClick={() => {
-              history.push("skills/add");
+              history.push('skills/add');
             }}
           >
             Add skill
@@ -84,12 +92,7 @@ export const Skillsets = () => {
         }
       />
 
-      <CSkillsList
-        getSkillsData={getSkillsData}
-        skills={skills}
-        skillsAmount={skillsAmount}
-        page={page}
-      />
+      <CSkillsList getSkillsData={getSkillsData} {...skillListConfig} />
     </>
   );
 };

@@ -23,14 +23,13 @@ router.get(
           order = 'asc',
         }: IGetSkills = req.query;
         console.log(
-          '\n\n\n',
-          'page',
+          new Date().toLocaleString(),
+          'page::',
           page,
-          'columnKey',
+          'columnKey::',
           columnKey,
-          'order',
-          order,
-          '\n\n\n'
+          'order::',
+          order
         );
         const limit = 5;
         skills = await SkillsModel.find()
