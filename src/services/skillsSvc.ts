@@ -11,7 +11,8 @@ export const getAllSkills = async (page?: number, sortBy?: ISort) => {
   }
 
   if (sortBy) {
-    const { order, columnKey } = sortBy;
+    let { order, columnKey } = sortBy;
+    order = order === 'ascend' ? 'asc' : 'desc';
     url = url.concat(`columnKey=${columnKey}&order=${order}&`);
   }
 

@@ -24,7 +24,7 @@ export const Skillsets = () => {
     const { current, order, columnKey } = data;
     try {
       if (order && columnKey) {
-        const skillsData: IGetSkills = await getAllSkills(page, {
+        const skillsData: IGetSkills = await getAllSkills(current, {
           order,
           columnKey,
         });

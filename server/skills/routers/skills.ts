@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response, NextFunction, query } from 'express';
 import SkillsModel, { ISkills } from '../models/skills.model';
 import isSkillMiddleware from '../middlewares/isSkill';
 
@@ -39,6 +39,7 @@ router.get(
           .sort({ [columnKey]: order });
       } else {
         skills = await SkillsModel.find();
+        console.log(req, query);
       }
       const count = await SkillsModel.countDocuments();
       res.send({ skills, count });
