@@ -1,11 +1,13 @@
-import React, { FC, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { FC, useState, Key } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { ISkills, ISkillsDTO } from "../../models/ISkills";
+import { ISkills, ISkillsDTO } from '../../models/ISkills';
 
-import { Table, Button, notification, Modal } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { deleteSkill } from "../../services/skillsSvc";
+import { Table, Button, notification, Modal } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { deleteSkill } from '../../services/skillsSvc';
+import { TablePaginationConfig } from 'antd/lib/table';
+import { SorterResult } from 'antd/lib/table/interface';
 
 export interface ISkillsList {
   getSkillsData: Function;
@@ -24,23 +26,26 @@ const CSkillList: FC<ISkillsList> = ({
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: true,
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
+      title: 'Category',
+      dataIndex: 'category',
+      key: 'category',
+      sorter: true,
     },
     {
-      title: "Weight",
-      dataIndex: "weight",
-      key: "weight",
+      title: 'Weight',
+      dataIndex: 'weight',
+      key: 'weight',
+      sorter: true,
     },
     {
-      title: "Actions",
-      key: "action",
+      title: 'Actions',
+      key: 'action',
       render: (date: string, record: ISkills) => (
         <>
           <Button
@@ -65,13 +70,13 @@ const CSkillList: FC<ISkillsList> = ({
 
   const openNotificationFailed = (): void =>
     notification.error({
-      message: "Error!",
-      description: "Something went wrong. Please try again. ",
+      message: 'Error!',
+      description: 'Something went wrong. Please try again. ',
     });
 
   const openNotificationSuccess = (skill: ISkillsDTO): void => {
     notification.success({
-      message: "Success!",
+      message: 'Success!',
       description: `You have successfully deleted skill ${skill.name}`,
     });
   };
@@ -104,9 +109,19 @@ const CSkillList: FC<ISkillsList> = ({
           hideOnSinglePage: true,
           pageSize: 5,
           total: skillsAmount,
-          onChange: (page) => {
-            getSkillsData(page);
-          },
+        }}
+        onChange={(
+          pagination: TablePaginationConfig,
+          filters: Record<string, Key[] | null>,
+          sorter: SorterResult<ISkills> | SorterResult<ISkills>[]
+        ) => {
+          if (!Array.isArray(sorter)) {
+            getSkillsData({
+              current: pagination?.current,
+              order: sorter?.order,
+              columnKey: sorter?.columnKey,
+            });
+          }
         }}
       />
     </>

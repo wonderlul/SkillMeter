@@ -4,8 +4,8 @@ import isSkillMiddleware from '../middlewares/isSkill';
 
 export interface IGetSkills {
   page?: number;
-  sort?: string;
-  order?: number;
+  columnKey?: string;
+  order?: string;
 }
 
 const router = express.Router();
@@ -16,14 +16,27 @@ router.get(
     try {
       let skills: ISkills[];
 
-      if (req.query.page || req.query.tag || req.query.direction) {
-        const { page = 1, sort = '_id', order = -1 }: IGetSkills = req.query;
-
+      if (req.query.page || req.query.columnKey || req.query.order) {
+        const {
+          page = 1,
+          columnKey = '_id',
+          order = 'asc',
+        }: IGetSkills = req.query;
+        console.log(
+          '\n\n\n',
+          'page',
+          page,
+          'columnKey',
+          columnKey,
+          'order',
+          order,
+          '\n\n\n'
+        );
         const limit = 5;
         skills = await SkillsModel.find()
           .limit(limit)
           .skip((+page - 1) * limit)
-          .sort({ [sort]: order });
+          .sort({ [columnKey]: order });
       } else {
         skills = await SkillsModel.find();
       }

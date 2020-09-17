@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import CSkillsList from "../../components/CSkillsList/CSkillsList";
+import CSkillsList from '../../components/CSkillsList/CSkillsList';
 
-import { getAllSkills, deleteSkill } from "../../services/skillsSvc";
-import { IGetSkills, ISkills, ISkillsDTO, ISort } from "../../models/ISkills";
+import { getAllSkills, deleteSkill } from '../../services/skillsSvc';
+import { IGetSkills, ISkills, ISkillsDTO, ISort } from '../../models/ISkills';
 
-import { PageHeader, Button } from "antd";
+import { PageHeader, Button } from 'antd';
 
 export const Skillsets = () => {
   const history = useHistory();
@@ -15,10 +15,23 @@ export const Skillsets = () => {
   const [skillsAmount, setSkillsAmount] = useState(0);
   const [page, setPage] = useState(1);
 
-  const getSkillsData = async (currentPage?: number) => {
+  const getSkillsData = async (data: {
+    current?: number;
+    order?: string;
+    columnKey?: string;
+  }) => {
+    console.log(data);
+    const { current, order, columnKey } = data;
     try {
-      if (currentPage) {
-        setPage(currentPage);
+      if (order && columnKey) {
+        const skillsData: IGetSkills = await getAllSkills(page, {
+          order,
+          columnKey,
+        });
+        setSkills(skillsData.skills);
+        setSkillsAmount(skillsData.count);
+      } else if (current) {
+        setPage(current);
       } else {
         const skillsData: IGetSkills = await getAllSkills(page);
         setSkills(skillsData.skills);
@@ -33,7 +46,7 @@ export const Skillsets = () => {
   useEffect(() => {
     (async () => {
       try {
-        await getSkillsData();
+        await getSkillsData({});
       } catch (e) {
         console.log(e);
       }
@@ -50,7 +63,7 @@ export const Skillsets = () => {
             type="primary"
             shape="round"
             onClick={() => {
-              history.push("skills/add");
+              history.push('skills/add');
             }}
           >
             Add skill
