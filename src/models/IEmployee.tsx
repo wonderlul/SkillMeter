@@ -29,7 +29,6 @@ export interface IEmployee {
 export interface IGetEmployees {
   employees: IEmployee[];
   count: number;
-  currentPage: number;
 }
 
 export type IEmployeeDTO = Omit<IEmployee, "_id">;

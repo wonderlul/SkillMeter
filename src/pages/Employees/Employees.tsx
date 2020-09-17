@@ -15,29 +15,31 @@ export const Employees = () => {
   const [employeesAmount, setEmployeesAmount] = useState(0);
 
   const [page, setPage] = useState(1);
-  const pageHandler = (page: number) => {
-    setPage(page);
-  };
 
-  const [flag, setFlag] = useState(false);
-  const flagHandler = () => {
-    setFlag(!flag);
+  const getEmployeesData = async (currentPage?: number) => {
+    try {
+      if (currentPage) {
+        setPage(currentPage);
+      } else {
+        const employeesData: IGetEmployees = await getAllEmployees(page);
+        setEmployees(employeesData.employees);
+        setEmployeesAmount(employeesData.count);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     (async () => {
       try {
-        const employeesData: IGetEmployees = await getAllEmployees(page);
-
-        setEmployees(employeesData.employees);
-        setEmployeesAmount(employeesData.count);
+        await getEmployeesData();
       } catch (error) {
         console.log(error);
       }
     })();
-    setFlag(false);
-  }, [flag]);
+  }, [page]);
 
   return (
     <>
@@ -57,10 +59,9 @@ export const Employees = () => {
         }
       />
       <CEmployeesList
+        getEmployeesData={getEmployeesData}
         employees={employees}
         employeesAmount={employeesAmount}
-        pageHandler={pageHandler}
-        flagHandler={flagHandler}
       />
     </>
   );

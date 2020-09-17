@@ -2,51 +2,77 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import CSkillsList from '../../components/CSkillsList/CSkillsList';
+import { getAllSkills } from '../../services/skillsSvc';
+import { IGetSkills, ISkills } from '../../models/ISkills';
 
-import {
-  getAllSkills,
-  deleteSkill as deleteSkillSvc,
-} from '../../services/skillsSvc';
-import { ISkills } from '../../models/ISkills';
-
-import { PageHeader, Button, Popconfirm, message } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { PageHeader, Button } from 'antd';
 
 export const Skillsets = () => {
   const history = useHistory();
 
-  const [skills, setSkills] = useState<ISkills[]>([]);
-  const [skillsAmount, setSkillsAmount] = useState(0);
-  const [page, setPage] = useState(1);
-  const [skillToDeleted, setSkillToDeleted] = useState<ISkills>();
+  interface ISkillListConfig {
+    skills: ISkills[];
+    skillsAmount: number;
+    page: number;
+    order: string;
+    columnKey: string;
+  }
 
-  const config = async () => {
-    const skillsData = await getAllSkills(page);
-    setSkills(skillsData.skills);
-    setSkillsAmount(skillsData.count);
+  interface IGetSkillsData {
+    (data: { current?: number; order?: string; columnKey?: string }): Promise<
+      void
+    >;
+  }
+
+  const [skillListConfig, setSkillListConfig] = useState<ISkillListConfig>({
+    skills: [],
+    skillsAmount: 0,
+    page: 0,
+    order: 'ascend',
+    columnKey: 'name',
+  });
+
+  const getSkillsData: IGetSkillsData = async ({
+    current = 1,
+    order = 'ascend',
+    columnKey = 'name',
+  }) => {
+    let currentPage = current;
+    if (
+      order !== skillListConfig.order ||
+      columnKey !== skillListConfig.columnKey
+    ) {
+      currentPage = 1;
+    }
+
+    try {
+      const skillsData: IGetSkills = await getAllSkills(currentPage, {
+        order,
+        columnKey,
+      });
+
+      setSkillListConfig({
+        page: currentPage,
+        skillsAmount: skillsData.count,
+        skills: skillsData.skills,
+        order,
+        columnKey,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     (async () => {
-      await config();
+      try {
+        getSkillsData({});
+      } catch (e) {
+        console.log(e);
+      }
     })();
-  }, [page]);
-
-  const pageHandler = (page: number) => {
-    setPage(page);
-  };
-
-  const deleteSkill = async (skill: string) => {
-    const response = await deleteSkillSvc(skill);
-    if (response) {
-      message.success(`Deleted "${skillToDeleted?.name}" skill.`);
-      await config();
-    } else {
-      message.error('Something goes wrong. Please try again.');
-    }
-    setSkillToDeleted(undefined);
-  };
+  }, []);
 
   return (
     <>
@@ -65,26 +91,8 @@ export const Skillsets = () => {
           </Button>
         }
       />
-      <Popconfirm
-        icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-        style={{ position: 'absolute' }}
-        visible={!!skillToDeleted}
-        title={`Are you sure delete ${skillToDeleted?.name}?`}
-        onConfirm={() => {
-          deleteSkill(skillToDeleted?._id!);
-        }}
-        onCancel={() => {
-          setSkillToDeleted(undefined);
-        }}
-        okText="Yes"
-        cancelText="No"
-      />
-      <CSkillsList
-        skills={skills}
-        skillsAmount={skillsAmount}
-        pageHandler={pageHandler}
-        deleteCallbackFunction={setSkillToDeleted}
-      />
+
+      <CSkillsList getSkillsData={getSkillsData} {...skillListConfig} />
     </>
   );
 };

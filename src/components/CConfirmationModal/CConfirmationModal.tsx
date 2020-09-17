@@ -1,5 +1,5 @@
-import React, { useState, ReactNode, FC } from 'react';
-import { Modal, message } from 'antd';
+import React, { useState, ReactNode, FC } from "react";
+import { Modal, message } from "antd";
 
 export interface IConfirmationModal {
   visible: boolean;
@@ -18,21 +18,19 @@ const CConfirmationModal: FC<IConfirmationModal> = ({
 }) => {
   const [visibleModal, visibleModalChange] = useState<boolean>(visible);
   return (
-    <>
-      <Modal
-        title={title}
-        visible={visibleModal}
-        onOk={onOk}
-        onCancel={(event) => {
-          if (onCancel) {
-            onCancel(event);
-          }
-          visibleModalChange(false);
-        }}
-      >
-        <p>{message}</p>
-      </Modal>
-    </>
+    <Modal
+      title={title}
+      visible={visibleModal}
+      onOk={onOk}
+      onCancel={(event) => {
+        if (onCancel) {
+          onCancel(event);
+        }
+        visibleModalChange(false);
+      }}
+    >
+      <p>{message}</p>
+    </Modal>
   );
 };
 

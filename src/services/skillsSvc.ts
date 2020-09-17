@@ -7,13 +7,13 @@ export const getAllSkills = async (page?: number, sortBy?: ISort) => {
   let url = '';
 
   if (page) {
-    url.concat(`page=${page}&`);
+    url = url.concat(`page=${page}&`);
   }
 
   if (sortBy) {
-    const sort = skillsTagsValues[sortBy.tag];
-    const order = sortBy.direction;
-    url.concat(`sort=${sort}&order=${order}&`);
+    let { order, columnKey } = sortBy;
+    order = order === 'ascend' ? 'asc' : 'desc';
+    url = url.concat(`columnKey=${columnKey}&order=${order}&`);
   }
 
   try {

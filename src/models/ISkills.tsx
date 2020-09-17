@@ -4,14 +4,14 @@ export enum ESortSkills {
   WEIGHT,
 }
 
-export enum ESortSkillsDirection {
-  ASCEND = 1,
-  DESCEND = -1,
-}
+// export enum ESortSkillsDirection {
+//   ASCEND = 1,
+//   DESCEND = -1,
+// }
 
 export interface ISort {
-  tag: ESortSkills;
-  direction: ESortSkillsDirection;
+  order?: string;
+  columnKey?: string;
 }
 
 export enum ESkills {
@@ -25,6 +25,11 @@ export enum ESkills {
   SEVEN,
 }
 
+export interface IGetSkills {
+  skills: ISkills[];
+  count: number;
+}
+
 export interface ISkills {
   _id: string;
   name: string;
@@ -32,4 +37,4 @@ export interface ISkills {
   weight: ESkills;
 }
 
-export type ISkillsDTO = Omit<ISkills, "_id">;
+export type ISkillsDTO = Omit<ISkills, '_id'>;

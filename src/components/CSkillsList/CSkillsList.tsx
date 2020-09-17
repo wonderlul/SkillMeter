@@ -1,41 +1,49 @@
-import React, { FC } from 'react';
+import React, { FC, useState, Key } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ISkills } from '../../models/ISkills';
+import { ISkills, ISkillsDTO } from '../../models/ISkills';
 
-import { Table, Button } from 'antd';
+import { Table, Button, notification, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { deleteSkill } from '../../services/skillsSvc';
+import { TablePaginationConfig } from 'antd/lib/table';
+import { SorterResult } from 'antd/lib/table/interface';
 
 export interface ISkillsList {
+  getSkillsData: Function;
   skills: ISkills[];
   skillsAmount: number;
-  deleteCallbackFunction: Function;
-  pageHandler: Function;
+  page: number;
 }
 
 const CSkillList: FC<ISkillsList> = ({
+  getSkillsData,
   skills,
   skillsAmount,
-  pageHandler,
-  deleteCallbackFunction = () => {},
+  page,
 }) => {
   const history = useHistory();
+
+  const [skillToDelete, setSkillToDelete] = useState<ISkills>();
 
   const columns = [
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      sorter: true,
     },
     {
       title: 'Category',
       dataIndex: 'category',
       key: 'category',
+      sorter: true,
     },
     {
       title: 'Weight',
       dataIndex: 'weight',
       key: 'weight',
+      sorter: true,
     },
     {
       title: 'Actions',
@@ -53,8 +61,7 @@ const CSkillList: FC<ISkillsList> = ({
             type="ghost"
             danger
             onClick={() => {
-              console.log(record);
-              deleteCallbackFunction(record);
+              setSkillToDelete(record);
             }}
             icon={<DeleteOutlined />}
           />
@@ -62,18 +69,63 @@ const CSkillList: FC<ISkillsList> = ({
       ),
     },
   ];
+
+  const openNotificationFailed = (): void =>
+    notification.error({
+      message: 'Error!',
+      description: 'Something went wrong. Please try again. ',
+    });
+
+  const openNotificationSuccess = (skill: ISkillsDTO): void => {
+    notification.success({
+      message: 'Success!',
+      description: `You have successfully deleted skill ${skill.name}`,
+    });
+  };
   return (
     <>
+      <Modal
+        title="Delete skill"
+        visible={!!skillToDelete}
+        onOk={async () => {
+          const deletedSkill = await deleteSkill(skillToDelete?._id!);
+
+          if (deletedSkill) {
+            openNotificationSuccess(deletedSkill!);
+          } else {
+            openNotificationFailed();
+          }
+          setSkillToDelete(undefined);
+          getSkillsData();
+        }}
+        onCancel={() => {
+          setSkillToDelete(undefined);
+        }}
+      >
+        <p>Are you sure you want to delete skill {skillToDelete?.name}?</p>
+      </Modal>
       <Table
+        sortDirections={['ascend', 'descend', 'ascend']}
         columns={columns}
         dataSource={skills}
         pagination={{
           hideOnSinglePage: true,
           pageSize: 5,
           total: skillsAmount,
-          onChange: (page) => {
-            pageHandler(page);
-          },
+          current: page,
+        }}
+        onChange={(
+          pagination: TablePaginationConfig,
+          filters: Record<string, Key[] | null>,
+          sorter: SorterResult<ISkills> | SorterResult<ISkills>[]
+        ) => {
+          if (!Array.isArray(sorter)) {
+            getSkillsData({
+              current: pagination?.current,
+              order: sorter?.order,
+              columnKey: sorter?.columnKey,
+            });
+          }
         }}
       />
     </>
