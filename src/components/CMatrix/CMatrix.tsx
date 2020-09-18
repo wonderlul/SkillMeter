@@ -5,16 +5,20 @@ import { ISkills } from '../../models/ISkills';
 import { IEmployee } from '../../models/IEmployee';
 import { getAllEmployees } from '../../services/employeesSvc';
 
+interface IHeader {
+  [key: string]: string[];
+}
+
+interface IMatrixData {
+  skills?: ISkills[];
+  employees?: IEmployee[];
+  header?: IHeader;
+  skillsNumber?: number;
+}
+
 const CMatrix = () => {
-  const [matrixData, setMatrixData] = useState<{
-    skills?: ISkills[];
-    employees?: IEmployee[];
-    header?: IHeader;
-    skillsNumber?: number;
-  }>({});
-  interface IHeader {
-    [key: string]: string[];
-  }
+  const [matrixData, setMatrixData] = useState<IMatrixData>({});
+
   useEffect(() => {
     (async () => {
       const {
@@ -31,6 +35,7 @@ const CMatrix = () => {
 
         return previous;
       }, {});
+      console.log(header);
       setMatrixData({ skills, employees, header, skillsNumber: count });
     })();
   }, []);

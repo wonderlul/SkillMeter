@@ -97,7 +97,7 @@ const CSkillList: FC<ISkillsList> = ({
             openNotificationFailed();
           }
           setSkillToDelete(undefined);
-          getSkillsData();
+          getSkillsData({});
         }}
         onCancel={() => {
           setSkillToDelete(undefined);
