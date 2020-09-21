@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
-import { Story, Meta } from "@storybook/react/types-6-0";
+import { Story, Meta } from '@storybook/react/types-6-0';
 
-import { IEmployee, ELevels } from "../../models/IEmployee";
-import { Table } from "antd";
-import { CUserSignature, IUserSignature } from "./CUserSignature";
+import { IEmployee, ELevels } from '../../models/IEmployee';
+import { Table } from 'antd';
+import CUserSignature, { IUserSignature } from './CUserSignature';
 
 export default {
-  title: "Storybook/CUserSignature",
+  title: 'Storybook/CUserSignature',
   component: CUserSignature,
 } as Meta;
 
@@ -17,14 +17,14 @@ const Template: Story<IUserSignature> = (args) => (
 
 export const CUserSignatureWithoutAvatar = Template.bind({});
 CUserSignatureWithoutAvatar.args = {
-  name: "John",
-  lastName: "Doe",
+  name: 'John',
+  lastName: 'Doe',
 };
 
 export const CUserSignatureWithAvatar = Template.bind({});
 CUserSignatureWithAvatar.args = {
-  name: "John",
-  lastName: "Doe",
+  name: 'John',
+  lastName: 'Doe',
   urlAvatar:
-    "https://pbs.twimg.com/profile_images/762226166736547840/hQXGSqX6_bigger.jpg",
+    'https://pbs.twimg.com/profile_images/762226166736547840/hQXGSqX6_bigger.jpg',
 };

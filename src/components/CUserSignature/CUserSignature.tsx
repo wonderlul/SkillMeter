@@ -1,7 +1,7 @@
-import React, { PropsWithChildren } from "react";
-import styles from "./CUser.module.scss";
-import { Row, Col, Avatar } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import React, { PropsWithChildren } from 'react';
+import styles from './CUser.module.scss';
+import { Row, Col, Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 export interface IUserSignature {
   name: string;
@@ -9,21 +9,18 @@ export interface IUserSignature {
   urlAvatar?: string;
 }
 
-export const CUserSignature = ({
-  name,
-  lastName,
-  urlAvatar,
-}: IUserSignature) => {
+const CUserSignature = ({ name, lastName, urlAvatar }: IUserSignature) => {
   const avatar = urlAvatar ? (
-    <Avatar size="large" src={urlAvatar} />
+    <Avatar size="large" src={urlAvatar} shape="square" />
   ) : (
-    <Avatar size="large" icon={<UserOutlined />} />
+    <Avatar size="large" icon={<UserOutlined />} shape="square" />
   );
 
   return (
     <Row gutter={12} align="middle">
-      <Col span={4}>{avatar}</Col>
-      <Col span={8}>{`${name} ${lastName}`}</Col>
+      <Col className="gutter-row">{avatar}</Col>
+      <Col className="gutter-row">{`${name} ${lastName}`}</Col>
     </Row>
   );
 };
+export default CUserSignature;

@@ -5,6 +5,8 @@ import { ISkills } from '../../models/ISkills';
 import { IEmployee } from '../../models/IEmployee';
 import { getAllEmployees } from '../../services/employeesSvc';
 
+import CMatrixRow from '../CMatrixRow/CMatrixRow';
+
 interface IHeader {
   [key: string]: string[];
 }
@@ -31,7 +33,7 @@ const CMatrix = () => {
       const header = skills.reduce<IHeader>((previous, current) => {
         !!previous[current.category]
           ? previous[current.category].push(current.name)
-          : (previous[current.category] = []);
+          : (previous[current.category] = [current.name]);
 
         return previous;
       }, {});
@@ -39,7 +41,12 @@ const CMatrix = () => {
       setMatrixData({ skills, employees, header, skillsNumber: count });
     })();
   }, []);
-  return <Space>MAtrix</Space>;
+
+  return (
+    <Space>
+      <CMatrixRow />
+    </Space>
+  );
 };
 
 export default CMatrix;
