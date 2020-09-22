@@ -5,6 +5,7 @@ import CCircle, { levelRange } from '../CCircle/CCircle';
 import CUserSignature from '../CUserSignature/CUserSignature';
 import { IEmployee } from '../../models/IEmployee';
 import { ISkills } from '../../models/ISkills';
+import { Dropdown, Menu } from 'antd';
 
 const CMatrixRow: FC<{
   employee: IEmployee;
@@ -17,17 +18,37 @@ const CMatrixRow: FC<{
     let skillEmployee = employee.skills!.find(
       (skillEmp) => skillEmp.skill.name === skill
     );
+    const menu = (
+      <Menu>
+        <Menu.Item>
+          <div
+            className=""
+            onClick={() => {
+              console.log(1);
+            }}
+          >
+            <CCircle level={1} />
+          </div>
+        </Menu.Item>
+        <Menu.Item>
+          <CCircle level={2} />
+        </Menu.Item>
+        <Menu.Item>
+          <CCircle level={3} />
+        </Menu.Item>
+        <Menu.Item>
+          <CCircle level={4} />
+        </Menu.Item>
+      </Menu>
+    );
     return (
-      <div
-        className={style.Cell}
-        onClick={() => {
-          console.log('@@@@', employee._id, skillEmployee, '@@@@');
-        }}
-      >
-        {!!skillEmployee && (
-          <CCircle level={skillEmployee.level as levelRange} />
-        )}
-      </div>
+      <Dropdown overlay={menu} trigger={['click']}>
+        <div className={style.Cell}>
+          {!!skillEmployee && (
+            <CCircle level={skillEmployee.level as levelRange} />
+          )}
+        </div>
+      </Dropdown>
     );
   });
   return (
