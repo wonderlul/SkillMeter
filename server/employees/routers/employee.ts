@@ -1,5 +1,11 @@
 import express, { Request, Response, NextFunction } from "express";
-import EmployeeModel, { IEmployee } from "../models/employee.model";
+import EmployeeModel, {
+  IEmployee,
+  IEmployeeSkills,
+  ISkills,
+} from "../models/employee.model";
+
+import mongoose, { Schema, Document } from "mongoose";
 
 import isEmployeeMiddleware from "../middlewares/isEmployee";
 
@@ -80,16 +86,30 @@ router.patch(
 );
 
 router.patch(
-  "/employees/:employeeId/skill/:skillId",
+  "/employees/:employeeId/skill/:skillObjectId",
   async (req: Request, res: Response, next: NextFunction) => {
-    const { employeeId, skillId } = req.params;
-    const { level } = req.body;
+    const { employeeId, skillObjectId } = req.params;
+    const {
+      skill,
+      level,
+    }: { skill: mongoose.Schema.Types.ObjectId; level: number } = req.body;
+
+    const isSkillObjectId = skillObjectId === "undefined" ? false : true;
 
     try {
-      const response = await EmployeeModel.updateOne(
-        { _id: employeeId, "skills._id": skillId },
-        { $set: { "skills.$.level": level } }
-      );
+      let response;
+
+      if (isSkillObjectId) {
+        response = await EmployeeModel.updateOne(
+          { _id: employeeId, "skills._id": skillObjectId },
+          { $set: { "skills.$.level": level } }
+        );
+      } else {
+        response = await EmployeeModel.updateOne(
+          { _id: employeeId },
+          { $push: { skills: { skill, level } } }
+        );
+      }
 
       res.status(200).send(response);
     } catch (e) {

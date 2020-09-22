@@ -1,7 +1,6 @@
-import React, { FC } from 'react';
-import { ISkills } from '../../models/ISkills';
-import { IHeader } from '../CMatrix/CMatrix';
-import styles from './CMatrixHeader.module.scss';
+import React, { FC } from "react";
+import { IHeader } from "../CMatrix/CMatrix";
+import styles from "./CMatrixHeader.module.scss";
 
 export interface IMatrixSkills {
   header: IHeader;
@@ -23,13 +22,13 @@ const CMatrixHeader: FC<IMatrixSkills> = ({ header, categories }) => {
         const isLong =
           skillsByCategory[category] <= 1 && category.length > 3
             ? `${styles.category}`
-            : '';
+            : "";
 
         return (
           <div key={`${category}${index}`} className={styles.columnWrapper}>
             <div
               className={`${styles.skillsColumnHeader} ${
-                isLong ? styles.longCategory : ''
+                isLong ? styles.longCategory : ""
               }`}
             >
               {category}

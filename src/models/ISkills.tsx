@@ -4,10 +4,13 @@ export enum ESortSkills {
   WEIGHT,
 }
 
-// export enum ESortSkillsDirection {
-//   ASCEND = 1,
-//   DESCEND = -1,
-// }
+export enum ESkillLevel {
+  NOT_AQUIRED,
+  BASIC,
+  INTERMEDIATE,
+  ADVANCED,
+  EXPERT,
+}
 
 export interface ISort {
   order?: string;

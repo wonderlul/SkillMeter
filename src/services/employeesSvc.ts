@@ -4,6 +4,8 @@ import {
   ELevels,
   EPositions,
   IEmployeeSkills,
+  IEmployeeSkillsDTO,
+  ISkills,
 } from "../models/IEmployee";
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
@@ -49,13 +51,18 @@ export const updateEmployee = async (id: string, employee: IEmployeeDTO) => {
 
 export const updateEmployeeSkill = async (
   employeeId: string,
-  skill: IEmployeeSkills
+  skill: ISkills,
+  level: number,
+  skillObject?: IEmployeeSkills
 ) => {
   try {
-    const { data } = await axios.patch(
-      `${SERVER_URL}/employees/${employeeId}/skill/${skill._id}`,
-      skill
+    const {
+      data,
+    } = await axios.patch(
+      `${SERVER_URL}/employees/${employeeId}/skill/${skillObject?._id}`,
+      { skill, level }
     );
+
     return data;
   } catch (error) {
     console.log(error);

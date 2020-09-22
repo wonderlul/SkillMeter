@@ -1,21 +1,20 @@
-import React, { useEffect, useState, FC } from 'react';
-import { getAllSkills } from '../../services/skillsSvc';
-import { ISkills } from '../../models/ISkills';
-import { IEmployee } from '../../models/IEmployee';
-import { getAllEmployees } from '../../services/employeesSvc';
-import style from './CMatrix.module.scss';
+import React, { useEffect, useState, FC } from "react";
+import { getAllSkills } from "../../services/skillsSvc";
+import { ISkills } from "../../models/ISkills";
+import { IEmployee } from "../../models/IEmployee";
+import { getAllEmployees } from "../../services/employeesSvc";
+import style from "./CMatrix.module.scss";
 
-import CMatrixHeader from '../CMatrixHeader/CMatrixHeader';
+import CMatrixHeader from "../CMatrixHeader/CMatrixHeader";
 
-import CMatrixRow from '../CMatrixRow/CMatrixRow';
-import CMatrixRequires from '../CMatrixRequires/CMatrixRequires';
-import { ISkillsList } from '../CSkillsList/CSkillsList';
+import CMatrixRow from "../CMatrixRow/CMatrixRow";
+import CMatrixRequires from "../CMatrixRequires/CMatrixRequires";
 
 export interface IHeader {
   [key: string]: string[];
 }
 
-interface IMatrixData {
+export interface IMatrixData {
   skills?: ISkills[];
   employees?: IEmployee[];
   header?: IHeader;
@@ -26,13 +25,15 @@ const CMatrixRowList: FC<{
   employees: IEmployee[];
   skills: ISkills[];
   skillsSorted: string[];
-}> = ({ employees, skills, skillsSorted }) => {
+  getMatrixData: Function;
+}> = ({ employees, skills, skillsSorted, getMatrixData }) => {
   const rowList = employees.map((employee) => {
     return (
       <CMatrixRow
         employee={employee}
         skills={skills}
         skillsSorted={skillsSorted}
+        getMatrixData={getMatrixData}
       />
     );
   });
@@ -40,17 +41,19 @@ const CMatrixRowList: FC<{
 };
 
 const CMatrix = () => {
-  const [matrixData, setMatrixData] = useState<{
+  interface IMatrixConfig {
     skills?: ISkills[];
     employees?: IEmployee[];
     header?: IHeader;
     skillsNumber?: number;
     categories?: string[];
     skillsSorted?: string[];
-  }>({});
+  }
 
-  useEffect(() => {
-    (async () => {
+  const [matrixData, setMatrixData] = useState<IMatrixConfig>({});
+
+  const getMatrixData = async () => {
+    try {
       const {
         skills,
         count,
@@ -73,13 +76,8 @@ const CMatrix = () => {
       }
       let skillsSorted: string[] = [];
       categories.forEach((category) => {
-        // console.log(skillsSorted, header[category]);
         skillsSorted = skillsSorted.concat(header[category]);
-        // header[category].forEach((skill) => {
-        //   skillsSorted.push(skill);
-        // });
       });
-      console.log(skillsSorted);
 
       setMatrixData({
         skills,
@@ -89,6 +87,18 @@ const CMatrix = () => {
         categories,
         skillsSorted,
       });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        getMatrixData();
+      } catch (e) {
+        console.log(e);
+      }
     })();
   }, []);
 
@@ -110,6 +120,7 @@ const CMatrix = () => {
           employees={matrixData.employees!}
           skills={matrixData.skills!}
           skillsSorted={matrixData.skillsSorted!}
+          getMatrixData={getMatrixData}
         />
       )}
     </div>

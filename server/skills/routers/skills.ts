@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction, query } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import SkillsModel, { ISkills } from "../models/skills.model";
 import isSkillMiddleware from "../middlewares/isSkill";
 

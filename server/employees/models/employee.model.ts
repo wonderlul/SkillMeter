@@ -1,5 +1,22 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { ISkills } from "../../skills/models/skills.model";
+
+export interface ISkills {
+  _id: string;
+  name: string;
+  category: string;
+  weight: ESkills;
+}
+
+export enum ESkills {
+  ZERO,
+  ONE,
+  TWO,
+  THREE,
+  FOUR,
+  FIVE,
+  SIX,
+  SEVEN,
+}
 
 export enum ELevels {
   TRAINEE,
@@ -16,8 +33,8 @@ export enum EPositions {
   NOT_DEFINED,
 }
 
-export interface IEmployeeSkills extends Document {
-  skill: ISkills;
+export interface IEmployeeSkills {
+  skill: mongoose.Schema.Types.ObjectId;
   level: number;
 }
 

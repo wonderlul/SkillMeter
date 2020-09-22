@@ -35,7 +35,7 @@ export interface IEmployee {
   position: EPositions;
   photo: string;
   project?: string;
-  skills?: { skill: ISkills; level: number }[];
+  skills?: IEmployeeSkills[];
 }
 
 export interface IGetEmployees {
@@ -43,7 +43,7 @@ export interface IGetEmployees {
   count: number;
 }
 
-export type IEmployeeDTO = Omit<IEmployee, '_id'>;
+export type IEmployeeDTO = Omit<IEmployee, "_id">;
 
 export interface ISkills {
   _id: string;
@@ -52,7 +52,7 @@ export interface ISkills {
   weight: ESkills;
 }
 
-export type ISkillsDTO = Omit<ISkills, '_id'>;
+export type ISkillsDTO = Omit<ISkills, "_id">;
 
 export interface IEmployeeSkills {
   _id: string;
@@ -60,7 +60,7 @@ export interface IEmployeeSkills {
   level: number;
 }
 
-export type IEmployeeSkillsDTO = Omit<IEmployeeSkills, '_id'>;
+export type IEmployeeSkillsDTO = Omit<IEmployeeSkills, "_id">;
 
 export interface IEmployeeForm {
   name: string;
