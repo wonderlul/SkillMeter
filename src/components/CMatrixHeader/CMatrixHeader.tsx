@@ -27,7 +27,7 @@ const CMatrixHeader: FC<IMatrixSkills> = ({ skills, skillsNumber, header }) => {
     <div className={styles.wrapper}>
       {categories.map((category, index) => {
         const isLong =
-          skillsByCategory[category] <= 1 && category.length > 6
+          skillsByCategory[category] <= 1 && category.length > 3
             ? `${styles.category}`
             : "";
 

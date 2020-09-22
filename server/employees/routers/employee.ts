@@ -13,10 +13,7 @@ router.get(
       const limit = 5;
 
       const employees = await EmployeeModel.find()
-        // .populate({
-        //   path: "skills",
-        //   select: "_id",
-        // })
+        .populate("skills")
         .limit(limit)
         .skip((+page - 1) * limit)
         .sort({ startWorkDate: -1 });
@@ -69,6 +66,25 @@ router.patch(
       const response = await EmployeeModel.findByIdAndUpdate(id, req.body, {
         new: true,
       });
+      res.status(200).send(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.patch(
+  "/employees/:employeeId/skill/:skillId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { employeeId, skillId } = req.params;
+    const { level } = req.body;
+
+    try {
+      const response = await EmployeeModel.updateOne(
+        { _id: employeeId, "skills._id": skillId },
+        { $set: { "skills.$.level": level } }
+      );
+
       res.status(200).send(response);
     } catch (e) {
       next(e);

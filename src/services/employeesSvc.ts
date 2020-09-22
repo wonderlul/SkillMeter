@@ -1,5 +1,10 @@
 import axios from "axios";
-import { IEmployeeDTO, ELevels, EPositions } from "../models/IEmployee";
+import {
+  IEmployeeDTO,
+  ELevels,
+  EPositions,
+  IEmployeeSkills,
+} from "../models/IEmployee";
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
@@ -35,6 +40,21 @@ export const updateEmployee = async (id: string, employee: IEmployeeDTO) => {
     const { data } = await axios.patch(
       `${SERVER_URL}/employees/${id}`,
       employee
+    );
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateEmployeeSkill = async (
+  employeeId: string,
+  skill: IEmployeeSkills
+) => {
+  try {
+    const { data } = await axios.patch(
+      `${SERVER_URL}/employees/${employeeId}/skill/${skill._id}`,
+      skill
     );
     return data;
   } catch (error) {
