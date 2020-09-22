@@ -13,7 +13,13 @@ router.get(
       const limit = 5;
 
       const employees = await EmployeeModel.find()
-        .populate("skills")
+        .populate({
+          path: "skills",
+          populate: {
+            path: "skill",
+            select: "_id name category weight",
+          },
+        })
         .limit(limit)
         .skip((+page - 1) * limit)
         .sort({ startWorkDate: -1 });

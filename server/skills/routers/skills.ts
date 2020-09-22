@@ -1,6 +1,6 @@
-import express, { Request, Response, NextFunction, query } from 'express';
-import SkillsModel, { ISkills } from '../models/skills.model';
-import isSkillMiddleware from '../middlewares/isSkill';
+import express, { Request, Response, NextFunction, query } from "express";
+import SkillsModel, { ISkills } from "../models/skills.model";
+import isSkillMiddleware from "../middlewares/isSkill";
 
 export interface IGetSkills {
   page?: number;
@@ -11,7 +11,7 @@ export interface IGetSkills {
 const router = express.Router();
 
 router.get(
-  '/skills',
+  "/skills",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       let skills: ISkills[];
@@ -19,8 +19,8 @@ router.get(
       if (req.query.page || req.query.columnKey || req.query.order) {
         const {
           page = 1,
-          columnKey = '_id',
-          order = 'asc',
+          columnKey = "_id",
+          order = "asc",
         }: IGetSkills = req.query;
 
         const limit = 5;
@@ -39,7 +39,7 @@ router.get(
   }
 );
 router.get(
-  '/skills/:id',
+  "/skills/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -51,7 +51,7 @@ router.get(
   }
 );
 router.post(
-  '/skills',
+  "/skills",
   isSkillMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -65,7 +65,7 @@ router.post(
   }
 );
 router.patch(
-  '/skills/:id',
+  "/skills/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
@@ -79,7 +79,7 @@ router.patch(
   }
 );
 router.delete(
-  '/skills/:id',
+  "/skills/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
