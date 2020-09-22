@@ -9,6 +9,7 @@ import CMatrixHeader from '../CMatrixHeader/CMatrixHeader';
 
 import CMatrixRow from '../CMatrixRow/CMatrixRow';
 import CMatrixRequires from '../CMatrixRequires/CMatrixRequires';
+import { ISkillsList } from '../CSkillsList/CSkillsList';
 
 export interface IHeader {
   [key: string]: string[];
@@ -21,12 +22,19 @@ interface IMatrixData {
   skillsNumber?: number;
 }
 
-const CMatrixRowList: FC<{ employees: IEmployee[]; skills: ISkills[] }> = ({
-  employees,
-  skills,
-}) => {
+const CMatrixRowList: FC<{
+  employees: IEmployee[];
+  skills: ISkills[];
+  skillsSorted: string[];
+}> = ({ employees, skills, skillsSorted }) => {
   const rowList = employees.map((employee) => {
-    return <CMatrixRow employee={employee} skills={skills} />;
+    return (
+      <CMatrixRow
+        employee={employee}
+        skills={skills}
+        skillsSorted={skillsSorted}
+      />
+    );
   });
   return <>{rowList}</>;
 };
@@ -38,6 +46,7 @@ const CMatrix = () => {
     header?: IHeader;
     skillsNumber?: number;
     categories?: string[];
+    skillsSorted?: string[];
   }>({});
 
   useEffect(() => {
@@ -62,6 +71,15 @@ const CMatrix = () => {
           categories.push(category);
         }
       }
+      let skillsSorted: string[] = [];
+      categories.forEach((category) => {
+        // console.log(skillsSorted, header[category]);
+        skillsSorted = skillsSorted.concat(header[category]);
+        // header[category].forEach((skill) => {
+        //   skillsSorted.push(skill);
+        // });
+      });
+      console.log(skillsSorted);
 
       setMatrixData({
         skills,
@@ -69,10 +87,8 @@ const CMatrix = () => {
         header,
         skillsNumber: count,
         categories,
+        skillsSorted,
       });
-      console.log(header);
-      // console.log(employees);
-      // console.log(skills);
     })();
   }, []);
 
@@ -93,6 +109,7 @@ const CMatrix = () => {
         <CMatrixRowList
           employees={matrixData.employees!}
           skills={matrixData.skills!}
+          skillsSorted={matrixData.skillsSorted!}
         />
       )}
     </div>
