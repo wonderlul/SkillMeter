@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Space } from 'antd';
+import style from './CMatrix.module.scss';
 import { getAllSkills } from '../../services/skillsSvc';
 import { ISkills } from '../../models/ISkills';
 import { IEmployee } from '../../models/IEmployee';
 import { getAllEmployees } from '../../services/employeesSvc';
 
 import CMatrixRow from '../CMatrixRow/CMatrixRow';
+import CMatrixRequires from '../CMatrixRequires/CMatrixRequires';
 
 interface IHeader {
   [key: string]: string[];
@@ -37,15 +38,19 @@ const CMatrix = () => {
 
         return previous;
       }, {});
-      console.log(header);
       setMatrixData({ skills, employees, header, skillsNumber: count });
     })();
   }, []);
 
   return (
-    <Space>
-      <CMatrixRow />
-    </Space>
+    <div className={style.Table}>
+      <div className="">
+        <CMatrixRequires />
+      </div>
+      <div className="">
+        <CMatrixRow />
+      </div>
+    </div>
   );
 };
 

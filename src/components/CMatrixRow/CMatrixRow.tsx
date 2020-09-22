@@ -14,22 +14,25 @@ const employee = {
     { name: 'domestic', level: 1 },
     { name: 'kran', level: 2 },
     { name: 'samant', level: 4 },
+    { name: 'domestic', level: 0 },
+    { name: 'kran', level: 2 },
+    { name: 'samant', level: 4 },
   ],
 };
 
 const CMatrixRow = () => {
   const skills = employee.skills.map((skill) => (
-    <Col className="gutter-row">
-      <CCircle level={skill.level as levelRange} />
-    </Col>
+    <div className={style.Cell}>
+      {!!skill.level && <CCircle level={skill.level as levelRange} />}
+    </div>
   ));
   return (
-    <Row gutter={16} align="middle">
-      <Col className="gutter-row">
+    <div className={style.Row}>
+      <div className={style.Signature_Cell}>
         <CUserSignature {...employee} />
-      </Col>
+      </div>
       {skills}
-    </Row>
+    </div>
   );
 };
 

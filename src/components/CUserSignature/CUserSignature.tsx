@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import styles from './CUser.module.scss';
+import styles from './CUserSignature.module.scss';
 import { Row, Col, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
@@ -11,16 +11,16 @@ export interface IUserSignature {
 
 const CUserSignature = ({ name, lastName, urlAvatar }: IUserSignature) => {
   const avatar = urlAvatar ? (
-    <Avatar size="large" src={urlAvatar} shape="square" />
+    <Avatar src={urlAvatar} shape="square" size="large" />
   ) : (
-    <Avatar size="large" icon={<UserOutlined />} shape="square" />
+    <Avatar icon={<UserOutlined />} shape="square" size="large" />
   );
 
   return (
-    <Row gutter={12} align="middle">
-      <Col className="gutter-row">{avatar}</Col>
-      <Col className="gutter-row">{`${name} ${lastName}`}</Col>
-    </Row>
+    <div className={styles.Row}>
+      <div className={styles.Avatar}>{avatar}</div>
+      <div className={styles.Name}>{`${name} ${lastName}`}</div>
+    </div>
   );
 };
 export default CUserSignature;
