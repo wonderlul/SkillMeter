@@ -1,18 +1,18 @@
-import React, { FC, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { FC, useState } from "react";
+import { useHistory } from "react-router-dom";
 
-import { IEmployee } from '../../models/IEmployee';
+import { IEmployee } from "../../models/IEmployee";
 
-import { Tag, Table, Avatar, Button, Modal, notification, Space } from 'antd';
-import { UserOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Tag, Table, Avatar, Button, Modal, notification, Space } from "antd";
+import { UserOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import styles from './CEmployeesList.module.scss';
+import styles from "./CEmployeesList.module.scss";
 
 import {
   deleteEmployee,
   levelsMap,
   positionsMap,
-} from '../../services/employeesSvc';
+} from "../../services/employeesSvc";
 
 const getYear = (date: string) => new Date(date).getFullYear();
 const getFullDate = (date: string) => new Date(date).toLocaleDateString();
@@ -41,8 +41,8 @@ const CEmployeesList: FC<{
 
   const columns = [
     {
-      title: 'Photo',
-      dataIndex: 'photo',
+      title: "Photo",
+      dataIndex: "photo",
       render: (photo: string) => {
         return photo ? (
           <Avatar shape="square" size="large" src={photo} />
@@ -52,34 +52,34 @@ const CEmployeesList: FC<{
       },
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Surname',
-      dataIndex: 'surname',
-      key: 'surname',
+      title: "Surname",
+      dataIndex: "surname",
+      key: "surname",
     },
     {
-      title: 'Started working',
-      dataIndex: 'startWorkDate',
-      key: 'startWorkDate',
+      title: "Started working",
+      dataIndex: "startWorkDate",
+      key: "startWorkDate",
     },
     {
-      title: 'Last evaluation',
-      dataIndex: 'evaluationDate',
-      key: 'evaluationDate',
+      title: "Last evaluation",
+      dataIndex: "evaluationDate",
+      key: "evaluationDate",
     },
     {
-      title: 'Project',
-      dataIndex: 'project',
-      key: 'project',
+      title: "Project",
+      dataIndex: "project",
+      key: "project",
     },
     {
-      title: 'Tags',
-      dataIndex: 'tags',
-      key: 'tags',
+      title: "Tags",
+      dataIndex: "tags",
+      key: "tags",
       render: (tags: string[]) => (
         <>
           {tags.map((tag) => (
@@ -91,19 +91,19 @@ const CEmployeesList: FC<{
       ),
     },
     {
-      title: 'Level',
-      dataIndex: 'level',
-      key: 'level',
+      title: "Level",
+      dataIndex: "level",
+      key: "level",
     },
     {
-      title: 'Position',
-      dataIndex: 'position',
-      key: 'position',
+      title: "Position",
+      dataIndex: "position",
+      key: "position",
     },
     {
-      title: 'Actions',
-      dataIndex: 'id',
-      key: 'actions',
+      title: "Actions",
+      dataIndex: "id",
+      key: "actions",
 
       render: (id: string, record: typeof employeeData[0]) => (
         <Space>
@@ -131,13 +131,13 @@ const CEmployeesList: FC<{
 
   const openNotificationFailed = () =>
     notification.error({
-      message: 'Error!',
-      description: 'Something went wrong. Please try again. ',
+      message: "Error!",
+      description: "Something went wrong. Please try again. ",
     });
 
   const openNotificationSuccess = (user: typeof employeeData[0]): void => {
     notification.success({
-      message: 'Success!',
+      message: "Success!",
       description: `You have successfully deleted employee ${user.name} ${user.surname}! `,
     });
   };
@@ -171,6 +171,7 @@ const CEmployeesList: FC<{
       <Table
         columns={columns}
         dataSource={employeeData}
+        rowKey={(record) => record.id}
         pagination={{
           pageSize: 5,
           total: employeesAmount,
