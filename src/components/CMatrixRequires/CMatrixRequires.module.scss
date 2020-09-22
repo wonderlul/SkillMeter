@@ -1,0 +1,38 @@
+$CellWith: 60px;
+$CellHeight: 50px;
+$SignatureWith: 300px;
+
+.Row {
+  display: inline-flex;
+  border: 1px solid black;
+  border-bottom: none;
+  height: $CellHeight;
+}
+.Title {
+  width: $SignatureWith;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 5px;
+}
+.Cell {
+  width: $CellWith;
+  border-left: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Ok {
+  color: green;
+}
+.Under {
+  color: red;
+}
+.Over {
+  color: green;
+}
+.Column {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}

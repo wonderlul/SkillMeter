@@ -3,13 +3,13 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 import "./App.scss";
 
-import Layout from "./components/CLayout/CLayout";
+import CLayout from "./components/CLayout/CLayout";
 
 export const App = () => {
   return (
     <>
       <Router>
-        <Layout />
+        <CLayout />
       </Router>
     </>
   );

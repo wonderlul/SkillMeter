@@ -1,0 +1,26 @@
+$CellWith: 60px;
+$CellHeight: 50px;
+$SignatureWith: 300px;
+
+.Row {
+  border: 1px solid black;
+  display: inline-flex;
+  flex-direction: row;
+  height: $CellHeight;
+}
+.Signature_Cell {
+  height: 100%;
+  width: $SignatureWith;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+
+.Cell {
+  border-left: 1px solid black;
+  width: $CellWith;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  cursor: pointer;
+}

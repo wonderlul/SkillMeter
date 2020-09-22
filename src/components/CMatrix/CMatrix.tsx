@@ -4,8 +4,14 @@ import { getAllSkills } from '../../services/skillsSvc';
 import { ISkills } from '../../models/ISkills';
 import { IEmployee } from '../../models/IEmployee';
 import { getAllEmployees } from '../../services/employeesSvc';
+import style from './CMatrix.module.scss';
 
-interface IHeader {
+import CMatrixHeader from '../CMatrixHeader/CMatrixHeader';
+
+import CMatrixRow from '../CMatrixRow/CMatrixRow';
+import CMatrixRequires from '../CMatrixRequires/CMatrixRequires';
+
+export interface IHeader {
   [key: string]: string[];
 }
 
@@ -17,7 +23,12 @@ interface IMatrixData {
 }
 
 const CMatrix = () => {
-  const [matrixData, setMatrixData] = useState<IMatrixData>({});
+  const [matrixData, setMatrixData] = useState<{
+    skills?: ISkills[];
+    employees?: IEmployee[];
+    header?: IHeader;
+    skillsNumber?: number;
+  }>({});
 
   useEffect(() => {
     (async () => {
@@ -31,15 +42,32 @@ const CMatrix = () => {
       const header = skills.reduce<IHeader>((previous, current) => {
         !!previous[current.category]
           ? previous[current.category].push(current.name)
-          : (previous[current.category] = []);
-
+          : (previous[current.category] = [current.name]);
         return previous;
       }, {});
-      console.log(header);
+
       setMatrixData({ skills, employees, header, skillsNumber: count });
     })();
   }, []);
-  return <Space>MAtrix</Space>;
+
+  return (
+    <div className={style.Table}>
+      <div className={style.Header}>
+        <div className={style.Piechart}></div>
+        <CMatrixHeader
+          skills={matrixData.skills!}
+          skillsNumber={matrixData.skillsNumber!}
+          header={matrixData.header!}
+        />
+      </div>
+      <div className="">
+        <CMatrixRequires />
+      </div>
+      <div className="">
+        <CMatrixRow />
+      </div>
+    </div>
+  );
 };
 
 export default CMatrix;
