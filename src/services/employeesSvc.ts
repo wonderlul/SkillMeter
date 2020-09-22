@@ -5,7 +5,6 @@ import {
   EPositions,
   IEmployeeSkills,
 } from "../models/IEmployee";
-import { ISkills } from "../models/ISkills";
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
