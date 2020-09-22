@@ -18,13 +18,13 @@ const Template: Story<IUserSignature> = (args) => (
 export const CUserSignatureWithoutAvatar = Template.bind({});
 CUserSignatureWithoutAvatar.args = {
   name: 'John',
-  lastName: 'Doe',
+  surname: 'Doe',
 };
 
 export const CUserSignatureWithAvatar = Template.bind({});
 CUserSignatureWithAvatar.args = {
   name: 'John',
-  lastName: 'Doe',
-  urlAvatar:
+  surname: 'Doe',
+  photo:
     'https://pbs.twimg.com/profile_images/762226166736547840/hQXGSqX6_bigger.jpg',
 };

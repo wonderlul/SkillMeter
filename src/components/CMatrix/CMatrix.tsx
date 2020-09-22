@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { Space } from 'antd';
+import React, { useEffect, useState, FC } from 'react';
 import { getAllSkills } from '../../services/skillsSvc';
 import { ISkills } from '../../models/ISkills';
 import { IEmployee } from '../../models/IEmployee';
@@ -21,6 +20,16 @@ interface IMatrixData {
   header?: IHeader;
   skillsNumber?: number;
 }
+
+const CMatrixRowList: FC<{ employees: IEmployee[]; skills: ISkills[] }> = ({
+  employees,
+  skills,
+}) => {
+  const rowList = employees.map((employee) => {
+    return <CMatrixRow employee={employee} skills={skills} />;
+  });
+  return <>{rowList}</>;
+};
 
 const CMatrix = () => {
   const [matrixData, setMatrixData] = useState<{
@@ -47,6 +56,9 @@ const CMatrix = () => {
       }, {});
 
       setMatrixData({ skills, employees, header, skillsNumber: count });
+      console.log(header);
+      // console.log(employees);
+      // console.log(skills);
     })();
   }, []);
 
@@ -60,12 +72,14 @@ const CMatrix = () => {
           header={matrixData.header!}
         />
       </div>
-      <div className="">
-        <CMatrixRequires />
-      </div>
-      <div className="">
-        <CMatrixRow />
-      </div>
+
+      <CMatrixRequires />
+      {!!matrixData.employees && (
+        <CMatrixRowList
+          employees={matrixData.employees}
+          skills={matrixData.skills!}
+        />
+      )}
     </div>
   );
 };

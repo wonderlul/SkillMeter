@@ -1,3 +1,5 @@
+import { ISkills } from './ISkills';
+
 export enum ELevels {
   TRAINEE,
   JUNIOR,
@@ -24,6 +26,7 @@ export interface IEmployee {
   position: EPositions;
   photo: string;
   project?: string;
+  skills?: { skill: ISkills; level: number }[];
 }
 
 export interface IGetEmployees {
@@ -31,7 +34,7 @@ export interface IGetEmployees {
   count: number;
 }
 
-export type IEmployeeDTO = Omit<IEmployee, "_id">;
+export type IEmployeeDTO = Omit<IEmployee, '_id'>;
 
 export interface IEmployeeForm {
   name: string;
