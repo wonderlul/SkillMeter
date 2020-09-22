@@ -1,5 +1,3 @@
-import { ISkills } from './ISkills';
-
 export enum ELevels {
   TRAINEE,
   JUNIOR,
@@ -54,7 +52,7 @@ export interface ISkills {
   weight: ESkills;
 }
 
-export type ISkillsDTO = Omit<ISkills, "_id">;
+export type ISkillsDTO = Omit<ISkills, '_id'>;
 
 export interface IEmployeeSkills {
   _id: string;
@@ -62,7 +60,7 @@ export interface IEmployeeSkills {
   level: number;
 }
 
-export type IEmployeeSkillsDTO = Omit<IEmployeeSkills, "_id">;
+export type IEmployeeSkillsDTO = Omit<IEmployeeSkills, '_id'>;
 
 export interface IEmployeeForm {
   name: string;

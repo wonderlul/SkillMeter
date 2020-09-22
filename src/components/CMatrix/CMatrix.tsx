@@ -37,6 +37,7 @@ const CMatrix = () => {
     employees?: IEmployee[];
     header?: IHeader;
     skillsNumber?: number;
+    categories?: string[];
   }>({});
 
   useEffect(() => {
@@ -55,7 +56,20 @@ const CMatrix = () => {
         return previous;
       }, {});
 
-      setMatrixData({ skills, employees, header, skillsNumber: count });
+      const categories: string[] = [];
+      for (const category in header) {
+        if (categories.indexOf(category) === -1) {
+          categories.push(category);
+        }
+      }
+
+      setMatrixData({
+        skills,
+        employees,
+        header,
+        skillsNumber: count,
+        categories,
+      });
       console.log(header);
       // console.log(employees);
       // console.log(skills);
@@ -66,17 +80,18 @@ const CMatrix = () => {
     <div className={style.Table}>
       <div className={style.Header}>
         <div className={style.Piechart}></div>
-        <CMatrixHeader
-          skills={matrixData.skills!}
-          skillsNumber={matrixData.skillsNumber!}
-          header={matrixData.header!}
-        />
+        {!!matrixData.categories && (
+          <CMatrixHeader
+            categories={matrixData.categories!}
+            header={matrixData.header!}
+          />
+        )}
       </div>
 
       <CMatrixRequires />
       {!!matrixData.employees && (
         <CMatrixRowList
-          employees={matrixData.employees}
+          employees={matrixData.employees!}
           skills={matrixData.skills!}
         />
       )}
