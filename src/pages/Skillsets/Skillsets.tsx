@@ -74,6 +74,7 @@ export const Skillsets = () => {
     })();
   }, []);
 
+  console.log(skillListConfig);
   return (
     <>
       <PageHeader
