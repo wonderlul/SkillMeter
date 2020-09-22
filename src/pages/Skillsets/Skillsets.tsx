@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
-import CSkillsList from '../../components/CSkillsList/CSkillsList';
-import { getAllSkills } from '../../services/skillsSvc';
-import { IGetSkills, ISkills } from '../../models/ISkills';
+import CSkillsList from "../../components/CSkillsList/CSkillsList";
+import { getAllSkills } from "../../services/skillsSvc";
+import { IGetSkills, ISkills } from "../../models/ISkills";
 
-import { PageHeader, Button } from 'antd';
+import { PageHeader, Button } from "antd";
 
 export const Skillsets = () => {
   const history = useHistory();
@@ -28,14 +28,14 @@ export const Skillsets = () => {
     skills: [],
     skillsAmount: 0,
     page: 0,
-    order: 'ascend',
-    columnKey: 'name',
+    order: "ascend",
+    columnKey: "name",
   });
 
   const getSkillsData: IGetSkillsData = async ({
     current = 1,
-    order = 'ascend',
-    columnKey = 'name',
+    order = "ascend",
+    columnKey = "name",
   }) => {
     let currentPage = current;
     if (
@@ -84,7 +84,7 @@ export const Skillsets = () => {
             type="primary"
             shape="round"
             onClick={() => {
-              history.push('skills/add');
+              history.push("skills/add");
             }}
           >
             Add skill

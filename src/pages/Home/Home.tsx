@@ -1,8 +1,8 @@
-import React from 'react';
-import CMatrix from '../../components/CMatrix/CMatrix';
+import React from "react";
+import CMatrix from "../../components/CMatrix/CMatrix";
 
-export const App = () => {
+export const Home = () => {
   return <CMatrix />;
 };
 
-export default App;
+export default Home;

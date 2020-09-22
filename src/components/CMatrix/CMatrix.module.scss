@@ -1,7 +1,17 @@
+$border-style: 1px solid black;
+
 .Table {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   align-content: flex-start;
   flex: 1;
+}
+.Header {
+  display: flex;
+}
+.Piechart {
+  flex-basis: 301px;
+  // border-left: $border-style;
+  // border-top: $border-style;
 }

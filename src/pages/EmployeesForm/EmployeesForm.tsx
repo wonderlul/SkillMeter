@@ -270,7 +270,7 @@ const EmployeesForm = () => {
                     <Form.Item
                       {...field}
                       label={index === 0 ? "Tags" : ""}
-                      key={field.key}
+                      key={`${field.key}${index}`}
                     >
                       <Tag
                         closable
