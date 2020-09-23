@@ -6,9 +6,9 @@ import { getAllEmployees } from "../../services/employeesSvc";
 import style from "./CMatrix.module.scss";
 
 import CMatrixHeader from "../CMatrixHeader/CMatrixHeader";
-
 import CMatrixRow from "../CMatrixRow/CMatrixRow";
 import CMatrixRequires from "../CMatrixRequires/CMatrixRequires";
+import CMatrixPieChart from "../CMatrixPieChart/CMatrixPieChart";
 
 export interface IHeader {
   [key: string]: string[];
@@ -105,7 +105,12 @@ const CMatrix = () => {
   return (
     <div className={style.Table}>
       <div className={style.Header}>
-        <div className={style.Piechart}></div>
+        {/* <div className={style.Piechart}></div> */}
+        <div className={style.Piechart}>
+          <CMatrixPieChart />
+          {/* <div className={style.PiechartCoverage}>Coverage</div> */}
+        </div>
+
         {!!matrixData.categories && (
           <CMatrixHeader
             categories={matrixData.categories!}
