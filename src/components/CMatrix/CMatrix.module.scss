@@ -10,6 +10,7 @@ $border-style: 1px solid black;
 .Header {
   display: flex;
 }
+
 .Piechart {
   position: relative;
   height: 300px;
@@ -18,8 +19,8 @@ $border-style: 1px solid black;
   // border-top: $border-style;
 }
 
-// .PiechartCoverage {
-//   position: absolute;
-//   top: -10;
-//   right: 10;
-// }
+.PiechartCoverage {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+}

@@ -1,68 +1,102 @@
-import React from "react";
+import React, { FC } from "react";
 import { ResponsivePie } from "@nivo/pie";
+import { IEmployee, ISkills } from "../../models/IEmployee";
 
-const data = [
-  {
-    id: "Not Coverage",
-    label: "Not Coverage",
-    value: 5,
-    color: "hsl(82, 70%, 50%)",
-  },
+import styles from "./CMatrixPieChart.module.scss";
 
-  {
-    id: "Coverage",
-    label: "Coverage",
-    value: 95,
-    color: "hsl(5, 70%, 50%)",
-  },
-];
+const CMatrixPieChart: FC<{
+  skills: ISkills[];
+  skillsSorted: string[];
+  employees: IEmployee[];
+}> = ({ skills, skillsSorted, employees }) => {
+  const skillLevelData = () => {
+    let skillLevel: number = 0;
+    const numberOfSkills: number = skillsSorted?.length;
+    const numberOfEmployees: number = employees?.length;
 
-const CMatrixPieChart = () => (
-  <ResponsivePie
-    data={data}
-    margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-    innerRadius={0.6}
-    padAngle={0.75}
-    fit={false}
-    enableRadialLabels={false}
-    enableSlicesLabels={false}
-    cornerRadius={3}
-    colors={{ scheme: "nivo" }}
-    borderWidth={4}
-    borderColor={{ from: "color", modifiers: [["opacity", 0.2]] }}
-    animate={true}
-    // motionStiffness={90}
-    // motionDamping={15}
-    isInteractive={false}
-    defs={[
-      {
-        id: "dots",
-        type: "patternDots",
-        background: "inherit",
-        color: "rgba(255, 255, 255, 0.3)",
-        size: 4,
-        padding: 1,
-        stagger: true,
-      },
-      {
-        id: "lines",
-        type: "patternLines",
-        background: "inherit",
-        color: "rgba(255, 255, 255, 0.3)",
-        rotation: -45,
-        lineWidth: 6,
-        spacing: 10,
-      },
-    ]}
-    fill={[
-      {
-        match: {
-          id: "Coverage",
-        },
-        id: "dots",
-      },
-    ]}
-  />
-);
+    skillsSorted?.forEach((skill) => {
+      employees.forEach((employee) => {
+        let employeeSkill = employee.skills!.find(
+          (empSkill) => empSkill.skill?.name === skill && empSkill.level > 0
+        );
+
+        if (employeeSkill) {
+          skillLevel += employeeSkill.level;
+        }
+      });
+    });
+
+    let coverage =
+      (skillLevel * 100) / (numberOfEmployees * numberOfSkills * 5);
+    return coverage;
+  };
+
+  const data = [
+    {
+      id: "Coverage",
+      label: "Coverage",
+      value: skillLevelData(),
+      color: "hsl(5, 70%, 50%)",
+    },
+    {
+      id: "Not Coverage",
+      label: "Not Coverage",
+      value: 100 - skillLevelData(),
+      color: "hsl(82, 70%, 50%)",
+    },
+  ];
+
+  return (
+    <div className={styles.Piechart}>
+      <ResponsivePie
+        data={data}
+        margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+        innerRadius={0.6}
+        padAngle={0.75}
+        fit={false}
+        enableRadialLabels={false}
+        enableSlicesLabels={false}
+        cornerRadius={3}
+        colors={{ scheme: "pastel1" }}
+        borderWidth={4}
+        borderColor={{ from: "color", modifiers: [["opacity", 0.2]] }}
+        animate={true}
+        isInteractive={false}
+        defs={[
+          {
+            id: "dots",
+            type: "patternDots",
+            background: "inherit",
+            color: "rgba(255, 255, 255, 0.3)",
+            size: 4,
+            padding: 1,
+            stagger: true,
+          },
+          {
+            id: "lines",
+            type: "patternLines",
+            background: "inherit",
+            color: "rgba(255, 255, 255, 0.3)",
+            rotation: -45,
+            lineWidth: 6,
+            spacing: 10,
+          },
+        ]}
+        fill={[
+          {
+            match: {
+              id: "Coverage",
+            },
+            id: "dots",
+          },
+        ]}
+      />
+      <div className={styles.PiechartCoverage}>
+        <p>Coverage:</p>
+        <p>{skillLevelData().toFixed()}%</p>
+      </div>
+    </div>
+  );
+};
 
 export default CMatrixPieChart;

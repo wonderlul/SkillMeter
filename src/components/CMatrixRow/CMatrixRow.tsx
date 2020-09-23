@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
-import style from './CMatrixRow.module.scss';
+import React, { FC } from "react";
+import style from "./CMatrixRow.module.scss";
 
-import CCircle, { levelRange } from '../CCircle/CCircle';
-import CUserSignature from '../CUserSignature/CUserSignature';
-import { IEmployee } from '../../models/IEmployee';
-import { ISkills, ESkillLevel } from '../../models/ISkills';
-import { Dropdown, Menu } from 'antd';
-import { updateEmployeeSkill } from '../../services/employeesSvc';
+import CCircle, { levelRange } from "../CCircle/CCircle";
+import CUserSignature from "../CUserSignature/CUserSignature";
+import { IEmployee } from "../../models/IEmployee";
+import { ISkills, ESkillLevel } from "../../models/ISkills";
+import { Dropdown, Menu } from "antd";
+import { updateEmployeeSkill } from "../../services/employeesSvc";
 
 const CMatrixRow: FC<{
   employee: IEmployee;
@@ -18,7 +18,7 @@ const CMatrixRow: FC<{
 
   const skillsCell = skillsSorted.map((skill) => {
     let employeeSkill = employee.skills!.find(
-      (empSkill) => empSkill.skill.name === skill
+      (empSkill) => empSkill.skill?.name === skill && empSkill.level > 0
     );
 
     let currentSkill = skills.find((currSkill) => currSkill.name === skill);
@@ -55,7 +55,7 @@ const CMatrixRow: FC<{
     );
 
     return (
-      <Dropdown overlay={menu} trigger={['click']}>
+      <Dropdown overlay={menu} trigger={["click"]}>
         <div className={style.Cell}>
           {!!employeeSkill && (
             <CCircle level={employeeSkill.level as levelRange} />

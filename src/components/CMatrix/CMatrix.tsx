@@ -2,7 +2,10 @@ import React, { useEffect, useState, FC } from "react";
 import { getAllSkills } from "../../services/skillsSvc";
 import { ISkills } from "../../models/ISkills";
 import { IEmployee } from "../../models/IEmployee";
-import { getAllEmployees } from "../../services/employeesSvc";
+import {
+  getAllEmployees,
+  getPaginatedEmployees,
+} from "../../services/employeesSvc";
 import style from "./CMatrix.module.scss";
 
 import CMatrixHeader from "../CMatrixHeader/CMatrixHeader";
@@ -58,9 +61,7 @@ const CMatrix = () => {
         skills,
         count,
       }: { skills: ISkills[]; count: number } = await getAllSkills();
-      const { employees }: { employees: IEmployee[] } = await getAllEmployees(
-        1
-      ); // Remember this get only first page of employees!!!!
+      const employees: IEmployee[] = await getAllEmployees();
       const header = skills.reduce<IHeader>((previous, current) => {
         !!previous[current.category]
           ? previous[current.category].push(current.name)
@@ -105,11 +106,11 @@ const CMatrix = () => {
   return (
     <div className={style.Table}>
       <div className={style.Header}>
-        {/* <div className={style.Piechart}></div> */}
-        <div className={style.Piechart}>
-          <CMatrixPieChart />
-          {/* <div className={style.PiechartCoverage}>Coverage</div> */}
-        </div>
+        <CMatrixPieChart
+          skills={matrixData.skills!}
+          skillsSorted={matrixData.skillsSorted!}
+          employees={matrixData.employees!}
+        />
 
         {!!matrixData.categories && (
           <CMatrixHeader

@@ -1,10 +1,10 @@
 $CellWith: 60px;
 $CellHeight: 50px;
-$SignatureWith: 300px;
+$SignatureWith: 299px;
 
 .Row {
   border: 1px solid black;
-  display: inline-flex;
+  display: flex;
   flex-direction: row;
   height: $CellHeight;
 }

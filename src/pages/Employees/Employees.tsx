@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import CEmployeesList from "../../components/CEmployeesList/CEmployeesList";
 
-import { getAllEmployees } from "../../services/employeesSvc";
+import { getPaginatedEmployees } from "../../services/employeesSvc";
 import { IEmployee, IGetEmployees } from "../../models/IEmployee";
 import { Button, PageHeader } from "antd";
 
@@ -21,7 +21,7 @@ export const Employees = () => {
       if (currentPage) {
         setPage(currentPage);
       } else {
-        const employeesData: IGetEmployees = await getAllEmployees(page);
+        const employeesData: IGetEmployees = await getPaginatedEmployees(page);
         setEmployees(employeesData.employees);
         setEmployeesAmount(employeesData.count);
       }
