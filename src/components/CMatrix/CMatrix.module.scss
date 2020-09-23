@@ -11,7 +11,15 @@ $border-style: 1px solid black;
   display: flex;
 }
 .Piechart {
-  flex-basis: 301px;
+  position: relative;
+  height: 300px;
+  width: 300px;
   // border-left: $border-style;
   // border-top: $border-style;
 }
+
+// .PiechartCoverage {
+//   position: absolute;
+//   top: -10;
+//   right: 10;
+// }
