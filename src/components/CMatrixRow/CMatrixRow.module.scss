@@ -8,6 +8,9 @@ $SignatureWith: 300px;
   flex-direction: row;
   height: $CellHeight;
 }
+.Row + .Row {
+  border-top: none;
+}
 .Row:hover {
   background-color: #f5f5f575;
 }
