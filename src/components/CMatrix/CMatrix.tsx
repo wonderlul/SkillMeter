@@ -114,7 +114,11 @@ const CMatrix = () => {
         )}
       </div>
 
-      <CMatrixRequires />
+      <CMatrixRequires
+        skills={matrixData.skills!}
+        skillsSorted={matrixData.skillsSorted!}
+        employees={matrixData.employees!}
+      />
       {!!matrixData.employees && (
         <CMatrixRowList
           employees={matrixData.employees!}
