@@ -5,7 +5,7 @@ export enum ESortSkills {
 }
 
 export enum ESkillLevel {
-  NOT_AQUIRED,
+  NOT_ACQUIRED,
   BASIC,
   INTERMEDIATE,
   ADVANCED,
@@ -40,4 +40,4 @@ export interface ISkills {
   weight: ESkills;
 }
 
-export type ISkillsDTO = Omit<ISkills, "_id">;
+export type ISkillsDTO = Omit<ISkills, '_id'>;

@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import style from "./CCircle.module.scss";
+import React, { FC } from 'react';
+import style from './CCircle.module.scss';
 
 export type levelRange = 1 | 2 | 3 | 4;
 
