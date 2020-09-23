@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { IEmployee, ISkills } from "../../models/IEmployee";
 
@@ -9,39 +9,42 @@ const CMatrixPieChart: FC<{
   skillsSorted: string[];
   employees: IEmployee[];
 }> = ({ skills, skillsSorted, employees }) => {
-  const skillLevelData = () => {
-    let skillLevel: number = 0;
+  const skillLevelData = useMemo(() => {
     const numberOfSkills: number = skillsSorted?.length;
     const numberOfEmployees: number = employees?.length;
 
-    skillsSorted?.forEach((skill) => {
-      employees.forEach((employee) => {
-        let employeeSkill = employee.skills!.find(
+    const skillLevel = skillsSorted?.reduce((result, skill) => {
+      const employeeSkillLevel = employees.reduce((result, employee) => {
+        const employeeSkill = employee.skills!.find(
           (empSkill) => empSkill.skill?.name === skill && empSkill.level > 0
         );
 
         if (employeeSkill) {
-          skillLevel += employeeSkill.level;
+          result += employeeSkill.level;
         }
-      });
-    });
+        return result;
+      }, 0);
 
-    let coverage =
+      result += employeeSkillLevel;
+      return result;
+    }, 0);
+
+    const coverage =
       (skillLevel * 100) / (numberOfEmployees * numberOfSkills * 5);
     return coverage;
-  };
+  }, [skillsSorted, employees]);
 
   const data = [
     {
       id: "Coverage",
       label: "Coverage",
-      value: skillLevelData(),
+      value: skillLevelData,
       color: "hsl(5, 70%, 50%)",
     },
     {
       id: "Not Coverage",
       label: "Not Coverage",
-      value: 100 - skillLevelData(),
+      value: 100 - skillLevelData,
       color: "hsl(82, 70%, 50%)",
     },
   ];
@@ -93,7 +96,7 @@ const CMatrixPieChart: FC<{
       />
       <div className={styles.PiechartCoverage}>
         <p>Coverage:</p>
-        <p>{skillLevelData().toFixed()}%</p>
+        <p>{skillLevelData.toFixed()}%</p>
       </div>
     </div>
   );
