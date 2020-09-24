@@ -1,16 +1,17 @@
-import express, { Request, Response, Application, NextFunction } from 'express';
-import mongoose from 'mongoose';
+import express, { Request, Response, Application, NextFunction } from "express";
+import mongoose from "mongoose";
 
-import cors from 'cors';
+import cors from "cors";
 
-import employeeRouter from './employees/routers/employee';
-import skillsRouter from './skills/routers/skills';
+import employeeRouter from "./employees/routers/employee";
+import skillsRouter from "./skills/routers/skills";
+import userRouter from "./user/routers/user";
 
-require('dotenv').config();
+require("dotenv").config();
 
 (() => {
   if (!process.env.MONGODB_CONNECTION) {
-    console.error('MongoDB is not configured');
+    console.error("MongoDB is not configured");
     return;
   }
 
@@ -25,11 +26,12 @@ require('dotenv').config();
   app.use(cors());
   app.use(express.json());
 
-  app.use('/', employeeRouter);
-  app.use('/', skillsRouter);
+  app.use("/", employeeRouter);
+  app.use("/", skillsRouter);
+  app.use("/", userRouter);
 
   app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-    console.log('Error:', error);
+    console.log("Error:", error);
     res.send(`There was na error: ${error.message}`);
   });
 
