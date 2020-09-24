@@ -13,6 +13,7 @@ import CMatrixRow from '../CMatrixRow/CMatrixRow';
 import CMatrixRequires from '../CMatrixRequires/CMatrixRequires';
 import CMatrixPieChart from '../CMatrixPieChart/CMatrixPieChart';
 import CDrawer, { IFilterConfigData } from '../CDrawer/CDrawer';
+import Employees from '../../pages/Employees/Employees';
 
 export interface IHeader {
   [key: string]: string[];
@@ -21,28 +22,10 @@ export interface IHeader {
 export interface IMatrixData {
   skills?: ISkills[];
   employees?: IEmployee[];
+  disabledEmployees?: IEmployee[];
   header?: IHeader;
   skillsNumber?: number;
 }
-
-const CMatrixRowList: FC<{
-  employees: IEmployee[];
-  skills: ISkills[];
-  skillsSorted: string[];
-  getMatrixData: Function;
-}> = ({ employees, skills, skillsSorted, getMatrixData }) => {
-  const rowList = employees.map((employee) => {
-    return (
-      <CMatrixRow
-        employee={employee}
-        skills={skills}
-        skillsSorted={skillsSorted}
-        getMatrixData={getMatrixData}
-      />
-    );
-  });
-  return <>{rowList}</>;
-};
 
 const CMatrix = () => {
   interface IMatrixConfig {
@@ -94,7 +77,7 @@ const CMatrix = () => {
       const filterConfigData: IFilterConfigData = {
         skills: skillsSorted,
         tags,
-        filter: setFilterData,
+        filterCallback: setFilterData,
       };
       setMatrixData({
         skills,
@@ -164,6 +147,23 @@ const CMatrix = () => {
       }
     })();
   }, []);
+  let rowList: JSX.Element[] = [];
+  if (
+    !!matrixData.employees &&
+    !!matrixData.skills &&
+    !!matrixData.skillsSorted
+  ) {
+    rowList = matrixData.employees.map<JSX.Element>((employee) => {
+      return (
+        <CMatrixRow
+          employee={employee}
+          skills={matrixData.skills!}
+          skillsSorted={matrixData.skillsSorted!}
+          getMatrixData={getMatrixData}
+        />
+      );
+    });
+  }
 
   return (
     <div className={style.TableScroll}>
@@ -199,15 +199,7 @@ const CMatrix = () => {
               skillsSorted={matrixData.skillsSorted!}
               employees={matrixData.employees!}
             />
-
-            {!!matrixData.employees && (
-              <CMatrixRowList
-                employees={matrixData.employees!}
-                skills={matrixData.skills!}
-                skillsSorted={matrixData.skillsSorted!}
-                getMatrixData={getMatrixData}
-              />
-            )}
+            {!!matrixData.employees && rowList}
           </div>
         </div>
       </div>
