@@ -10,7 +10,17 @@ import {
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
-export const getAllEmployees = async (page: number) => {
+export const getAllEmployees = async () => {
+  try {
+    const { data } = await axios.get(`${SERVER_URL}/employees/all`);
+
+    return data;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const getPaginatedEmployees = async (page: number) => {
   try {
     const { data } = await axios.get(`${SERVER_URL}/employees/?page=${page}`);
     return data;

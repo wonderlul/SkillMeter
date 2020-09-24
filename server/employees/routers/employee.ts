@@ -43,6 +43,25 @@ router.get(
 );
 
 router.get(
+  "/employees/all",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const employees = await EmployeeModel.find().populate({
+        path: "skills",
+        populate: {
+          path: "skill",
+          select: "_id name category weight",
+        },
+      });
+
+      res.send(employees);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.get(
   "/employees/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
