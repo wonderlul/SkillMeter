@@ -79,10 +79,14 @@ const CMatrix = () => {
         }
       }
       let skillsSorted: string[] = [];
-      let tags = employees.reduce<string[]>((previous, current) => {
-        previous = previous.concat(current?.tags || []);
-        return previous;
-      }, []);
+      let tags = Array.from(
+        new Set(
+          employees.reduce<string[]>((previous, current) => {
+            previous = previous.concat(current?.tags || []);
+            return previous;
+          }, [])
+        )
+      );
       categories.forEach((category) => {
         skillsSorted = skillsSorted.concat(header[category]);
       });
@@ -109,17 +113,15 @@ const CMatrix = () => {
   async function filter(
     data: { [key: string]: (string | number)[] }[] | undefined
   ) {
-    console.log(data);
     if (!data || data.length === 0) {
       await getMatrixData();
       return;
     }
     let employees: IEmployee[] = await getAllEmployees();
-    console.log(employees);
     if (!employees) {
       return;
     }
-    console.log(employees);
+
     employees = employees!.filter((employee) => {
       return data.every((filterRecord) => {
         const [fieldName, filterArray] = Object.entries(filterRecord)[0];

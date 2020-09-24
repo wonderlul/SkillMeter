@@ -39,6 +39,7 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filter }) => {
       []
     );
     value = value.filter((elem) => Object.values(elem)[0].length !== 0);
+
     filter(value);
   };
   const onFinish = (value: any) => {
