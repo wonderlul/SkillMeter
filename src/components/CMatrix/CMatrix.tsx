@@ -1,11 +1,8 @@
-import React, { useEffect, useState, FC, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { getAllSkills } from '../../services/skillsSvc';
 import { ISkills } from '../../models/ISkills';
 import { IEmployee } from '../../models/IEmployee';
-import {
-  getAllEmployees,
-  getPaginatedEmployees,
-} from '../../services/employeesSvc';
+import { getAllEmployees } from '../../services/employeesSvc';
 import style from './CMatrix.module.scss';
 
 import CMatrixHeader from '../CMatrixHeader/CMatrixHeader';
@@ -13,7 +10,7 @@ import CMatrixRow from '../CMatrixRow/CMatrixRow';
 import CMatrixRequires from '../CMatrixRequires/CMatrixRequires';
 import CMatrixPieChart from '../CMatrixPieChart/CMatrixPieChart';
 import CDrawer, { IFilterConfigData } from '../CDrawer/CDrawer';
-import Employees from '../../pages/Employees/Employees';
+import { Divider } from 'antd';
 
 export interface IHeader {
   [key: string]: string[];
@@ -27,18 +24,25 @@ export interface IMatrixData {
   skillsNumber?: number;
 }
 
-const CMatrix = () => {
-  interface IMatrixConfig {
-    skills?: ISkills[];
-    employees?: IEmployee[];
-    header?: IHeader;
-    skillsNumber?: number;
-    categories?: string[];
-    skillsSorted?: string[];
-    filterConfigData?: IFilterConfigData;
-  }
+interface IMatrixConfig {
+  skills?: ISkills[];
+  employees?: IEmployee[];
+  disabledEmployees: IEmployee[];
+  header?: IHeader;
+  skillsNumber?: number;
+  categories?: string[];
+  skillsSorted?: string[];
+  filterConfigData?: IFilterConfigData;
+}
 
-  const [matrixData, setMatrixData] = useState<IMatrixConfig>({});
+interface IMakeEmployeesRows {
+  (employees?: IEmployee[], disabled?: boolean): JSX.Element[] | undefined;
+}
+
+const CMatrix = () => {
+  const [matrixData, setMatrixData] = useState<IMatrixConfig>({
+    disabledEmployees: [],
+  });
   const [filterData, setFilterData] = useState<any>();
 
   const getMatrixData = async () => {
@@ -87,12 +91,16 @@ const CMatrix = () => {
         categories,
         skillsSorted,
         filterConfigData,
+        disabledEmployees: matrixData.disabledEmployees,
       });
     } catch (e) {
       console.log(e);
     }
   };
-  useMemo(async () => filter(filterData), [filterData]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useMemo(() => filter(filterData), [filterData]);
+
   async function filter(
     data: { [key: string]: (string | number)[] }[] | undefined
   ) {
@@ -132,6 +140,7 @@ const CMatrix = () => {
           if (fieldName === 'tags') {
             return employee[fieldName]?.includes(String(filterProp));
           }
+          return false;
         });
       });
     });
@@ -146,25 +155,58 @@ const CMatrix = () => {
         console.log(e);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  let rowList: JSX.Element[] = [];
-  if (
-    !!matrixData.employees &&
-    !!matrixData.skills &&
-    !!matrixData.skillsSorted
-  ) {
-    rowList = matrixData.employees.map<JSX.Element>((employee) => {
+
+  const triggerDisabledEmployee = (
+    emp: IEmployee,
+    disabled?: boolean
+  ): void => {
+    let employees: IEmployee[] | undefined;
+    let disabledEmployees: IEmployee[] | undefined;
+    if (disabled) {
+      employees = matrixData.employees!.concat([emp]);
+      disabledEmployees = matrixData.disabledEmployees!.filter(
+        (employee) => employee._id !== emp._id
+      );
+    } else {
+      employees = matrixData.employees!.filter(
+        (employee) => employee._id !== emp._id
+      );
+      disabledEmployees = matrixData.disabledEmployees!.concat([emp]);
+      console.log('disabledEmployees', disabledEmployees);
+    }
+
+    setMatrixData({ ...matrixData, employees, disabledEmployees });
+  };
+
+  const makeEmployeesRows: IMakeEmployeesRows = (employees, disabled) => {
+    console.log(employees);
+    if (!employees) return undefined;
+
+    return employees?.map<JSX.Element>((employee, index) => {
       return (
         <CMatrixRow
+          key={`${employee._id}${index}`}
           employee={employee}
           skills={matrixData.skills!}
           skillsSorted={matrixData.skillsSorted!}
           getMatrixData={getMatrixData}
+          disabledEmployee={disabled}
+          disabledCallback={() => {
+            triggerDisabledEmployee(employee, disabled);
+          }}
         />
       );
     });
-  }
+  };
 
+  const employeesList = makeEmployeesRows(matrixData.employees);
+  const disabledEmployeesList = makeEmployeesRows(
+    matrixData.disabledEmployees,
+    true
+  );
+  console.log(disabledEmployeesList);
   return (
     <div className={style.TableScroll}>
       <div className={style.Table}>
@@ -199,7 +241,11 @@ const CMatrix = () => {
               skillsSorted={matrixData.skillsSorted!}
               employees={matrixData.employees!}
             />
-            {!!matrixData.employees && rowList}
+            {!!matrixData.employees && employeesList}
+            {!!matrixData.disabledEmployees?.length && (
+              <Divider>Disabled employees</Divider>
+            )}
+            {!!matrixData.disabledEmployees && disabledEmployeesList}
           </div>
         </div>
       </div>
