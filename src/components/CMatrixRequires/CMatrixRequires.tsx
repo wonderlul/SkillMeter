@@ -1,7 +1,7 @@
-import React, { FC } from "react";
-import { IEmployee } from "../../models/IEmployee";
-import { ISkills } from "../../models/ISkills";
-import style from "./CMatrixRequires.module.scss";
+import React, { FC } from 'react';
+import { IEmployee } from '../../models/IEmployee';
+import { ISkills } from '../../models/ISkills';
+import style from './CMatrixRequires.module.scss';
 
 const requiredData = {
   skillsNumber: 8,
@@ -32,7 +32,7 @@ const CMatrixRequires: FC<{
 
       employees.forEach((employee) => {
         let employeeSkill = employee.skills!.find(
-          (empSkill) => empSkill.skill.name === skill && empSkill.level > 0
+          (empSkill) => empSkill.skill?.name === skill && empSkill.level > 0
         );
         if (employeeSkill) {
           trainedEmployees += 1;
@@ -42,8 +42,6 @@ const CMatrixRequires: FC<{
 
       return { trainedEmployees, skillLevel };
     });
-
-  console.log(skillsData);
 
   return (
     <div className={style.Column}>

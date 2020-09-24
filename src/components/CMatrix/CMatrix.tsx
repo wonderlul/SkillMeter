@@ -1,14 +1,17 @@
-import React, { useEffect, useState, FC } from "react";
-import { getAllSkills } from "../../services/skillsSvc";
-import { ISkills } from "../../models/ISkills";
-import { IEmployee } from "../../models/IEmployee";
-import { getAllEmployees } from "../../services/employeesSvc";
-import style from "./CMatrix.module.scss";
+import React, { useEffect, useState, FC } from 'react';
+import { getAllSkills } from '../../services/skillsSvc';
+import { ISkills } from '../../models/ISkills';
+import { IEmployee } from '../../models/IEmployee';
+import { getAllEmployees } from '../../services/employeesSvc';
+import style from './CMatrix.module.scss';
 
-import CMatrixHeader from "../CMatrixHeader/CMatrixHeader";
+import CMatrixHeader from '../CMatrixHeader/CMatrixHeader';
 
-import CMatrixRow from "../CMatrixRow/CMatrixRow";
-import CMatrixRequires from "../CMatrixRequires/CMatrixRequires";
+import CMatrixRow from '../CMatrixRow/CMatrixRow';
+import CMatrixRequires from '../CMatrixRequires/CMatrixRequires';
+import CDrawer, { IFilterConfigData } from '../CDrawer/CDrawer';
+import Employees from '../../pages/Employees/Employees';
+import { forEachChild } from 'typescript';
 
 export interface IHeader {
   [key: string]: string[];
@@ -48,6 +51,7 @@ const CMatrix = () => {
     skillsNumber?: number;
     categories?: string[];
     skillsSorted?: string[];
+    filterConfigData?: IFilterConfigData;
   }
 
   const [matrixData, setMatrixData] = useState<IMatrixConfig>({});
@@ -75,10 +79,19 @@ const CMatrix = () => {
         }
       }
       let skillsSorted: string[] = [];
+      let tags = employees.reduce<string[]>((previous, current) => {
+        previous = previous.concat(current?.tags || []);
+        return previous;
+      }, []);
       categories.forEach((category) => {
         skillsSorted = skillsSorted.concat(header[category]);
       });
 
+      const filterConfigData: IFilterConfigData = {
+        skills: skillsSorted,
+        tags,
+        filter,
+      };
       setMatrixData({
         skills,
         employees,
@@ -86,11 +99,20 @@ const CMatrix = () => {
         skillsNumber: count,
         categories,
         skillsSorted,
+        filterConfigData,
       });
     } catch (e) {
       console.log(e);
     }
   };
+  function filter(data: { [key: string]: string[] | number[] }[]) {
+    console.log(data);
+    const filteredEmployees = matrixData.employees?.filter((employee) => {
+      let funded = data.every((filterField) => {
+        const [filterName, filterValues] = Object.entries(filterField)[0];
+      });
+    });
+  }
 
   useEffect(() => {
     (async () => {
@@ -104,6 +126,11 @@ const CMatrix = () => {
 
   return (
     <div className={style.Table}>
+      <div className={style.Drawer}>
+        {!!matrixData.employees && (
+          <CDrawer {...matrixData.filterConfigData!} />
+        )}
+      </div>
       <div className={style.Header}>
         <div className={style.Piechart}></div>
         {!!matrixData.categories && (

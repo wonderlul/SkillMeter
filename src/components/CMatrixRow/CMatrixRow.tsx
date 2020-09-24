@@ -15,10 +15,9 @@ const CMatrixRow: FC<{
   getMatrixData: Function;
 }> = ({ employee, skills, skillsSorted, getMatrixData }) => {
   //Cell
-
   const skillsCell = skillsSorted.map((skill) => {
     let employeeSkill = employee.skills!.find(
-      (empSkill) => empSkill.skill.name === skill
+      (empSkill) => empSkill.skill?.name === skill && empSkill.level > 0
     );
 
     let currentSkill = skills.find((currSkill) => currSkill.name === skill);
