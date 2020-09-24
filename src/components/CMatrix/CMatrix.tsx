@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, { useEffect, useState, FC, useMemo } from 'react';
 import { getAllSkills } from '../../services/skillsSvc';
 import { ISkills } from '../../models/ISkills';
 import { IEmployee } from '../../models/IEmployee';
@@ -55,6 +55,7 @@ const CMatrix = () => {
   }
 
   const [matrixData, setMatrixData] = useState<IMatrixConfig>({});
+  const [filterData, setFilterData] = useState<any>();
 
   const getMatrixData = async () => {
     try {
@@ -90,7 +91,7 @@ const CMatrix = () => {
       const filterConfigData: IFilterConfigData = {
         skills: skillsSorted,
         tags,
-        filter,
+        filter: setFilterData,
       };
       setMatrixData({
         skills,
@@ -105,22 +106,46 @@ const CMatrix = () => {
       console.log(e);
     }
   };
-  function filter(data: { [key: string]: string[] | number[] }[]) {
-    console.log('filter(data):', data);
-    const filteredEmployees = matrixData.employees?.filter((employee) =>
-      data.every((filterRecord) => {
+  useMemo(async () => filter(filterData), [filterData]);
+  async function filter(
+    data: { [key: string]: (string | number)[] }[] | undefined
+  ) {
+    if (!data || data.length === 0) {
+      await getMatrixData();
+      return;
+    }
+    let { employees }: { employees: IEmployee[] } = await getAllEmployees(1);
+    employees = employees!.filter((employee) => {
+      return data.every((filterRecord) => {
         const [fieldName, filterArray] = Object.entries(filterRecord)[0];
-        return filterArray.every((filterPropArray: string | number) => {
-          if (Array.isArray(employee[fieldName as keyof typeof IEmployee])) {
-            return employee[fieldName].find(filterPropArray);
-          } else {
-            return employee[fieldName] == filterPropArray;
+        return filterArray.every((filterProp: string | number) => {
+          if (fieldName === 'skills') {
+            return employee.skills?.some((skill) => {
+              return skill.skill?.name === String(filterProp);
+            });
+          }
+          if (fieldName === 'startWorkDate') {
+            const givenLevel = filterProp;
+
+            const experience =
+              new Date().getFullYear() -
+              new Date(employee.startWorkDate).getFullYear();
+
+            return (
+              givenLevel === experience ||
+              (givenLevel === 10 && experience > givenLevel)
+            );
+          }
+          if (fieldName === 'level') {
+            return String(employee[fieldName]) === String(filterProp);
+          }
+          if (fieldName === 'tags') {
+            return employee[fieldName]?.includes(String(filterProp));
           }
         });
-      })
-    );
-
-    console.log('filteredEmployees', filteredEmployees);
+      });
+    });
+    setMatrixData({ ...matrixData, employees });
   }
 
   useEffect(() => {

@@ -23,7 +23,7 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filter }) => {
     setVisible(false);
   };
   const onFieldsChange = (v: FieldData[], data: FieldData[]) => {
-    const value = data.reduce(
+    let value = data.reduce(
       (previous: { [key: string]: string[] }[], current) => {
         if (current.value || current.value?.length > 0) {
           previous.push({
@@ -38,6 +38,7 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filter }) => {
       },
       []
     );
+    value = value.filter((elem) => Object.values(elem)[0].length !== 0);
     filter(value);
   };
   const onFinish = (value: any) => {
