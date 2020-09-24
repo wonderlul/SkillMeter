@@ -46,6 +46,10 @@ $SignatureWith: 299px;
   padding-top: 5px;
 }
 
-.Dropdown {
+.Dropdown > * {
   z-index: 6;
+}
+.Disabled > * {
+  color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(255, 166, 0, 0.1);
 }

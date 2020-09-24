@@ -1,26 +1,38 @@
-import React, { FC } from "react";
-import style from "./CMatrixRow.module.scss";
+import React, { FC } from 'react';
+import style from './CMatrixRow.module.scss';
 
-import CCircle, { levelRange } from "../CCircle/CCircle";
-import CUserSignature from "../CUserSignature/CUserSignature";
-import { IEmployee } from "../../models/IEmployee";
-import { ISkills, ESkillLevel } from "../../models/ISkills";
-import { Dropdown, Menu } from "antd";
-import { updateEmployeeSkill } from "../../services/employeesSvc";
+import CCircle, { levelRange } from '../CCircle/CCircle';
+import CUserSignature from '../CUserSignature/CUserSignature';
+import { IEmployee } from '../../models/IEmployee';
+import { ISkills, ESkillLevel } from '../../models/ISkills';
+import { Dropdown, Menu, Popconfirm } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { updateEmployeeSkill } from '../../services/employeesSvc';
 
-const CMatrixRow: FC<{
+export interface ICMatrixRow {
   employee: IEmployee;
   skills: ISkills[];
   skillsSorted: string[];
   getMatrixData: Function;
-}> = ({ employee, skills, skillsSorted, getMatrixData }) => {
+  disabledCallback: () => void;
+  disabledEmployee?: boolean;
+}
+
+const CMatrixRow: FC<ICMatrixRow> = ({
+  employee,
+  skills,
+  skillsSorted,
+  getMatrixData,
+  disabledCallback,
+  disabledEmployee,
+}) => {
   //Cell
   const skillsCell = skillsSorted.map((skill) => {
-    let employeeSkill = employee.skills!.find(
+    const employeeSkill = employee.skills!.find(
       (empSkill) => empSkill.skill?.name === skill && empSkill.level > 0
     );
 
-    let currentSkill = skills.find((currSkill) => currSkill.name === skill);
+    const currentSkill = skills.find((currSkill) => currSkill.name === skill);
     const skillsToNumbers = Object.values(ESkillLevel).filter((elem) =>
       Number.isInteger(Number(elem))
     );
@@ -28,8 +40,9 @@ const CMatrixRow: FC<{
     const menu = (
       <div className={style.Dropdown}>
         <Menu>
-          {skillsToNumbers.map((skill) => (
+          {skillsToNumbers.map((skill, index) => (
             <Menu.Item
+              key={`${skill}${index}`}
               onClick={async () => {
                 if (employeeSkill) {
                   await updateEmployeeSkill(
@@ -48,7 +61,7 @@ const CMatrixRow: FC<{
                 getMatrixData();
               }}
             >
-              {skill == 0 ? (
+              {Number(skill) === 0 ? (
                 <div className={style.None}>{`\u2717`}</div>
               ) : (
                 <CCircle level={+skill as levelRange} />
@@ -60,7 +73,7 @@ const CMatrixRow: FC<{
     );
 
     return (
-      <Dropdown overlay={menu} trigger={["click"]}>
+      <Dropdown overlay={menu} trigger={['click']}>
         <div className={style.Content}>
           {!!employeeSkill && (
             <CCircle level={employeeSkill.level as levelRange} />
@@ -73,10 +86,24 @@ const CMatrixRow: FC<{
   //Row
 
   return (
-    <div className={style.Row}>
-      <div className={style.Column}>
-        <CUserSignature {...employee} />
-      </div>
+    <div className={`${style.Row} ${disabledEmployee ? style.Disabled : ''}`}>
+      <Popconfirm
+        title={`Are you sure ${disabledEmployee ? 'enable' : 'disable'} ${
+          employee.name
+        } ${employee.surname}？`}
+        icon={
+          <QuestionCircleOutlined
+            style={disabledEmployee ? { color: 'green' } : { color: 'red' }}
+          />
+        }
+        okText="Yes"
+        cancelText="No"
+        onConfirm={disabledCallback}
+      >
+        <div className={style.Column}>
+          <CUserSignature {...employee} />
+        </div>
+      </Popconfirm>
       {skillsCell}
     </div>
   );

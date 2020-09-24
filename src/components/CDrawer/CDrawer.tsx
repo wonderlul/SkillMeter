@@ -11,10 +11,10 @@ import {
 export interface IFilterConfigData {
   skills: string[];
   tags: string[];
-  filter: (value: any) => void;
+  filterCallback: (value: any) => void;
 }
 
-const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filter }) => {
+const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
   const [visible, setVisible] = useState(false);
   const showDrawer = () => {
     setVisible(true);
@@ -40,7 +40,7 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filter }) => {
     );
     value = value.filter((elem) => Object.values(elem)[0].length !== 0);
 
-    filter(value);
+    filterCallback(value);
   };
   const onFinish = (value: any) => {
     console.log(value);
