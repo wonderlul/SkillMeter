@@ -27,36 +27,42 @@ const CMatrixRow: FC<{
     );
 
     const menu = (
-      <Menu>
-        {skillsToNumbers.map((skill) => (
-          <Menu.Item
-            onClick={async () => {
-              if (employeeSkill) {
-                await updateEmployeeSkill(
-                  employee._id,
-                  currentSkill!,
-                  +skill,
-                  employeeSkill
-                );
-              } else {
-                await updateEmployeeSkill(employee._id, currentSkill!, +skill);
-              }
-              getMatrixData();
-            }}
-          >
-            {skill == 0 ? (
-              <div className={style.None}>{`\u2717`}</div>
-            ) : (
-              <CCircle level={+skill as levelRange} />
-            )}
-          </Menu.Item>
-        ))}
-      </Menu>
+      <div className={style.Dropdown}>
+        <Menu>
+          {skillsToNumbers.map((skill) => (
+            <Menu.Item
+              onClick={async () => {
+                if (employeeSkill) {
+                  await updateEmployeeSkill(
+                    employee._id,
+                    currentSkill!,
+                    +skill,
+                    employeeSkill
+                  );
+                } else {
+                  await updateEmployeeSkill(
+                    employee._id,
+                    currentSkill!,
+                    +skill
+                  );
+                }
+                getMatrixData();
+              }}
+            >
+              {skill == 0 ? (
+                <div className={style.None}>{`\u2717`}</div>
+              ) : (
+                <CCircle level={+skill as levelRange} />
+              )}
+            </Menu.Item>
+          ))}
+        </Menu>
+      </div>
     );
 
     return (
       <Dropdown overlay={menu} trigger={["click"]}>
-        <div className={style.Cell}>
+        <div className={style.Content}>
           {!!employeeSkill && (
             <CCircle level={employeeSkill.level as levelRange} />
           )}
@@ -69,7 +75,7 @@ const CMatrixRow: FC<{
 
   return (
     <div className={style.Row}>
-      <div className={style.Signature_Cell}>
+      <div className={style.Column}>
         <CUserSignature {...employee} />
       </div>
       {skillsCell}

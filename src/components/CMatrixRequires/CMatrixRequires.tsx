@@ -28,18 +28,22 @@ const CMatrixRequires: FC<{
   });
 
   return (
-    <div className={style.Column}>
-      <div className={style.Row}>
-        <span className={style.Title}>Trained</span>
-        {skillsData?.map((skillData) => (
-          <div className={style.Cell}>{skillData.trainedEmployees}</div>
-        ))}
+    <div className={style.Row}>
+      <div className={style.Column}>
+        <div className={style.Title}>Trained</div>
+        <div className={style.Title}>Skill Level</div>
       </div>
-      <div className={style.Row}>
-        <span className={style.Title}>Skill Level</span>
-        {skillsData?.map((skillData) => (
-          <div className={style.Cell}>{skillData.skillLevel}</div>
-        ))}
+      <div className={style.Content}>
+        <div className={style.ContentRow}>
+          {skillsData?.map((skillData) => (
+            <div className={style.Cell}>{skillData.trainedEmployees}</div>
+          ))}
+        </div>
+        <div className={style.ContentRow}>
+          {skillsData?.map((skillData) => (
+            <div className={style.Cell}>{skillData.skillLevel}</div>
+          ))}
+        </div>
       </div>
     </div>
   );
