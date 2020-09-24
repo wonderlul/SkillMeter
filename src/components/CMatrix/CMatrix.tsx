@@ -106,12 +106,21 @@ const CMatrix = () => {
     }
   };
   function filter(data: { [key: string]: string[] | number[] }[]) {
-    console.log(data);
-    const filteredEmployees = matrixData.employees?.filter((employee) => {
-      let funded = data.every((filterField) => {
-        const [filterName, filterValues] = Object.entries(filterField)[0];
-      });
-    });
+    console.log('filter(data):', data);
+    const filteredEmployees = matrixData.employees?.filter((employee) =>
+      data.every((filterRecord) => {
+        const [fieldName, filterArray] = Object.entries(filterRecord)[0];
+        return filterArray.every((filterPropArray: string | number) => {
+          if (Array.isArray(employee[fieldName as keyof typeof IEmployee])) {
+            return employee[fieldName].find(filterPropArray);
+          } else {
+            return employee[fieldName] == filterPropArray;
+          }
+        });
+      })
+    );
+
+    console.log('filteredEmployees', filteredEmployees);
   }
 
   useEffect(() => {
