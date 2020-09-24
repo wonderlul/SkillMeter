@@ -1,12 +1,14 @@
-import React from "react";
+import React from 'react';
 
-import ICollapse from "../../models/ICollapse";
+import ICollapse from '../../models/ICollapse';
 
-import styles from "./CHeader.module.scss";
+import styles from './CHeader.module.scss';
 
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
-import { Layout, Input } from "antd";
+import { Layout, Input } from 'antd';
+import CDrawer from '../CDrawer/CDrawer';
+import { useLocation, useParams } from 'react-router-dom';
 
 export const CHeader = ({
   isCollapsed,
@@ -16,7 +18,7 @@ export const CHeader = ({
   const { Header } = Layout;
 
   return (
-    <>
+    <div className={styles.Container}>
       <Header className={styles.siteLayoutBackground}>
         {isCollapsed ? (
           <MenuUnfoldOutlined
@@ -36,7 +38,7 @@ export const CHeader = ({
           style={{ width: 200 }}
         />
       </Header>
-    </>
+    </div>
   );
 };
 

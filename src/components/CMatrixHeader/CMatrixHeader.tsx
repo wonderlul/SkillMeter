@@ -1,33 +1,26 @@
 import React, { FC } from "react";
-import { ISkills } from "../../models/ISkills";
 import { IHeader } from "../CMatrix/CMatrix";
 import styles from "./CMatrixHeader.module.scss";
 
 export interface IMatrixSkills {
-  skills: ISkills[];
-  skillsNumber: number;
   header: IHeader;
+  categories: string[];
 }
 export interface ISkillsByCategory {
   [key: string]: number;
 }
-const CMatrixHeader: FC<IMatrixSkills> = ({ skills, skillsNumber, header }) => {
+const CMatrixHeader: FC<IMatrixSkills> = ({ header, categories }) => {
   const skillsByCategory: ISkillsByCategory = {};
-  const categories: string[] = [];
 
   for (const category in header) {
     skillsByCategory[category] = header[category].length;
-
-    if (categories.indexOf(category) === -1) {
-      categories.push(category);
-    }
   }
 
   return (
     <div className={styles.wrapper}>
       {categories.map((category, index) => {
         const isLong =
-          skillsByCategory[category] <= 1 && category.length > 6
+          skillsByCategory[category] <= 1 && category.length > 3
             ? `${styles.category}`
             : "";
 

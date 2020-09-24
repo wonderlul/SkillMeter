@@ -1,9 +1,26 @@
 import axios from "axios";
-import { IEmployeeDTO, ELevels, EPositions } from "../models/IEmployee";
+import {
+  IEmployeeDTO,
+  ELevels,
+  EPositions,
+  IEmployeeSkills,
+  IEmployeeSkillsDTO,
+  ISkills,
+} from "../models/IEmployee";
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
-export const getAllEmployees = async (page: number) => {
+export const getAllEmployees = async () => {
+  try {
+    const { data } = await axios.get(`${SERVER_URL}/employees/all`);
+
+    return data;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const getPaginatedEmployees = async (page: number) => {
   try {
     const { data } = await axios.get(`${SERVER_URL}/employees/?page=${page}`);
     return data;
@@ -36,6 +53,26 @@ export const updateEmployee = async (id: string, employee: IEmployeeDTO) => {
       `${SERVER_URL}/employees/${id}`,
       employee
     );
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateEmployeeSkill = async (
+  employeeId: string,
+  skill: ISkills,
+  level: number,
+  skillObject?: IEmployeeSkills
+) => {
+  try {
+    const {
+      data,
+    } = await axios.patch(
+      `${SERVER_URL}/employees/${employeeId}/skill/${skillObject?._id}`,
+      { skill, level }
+    );
+
     return data;
   } catch (error) {
     console.log(error);

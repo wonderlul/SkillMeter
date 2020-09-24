@@ -1,69 +1,49 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { IEmployee } from '../../models/IEmployee';
+import { ISkills } from '../../models/ISkills';
 import style from './CMatrixRequires.module.scss';
-const requiredData = {
-  skillsNumber: 4,
-  required: [
-    { skillname: 3 },
-    { skillname2: 0 },
-    { skillname3: 6 },
-    { skillname4: 7 },
-  ],
-  trained: [
-    { skillname: 3 },
-    { skillname2: 1 },
-    { skillname3: 4 },
-    { skillname4: 7 },
-  ],
-  status: [
-    { skillname: 0 },
-    { skillname2: 1 },
-    { skillname3: -2 },
-    { skillname4: 0 },
-  ],
-};
 
-const CMatrixRequires = () => {
-  const required = requiredData.required.map((skill) => {
-    const [key, value] = Object.entries(skill)[0];
-    return <div className={style.Cell}>{value}</div>;
-  });
-  const trained = requiredData.trained.map((skill) => {
-    const [key, value] = Object.entries(skill)[0];
-    return <div className={style.Cell}>{value}</div>;
-  });
-
-  const status = requiredData.status.map((skill) => {
-    let [key, value] = Object.entries(skill)[0];
-    let content = '';
-
-    let styleName = '';
-    if (Number(value) > 0) {
-      styleName = `${style.Over}`;
-
-      content = `+${value}`;
-    } else if (Number(value) < 0) {
-      styleName = `${style.Under}`;
-      content = `${value}`;
-    } else {
-      styleName = `${style.Ok}`;
-      content = '\u2713';
-    }
-    return <div className={`${style.Cell} ${styleName}`}>{content}</div>;
+const CMatrixRequires: FC<{
+  skills: ISkills[];
+  skillsSorted: string[];
+  employees: IEmployee[];
+}> = ({ skills, skillsSorted, employees }) => {
+  const skillsData = skillsSorted?.map((skill) => {
+    return employees.reduce(
+      (result, employee) => {
+        const employeeSkill = employee.skills!.find(
+          (empSkill) => empSkill.skill?.name === skill && empSkill.level > 0
+        );
+        if (employeeSkill) {
+          result.trainedEmployees += 1;
+          result.skillLevel += employeeSkill.level;
+        }
+        return result;
+      },
+      {
+        trainedEmployees: 0,
+        skillLevel: 0,
+      }
+    );
   });
 
   return (
-    <div className={style.Column}>
-      <div className={style.Row}>
-        <span className={style.Title}>Required</span>
-        {required}
+    <div className={style.Row}>
+      <div className={style.Column}>
+        <div className={style.Title}>Trained</div>
+        <div className={style.Title}>Skill Level</div>
       </div>
-      <div className={style.Row}>
-        <span className={style.Title}>Trained</span>
-        {trained}
-      </div>
-      <div className={style.Row}>
-        <span className={style.Title}>Training Status</span>
-        {status}
+      <div className={style.Content}>
+        <div className={style.ContentRow}>
+          {skillsData?.map((skillData) => (
+            <div className={style.Cell}>{skillData.trainedEmployees}</div>
+          ))}
+        </div>
+        <div className={style.ContentRow}>
+          {skillsData?.map((skillData) => (
+            <div className={style.Cell}>{skillData.skillLevel}</div>
+          ))}
+        </div>
       </div>
     </div>
   );

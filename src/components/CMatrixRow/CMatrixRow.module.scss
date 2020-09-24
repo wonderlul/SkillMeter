@@ -1,6 +1,6 @@
 $CellWith: 60px;
 $CellHeight: 50px;
-$SignatureWith: 300px;
+$SignatureWith: 299px;
 
 .Row {
   border: 1px solid black;
@@ -8,19 +8,44 @@ $SignatureWith: 300px;
   flex-direction: row;
   height: $CellHeight;
 }
-.Signature_Cell {
-  height: 100%;
+.Row + .Row {
+  border-top: none;
+}
+.Row:hover {
+  background-color: #f5f5f5bd;
+}
+.Column {
   width: $SignatureWith;
-  overflow: hidden;
   display: flex;
   flex-direction: row;
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  align-items: center;
+  background-color: #fff;
 }
 
-.Cell {
+.Content {
   border-left: 1px solid black;
   width: $CellWith;
   align-items: center;
   justify-content: center;
   display: flex;
   cursor: pointer;
+}
+.Content:hover {
+  background-color: #ebeaea;
+}
+
+.None {
+  color: #ff4d4f;
+  font-weight: bold;
+  font-size: xx-large;
+  text-align: center;
+  padding-top: 5px;
+}
+
+.Dropdown {
+  z-index: 6;
 }

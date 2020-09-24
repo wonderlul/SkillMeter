@@ -1,6 +1,6 @@
 $firstColor: #9ad4fc;
 $secondColor: #4b97cc;
-$size: 20px;
+$size: 35px;
 
 @mixin CIRCLE {
   border: 2px solid $firstColor;
@@ -8,6 +8,7 @@ $size: 20px;
   border-radius: 50%;
   width: $size;
   height: $size;
+  background-color: white;
 }
 
 .LEVEL-1 {

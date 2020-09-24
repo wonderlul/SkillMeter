@@ -1,44 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import { Space } from 'antd';
+import React, { useEffect, useState, FC, useMemo } from 'react';
 import { getAllSkills } from '../../services/skillsSvc';
 import { ISkills } from '../../models/ISkills';
 import { IEmployee } from '../../models/IEmployee';
-import { getAllEmployees } from '../../services/employeesSvc';
+import {
+  getAllEmployees,
+  getPaginatedEmployees,
+} from '../../services/employeesSvc';
 import style from './CMatrix.module.scss';
 
 import CMatrixHeader from '../CMatrixHeader/CMatrixHeader';
-
 import CMatrixRow from '../CMatrixRow/CMatrixRow';
 import CMatrixRequires from '../CMatrixRequires/CMatrixRequires';
+import CMatrixPieChart from '../CMatrixPieChart/CMatrixPieChart';
+import CDrawer, { IFilterConfigData } from '../CDrawer/CDrawer';
 
 export interface IHeader {
   [key: string]: string[];
 }
 
-interface IMatrixData {
+export interface IMatrixData {
   skills?: ISkills[];
   employees?: IEmployee[];
   header?: IHeader;
   skillsNumber?: number;
 }
 
+const CMatrixRowList: FC<{
+  employees: IEmployee[];
+  skills: ISkills[];
+  skillsSorted: string[];
+  getMatrixData: Function;
+}> = ({ employees, skills, skillsSorted, getMatrixData }) => {
+  const rowList = employees.map((employee) => {
+    return (
+      <CMatrixRow
+        employee={employee}
+        skills={skills}
+        skillsSorted={skillsSorted}
+        getMatrixData={getMatrixData}
+      />
+    );
+  });
+  return <>{rowList}</>;
+};
+
 const CMatrix = () => {
-  const [matrixData, setMatrixData] = useState<{
+  interface IMatrixConfig {
     skills?: ISkills[];
     employees?: IEmployee[];
     header?: IHeader;
     skillsNumber?: number;
-  }>({});
+    categories?: string[];
+    skillsSorted?: string[];
+    filterConfigData?: IFilterConfigData;
+  }
 
-  useEffect(() => {
-    (async () => {
+  const [matrixData, setMatrixData] = useState<IMatrixConfig>({});
+  const [filterData, setFilterData] = useState<any>();
+
+  const getMatrixData = async () => {
+    try {
       const {
         skills,
         count,
       }: { skills: ISkills[]; count: number } = await getAllSkills();
-      const { employees }: { employees: IEmployee[] } = await getAllEmployees(
-        1
-      ); // Remember this get only first page of employees!!!!
+      const employees: IEmployee[] = await getAllEmployees();
       const header = skills.reduce<IHeader>((previous, current) => {
         !!previous[current.category]
           ? previous[current.category].push(current.name)
@@ -46,25 +72,142 @@ const CMatrix = () => {
         return previous;
       }, {});
 
-      setMatrixData({ skills, employees, header, skillsNumber: count });
+      const categories: string[] = [];
+      for (const category in header) {
+        if (categories.indexOf(category) === -1) {
+          categories.push(category);
+        }
+      }
+      let skillsSorted: string[] = [];
+      let tags = employees.reduce<string[]>((previous, current) => {
+        previous = previous.concat(current?.tags || []);
+        return previous;
+      }, []);
+      categories.forEach((category) => {
+        skillsSorted = skillsSorted.concat(header[category]);
+      });
+
+      const filterConfigData: IFilterConfigData = {
+        skills: skillsSorted,
+        tags,
+        filter: setFilterData,
+      };
+      setMatrixData({
+        skills,
+        employees,
+        header,
+        skillsNumber: count,
+        categories,
+        skillsSorted,
+        filterConfigData,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useMemo(async () => filter(filterData), [filterData]);
+  async function filter(
+    data: { [key: string]: (string | number)[] }[] | undefined
+  ) {
+    console.log(data);
+    if (!data || data.length === 0) {
+      await getMatrixData();
+      return;
+    }
+    let employees: IEmployee[] = await getAllEmployees();
+    console.log(employees);
+    if (!employees) {
+      return;
+    }
+    console.log(employees);
+    employees = employees!.filter((employee) => {
+      return data.every((filterRecord) => {
+        const [fieldName, filterArray] = Object.entries(filterRecord)[0];
+        return filterArray.every((filterProp: string | number) => {
+          if (fieldName === 'skills') {
+            return employee.skills?.some((skill) => {
+              return skill.skill?.name === String(filterProp);
+            });
+          }
+          if (fieldName === 'startWorkDate') {
+            const givenLevel = filterProp;
+
+            const experience =
+              new Date().getFullYear() -
+              new Date(employee.startWorkDate).getFullYear();
+
+            return (
+              givenLevel === experience ||
+              (givenLevel === 10 && experience > givenLevel)
+            );
+          }
+          if (fieldName === 'level') {
+            return String(employee[fieldName]) === String(filterProp);
+          }
+          if (fieldName === 'tags') {
+            return employee[fieldName]?.includes(String(filterProp));
+          }
+        });
+      });
+    });
+    setMatrixData({ ...matrixData, employees });
+  }
+
+  useEffect(() => {
+    (async () => {
+      try {
+        getMatrixData();
+      } catch (e) {
+        console.log(e);
+      }
     })();
   }, []);
 
   return (
-    <div className={style.Table}>
-      <div className={style.Header}>
-        <div className={style.Piechart}></div>
-        <CMatrixHeader
-          skills={matrixData.skills!}
-          skillsNumber={matrixData.skillsNumber!}
-          header={matrixData.header!}
-        />
-      </div>
-      <div className="">
-        <CMatrixRequires />
-      </div>
-      <div className="">
-        <CMatrixRow />
+    <div className={style.TableScroll}>
+      <div className={style.Table}>
+        <div className={style.Drawer}>
+          {!!matrixData.employees && (
+            <CDrawer {...matrixData.filterConfigData!} />
+          )}
+        </div>
+        <div className={style.Header}>
+          <div className={style.HeadersContainer}>
+            <div className={style.HeaderOne}>
+              <CMatrixPieChart
+                skills={matrixData.skills!}
+                skillsSorted={matrixData.skillsSorted!}
+                employees={matrixData.employees!}
+              />
+            </div>
+            <div className={style.HeaderTwo}>
+              {!!matrixData.categories && (
+                <CMatrixHeader
+                  categories={matrixData.categories!}
+                  header={matrixData.header!}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+        <div className={style.Body}>
+          <div className={style.RowsContainer}>
+            <CMatrixRequires
+              skills={matrixData.skills!}
+              skillsSorted={matrixData.skillsSorted!}
+              employees={matrixData.employees!}
+            />
+
+            {!!matrixData.employees && (
+              <CMatrixRowList
+                employees={matrixData.employees!}
+                skills={matrixData.skills!}
+                skillsSorted={matrixData.skillsSorted!}
+                getMatrixData={getMatrixData}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

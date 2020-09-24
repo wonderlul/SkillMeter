@@ -1,5 +1,22 @@
 import mongoose, { Schema, Document } from "mongoose";
-// import { ISkills } from "../../skills/models/skills.model";
+
+export interface ISkills {
+  _id: string;
+  name: string;
+  category: string;
+  weight: ESkills;
+}
+
+export enum ESkills {
+  ZERO,
+  ONE,
+  TWO,
+  THREE,
+  FOUR,
+  FIVE,
+  SIX,
+  SEVEN,
+}
 
 export enum ELevels {
   TRAINEE,
@@ -16,6 +33,11 @@ export enum EPositions {
   NOT_DEFINED,
 }
 
+export interface IEmployeeSkills {
+  skill: mongoose.Schema.Types.ObjectId;
+  level: number;
+}
+
 export interface IEmployee extends Document {
   name: string;
   surname: string;
@@ -26,7 +48,7 @@ export interface IEmployee extends Document {
   position: EPositions;
   photo: string;
   project?: string;
-  // skills: ISkills[];
+  skills?: IEmployeeSkills[];
 }
 
 const EmployeeSchema: Schema = new Schema({
@@ -39,12 +61,15 @@ const EmployeeSchema: Schema = new Schema({
   position: { type: EPositions, required: true },
   photo: { type: String, required: true },
   project: { type: String, required: false },
-  // skills: [
-  //   {
-  //     ref: "skills",
-  //     type: mongoose.Schema.Types.ObjectId,
-  //   },
-  // ],
+  skills: [
+    {
+      skill: {
+        ref: "skills",
+        type: mongoose.Schema.Types.ObjectId,
+      },
+      level: { type: Number },
+    },
+  ],
 });
 
 export default mongoose.model<IEmployee>("employees", EmployeeSchema);

@@ -1,5 +1,11 @@
 import express, { Request, Response, NextFunction } from "express";
-import EmployeeModel, { IEmployee } from "../models/employee.model";
+import EmployeeModel, {
+  IEmployee,
+  IEmployeeSkills,
+  ISkills,
+} from "../models/employee.model";
+
+import mongoose, { Schema, Document } from "mongoose";
 
 import isEmployeeMiddleware from "../middlewares/isEmployee";
 
@@ -13,10 +19,13 @@ router.get(
       const limit = 5;
 
       const employees = await EmployeeModel.find()
-        // .populate({
-        //   path: "skills",
-        //   select: "_id",
-        // })
+        .populate({
+          path: "skills",
+          populate: {
+            path: "skill",
+            select: "_id name category weight",
+          },
+        })
         .limit(limit)
         .skip((+page - 1) * limit)
         .sort({ startWorkDate: -1 });
@@ -27,6 +36,25 @@ router.get(
         employees,
         count,
       });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.get(
+  "/employees/all",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const employees = await EmployeeModel.find().populate({
+        path: "skills",
+        populate: {
+          path: "skill",
+          select: "_id name category weight",
+        },
+      });
+
+      res.send(employees);
     } catch (e) {
       next(e);
     }
@@ -69,6 +97,39 @@ router.patch(
       const response = await EmployeeModel.findByIdAndUpdate(id, req.body, {
         new: true,
       });
+      res.status(200).send(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.patch(
+  "/employees/:employeeId/skill/:skillObjectId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { employeeId, skillObjectId } = req.params;
+    const {
+      skill,
+      level,
+    }: { skill: mongoose.Schema.Types.ObjectId; level: number } = req.body;
+
+    const isSkillObjectId = skillObjectId === "undefined" ? false : true;
+
+    try {
+      let response;
+
+      if (isSkillObjectId) {
+        response = await EmployeeModel.updateOne(
+          { _id: employeeId, "skills._id": skillObjectId },
+          { $set: { "skills.$.level": level } }
+        );
+      } else {
+        response = await EmployeeModel.updateOne(
+          { _id: employeeId },
+          { $push: { skills: { skill, level } } }
+        );
+      }
+
       res.status(200).send(response);
     } catch (e) {
       next(e);

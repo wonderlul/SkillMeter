@@ -1,37 +1,83 @@
-import React from 'react';
-import style from './CMatrixRow.module.scss';
+import React, { FC } from "react";
+import style from "./CMatrixRow.module.scss";
 
-import CCircle, { levelRange } from '../CCircle/CCircle';
-import CUserSignature from '../CUserSignature/CUserSignature';
-import { Row, Col } from 'antd';
+import CCircle, { levelRange } from "../CCircle/CCircle";
+import CUserSignature from "../CUserSignature/CUserSignature";
+import { IEmployee } from "../../models/IEmployee";
+import { ISkills, ESkillLevel } from "../../models/ISkills";
+import { Dropdown, Menu } from "antd";
+import { updateEmployeeSkill } from "../../services/employeesSvc";
 
-const employee = {
-  name: 'John',
-  lastName: 'Doe',
-  urlAvatar:
-    'https://pbs.twimg.com/profile_images/762226166736547840/hQXGSqX6_bigger.jpg',
-  skills: [
-    { name: 'domestic', level: 1 },
-    { name: 'kran', level: 2 },
-    { name: 'samant', level: 4 },
-    { name: 'domestic', level: 0 },
-    { name: 'kran', level: 2 },
-    { name: 'samant', level: 4 },
-  ],
-};
+const CMatrixRow: FC<{
+  employee: IEmployee;
+  skills: ISkills[];
+  skillsSorted: string[];
+  getMatrixData: Function;
+}> = ({ employee, skills, skillsSorted, getMatrixData }) => {
+  //Cell
+  const skillsCell = skillsSorted.map((skill) => {
+    let employeeSkill = employee.skills!.find(
+      (empSkill) => empSkill.skill?.name === skill && empSkill.level > 0
+    );
 
-const CMatrixRow = () => {
-  const skills = employee.skills.map((skill) => (
-    <div className={style.Cell}>
-      {!!skill.level && <CCircle level={skill.level as levelRange} />}
-    </div>
-  ));
+    let currentSkill = skills.find((currSkill) => currSkill.name === skill);
+    const skillsToNumbers = Object.values(ESkillLevel).filter((elem) =>
+      Number.isInteger(Number(elem))
+    );
+
+    const menu = (
+      <div className={style.Dropdown}>
+        <Menu>
+          {skillsToNumbers.map((skill) => (
+            <Menu.Item
+              onClick={async () => {
+                if (employeeSkill) {
+                  await updateEmployeeSkill(
+                    employee._id,
+                    currentSkill!,
+                    +skill,
+                    employeeSkill
+                  );
+                } else {
+                  await updateEmployeeSkill(
+                    employee._id,
+                    currentSkill!,
+                    +skill
+                  );
+                }
+                getMatrixData();
+              }}
+            >
+              {skill == 0 ? (
+                <div className={style.None}>{`\u2717`}</div>
+              ) : (
+                <CCircle level={+skill as levelRange} />
+              )}
+            </Menu.Item>
+          ))}
+        </Menu>
+      </div>
+    );
+
+    return (
+      <Dropdown overlay={menu} trigger={["click"]}>
+        <div className={style.Content}>
+          {!!employeeSkill && (
+            <CCircle level={employeeSkill.level as levelRange} />
+          )}
+        </div>
+      </Dropdown>
+    );
+  });
+
+  //Row
+
   return (
     <div className={style.Row}>
-      <div className={style.Signature_Cell}>
+      <div className={style.Column}>
         <CUserSignature {...employee} />
       </div>
-      {skills}
+      {skillsCell}
     </div>
   );
 };
