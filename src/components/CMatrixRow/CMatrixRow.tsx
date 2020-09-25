@@ -27,7 +27,7 @@ const CMatrixRow: FC<ICMatrixRow> = ({
   disabledEmployee,
 }) => {
   //Cell
-  const skillsCell = skillsSorted.map((skill) => {
+  const skillsCell = skillsSorted.map((skill, index) => {
     const employeeSkill = employee.skills!.find(
       (empSkill) => empSkill.skill?.name === skill && empSkill.level > 0
     );
@@ -73,8 +73,17 @@ const CMatrixRow: FC<ICMatrixRow> = ({
     );
 
     return (
-      <Dropdown overlay={menu} trigger={['click']}>
-        <div className={style.Content}>
+      <Dropdown
+        key={`${employee._id}${index}`}
+        overlay={menu}
+        trigger={['click']}
+        disabled={disabledEmployee}
+      >
+        <div
+          className={`${style.Content} ${
+            disabledEmployee ? style.DisabledCell : ''
+          }`}
+        >
           {!!employeeSkill && (
             <CCircle level={employeeSkill.level as levelRange} />
           )}

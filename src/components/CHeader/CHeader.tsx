@@ -7,8 +7,6 @@ import styles from './CHeader.module.scss';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
 import { Layout, Input } from 'antd';
-import CDrawer from '../CDrawer/CDrawer';
-import { useLocation, useParams } from 'react-router-dom';
 
 export const CHeader = ({
   isCollapsed,

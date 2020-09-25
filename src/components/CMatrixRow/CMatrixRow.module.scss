@@ -52,5 +52,8 @@ $SignatureWith: 299px;
 }
 .Disabled > * {
   color: rgba(0, 0, 0, 0.6);
-  background-color: rgba(255, 166, 0, 0.1);
+  background-color: rgb(230, 230, 230);
+}
+.DisabledCell {
+  cursor: not-allowed;
 }

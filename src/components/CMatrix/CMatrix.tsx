@@ -112,38 +112,44 @@ const CMatrix = () => {
     if (!employees) {
       return;
     }
+    employees = employees!
+      .filter(
+        (employee) =>
+          !matrixData.disabledEmployees.some(
+            (disabledEmp) => disabledEmp._id === employee._id
+          )
+      )
+      .filter((employee) => {
+        return data.every((filterRecord) => {
+          const [fieldName, filterArray] = Object.entries(filterRecord)[0];
+          return filterArray.every((filterProp: string | number) => {
+            if (fieldName === 'skills') {
+              return employee.skills?.some((skill) => {
+                return skill.skill?.name === String(filterProp);
+              });
+            }
+            if (fieldName === 'startWorkDate') {
+              const givenLevel = filterProp;
 
-    employees = employees!.filter((employee) => {
-      return data.every((filterRecord) => {
-        const [fieldName, filterArray] = Object.entries(filterRecord)[0];
-        return filterArray.every((filterProp: string | number) => {
-          if (fieldName === 'skills') {
-            return employee.skills?.some((skill) => {
-              return skill.skill?.name === String(filterProp);
-            });
-          }
-          if (fieldName === 'startWorkDate') {
-            const givenLevel = filterProp;
+              const experience =
+                new Date().getFullYear() -
+                new Date(employee.startWorkDate).getFullYear();
 
-            const experience =
-              new Date().getFullYear() -
-              new Date(employee.startWorkDate).getFullYear();
-
-            return (
-              givenLevel === experience ||
-              (givenLevel === 10 && experience > givenLevel)
-            );
-          }
-          if (fieldName === 'level') {
-            return String(employee[fieldName]) === String(filterProp);
-          }
-          if (fieldName === 'tags') {
-            return employee[fieldName]?.includes(String(filterProp));
-          }
-          return false;
+              return (
+                givenLevel === experience ||
+                (givenLevel === 10 && experience > givenLevel)
+              );
+            }
+            if (fieldName === 'level') {
+              return String(employee[fieldName]) === String(filterProp);
+            }
+            if (fieldName === 'tags') {
+              return employee[fieldName]?.includes(String(filterProp));
+            }
+            return false;
+          });
         });
       });
-    });
     setMatrixData({ ...matrixData, employees });
   }
 
@@ -174,14 +180,12 @@ const CMatrix = () => {
         (employee) => employee._id !== emp._id
       );
       disabledEmployees = matrixData.disabledEmployees!.concat([emp]);
-      console.log('disabledEmployees', disabledEmployees);
     }
 
     setMatrixData({ ...matrixData, employees, disabledEmployees });
   };
 
   const makeEmployeesRows: IMakeEmployeesRows = (employees, disabled) => {
-    console.log(employees);
     if (!employees) return undefined;
 
     return employees?.map<JSX.Element>((employee, index) => {
@@ -206,50 +210,51 @@ const CMatrix = () => {
     matrixData.disabledEmployees,
     true
   );
-  console.log(disabledEmployeesList);
   return (
-    <div className={style.TableScroll}>
-      <div className={style.Table}>
-        <div className={style.Drawer}>
-          {!!matrixData.employees && (
-            <CDrawer {...matrixData.filterConfigData!} />
-          )}
-        </div>
-        <div className={style.Header}>
-          <div className={style.HeadersContainer}>
-            <div className={style.HeaderOne}>
-              <CMatrixPieChart
+    <>
+      <div className={style.Drawer}>
+        {!!matrixData.employees && (
+          <CDrawer {...matrixData.filterConfigData!} />
+        )}
+      </div>
+      <div className={style.TableScroll}>
+        <div className={style.Table}>
+          <div className={style.Header}>
+            <div className={style.HeadersContainer}>
+              <div className={style.HeaderOne}>
+                <CMatrixPieChart
+                  skills={matrixData.skills!}
+                  skillsSorted={matrixData.skillsSorted!}
+                  employees={matrixData.employees!}
+                />
+              </div>
+              <div className={style.HeaderTwo}>
+                {!!matrixData.categories && (
+                  <CMatrixHeader
+                    categories={matrixData.categories!}
+                    header={matrixData.header!}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+          <div className={style.Body}>
+            <div className={style.RowsContainer}>
+              <CMatrixRequires
                 skills={matrixData.skills!}
                 skillsSorted={matrixData.skillsSorted!}
                 employees={matrixData.employees!}
               />
-            </div>
-            <div className={style.HeaderTwo}>
-              {!!matrixData.categories && (
-                <CMatrixHeader
-                  categories={matrixData.categories!}
-                  header={matrixData.header!}
-                />
+              {!!matrixData.employees && employeesList}
+              {!!matrixData.disabledEmployees?.length && (
+                <Divider>Disabled employees</Divider>
               )}
+              {!!matrixData.disabledEmployees && disabledEmployeesList}
             </div>
-          </div>
-        </div>
-        <div className={style.Body}>
-          <div className={style.RowsContainer}>
-            <CMatrixRequires
-              skills={matrixData.skills!}
-              skillsSorted={matrixData.skillsSorted!}
-              employees={matrixData.employees!}
-            />
-            {!!matrixData.employees && employeesList}
-            {!!matrixData.disabledEmployees?.length && (
-              <Divider>Disabled employees</Divider>
-            )}
-            {!!matrixData.disabledEmployees && disabledEmployeesList}
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,11 +1,11 @@
-import { Button, Checkbox, Col, Drawer, Form, Row, Select, Slider } from 'antd';
 import React, { FC, useState } from 'react';
-import { ESkillLevel } from '../../models/ISkills';
 import style from './CDrawer.module.scss';
+
+import { Button, Checkbox, Col, Drawer, Form, Row, Select, Slider } from 'antd';
+import { ESkillLevel } from '../../models/ISkills';
 import {
   FieldData,
   InternalNamePath,
-  NamePath,
 } from '../../../node_modules/rc-field-form/lib/interface';
 
 export interface IFilterConfigData {
@@ -52,8 +52,8 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
   };
 
   return (
-    <>
-      <Button onClick={showDrawer}>{`\u2699`}</Button>
+    <div className={style.Drawer}>
+      <Button onClick={showDrawer} className={style.Button}>{`\u2699`}</Button>
       <Drawer
         width={350}
         title="Filter"
@@ -68,15 +68,13 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
           onFinish={onFinish}
           onFieldsChange={onFieldsChange}
           initialValues={{
-            ['input-number']: 3,
-            ['checkbox-group']: ['A', 'B'],
             rate: 3.5,
           }}
         >
           <Form.Item name="skills" label="Skills:">
             <Checkbox.Group>
-              {skills.map((skill) => (
-                <Row>
+              {skills.map((skill, index) => (
+                <Row key={`${skill}${index}`}>
                   <Col>
                     <Checkbox value={skill}>{skill}</Checkbox>
                   </Col>
@@ -102,15 +100,17 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
             <Select placeholder="Select seniority level" allowClear>
               {Object.entries(ESkillLevel)
                 .filter(([elem]) => !Number.isInteger(Number(elem)))
-                .map(([key, value]) => (
-                  <Option value={value}>{key}</Option>
+                .map(([key, value], index) => (
+                  <Option value={value} key={`${'' + key + value + index}`}>
+                    {key}
+                  </Option>
                 ))}
             </Select>
           </Form.Item>
           <Form.Item name="tags" label="Tags:">
             <Checkbox.Group>
-              {tags.map((tag) => (
-                <Row>
+              {tags.map((tag, index) => (
+                <Row key={`${'' + tag + index}`}>
                   <Col>
                     <Checkbox value={tag}>{tag}</Checkbox>
                   </Col>
@@ -120,7 +120,7 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
           </Form.Item>
         </Form>
       </Drawer>
-    </>
+    </div>
   );
 };
 
