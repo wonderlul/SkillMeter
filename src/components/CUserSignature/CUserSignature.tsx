@@ -4,12 +4,13 @@ import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 export interface IUserSignature {
+  _id: string;
   name: string;
   surname: string;
   photo?: string;
 }
 
-const CUserSignature = ({ name, surname, photo }: IUserSignature) => {
+const CUserSignature = ({ name, surname, photo, _id }: IUserSignature) => {
   const avatar = photo ? (
     <Avatar src={photo} shape="square" size="large" />
   ) : (

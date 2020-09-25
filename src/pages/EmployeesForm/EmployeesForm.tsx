@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useHistory, Redirect } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 
-import styles from "./EmployeesForm.module.scss";
+import styles from './EmployeesForm.module.scss';
 
-import { IEmployeeDTO, IEmployeeForm } from "../../models/IEmployee";
+import { IEmployeeDTO, IEmployeeForm } from '../../models/IEmployee';
 
 import {
   Form,
@@ -13,14 +13,14 @@ import {
   DatePicker,
   Tag,
   notification,
-} from "antd";
-import { PlusOutlined, LeftOutlined } from "@ant-design/icons";
-import moment from "moment";
+} from 'antd';
+import { PlusOutlined, LeftOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 import {
   CAvatarUpload,
   uploadImage,
-} from "../../components/CAvatarUpload/CAvatarUpload";
+} from '../../components/CAvatarUpload/CAvatarUpload';
 
 import {
   getEmployee,
@@ -30,10 +30,7 @@ import {
   levelsMap,
   positionsMap,
   positionsValues,
-} from "../../services/employeesSvc";
-
-// import { getAllSkillsToForm } from "../../services/skillsSvc";
-// import { ISkills } from "../../models/ISkills";
+} from '../../services/employeesSvc';
 
 const { Option } = Select;
 
@@ -50,13 +47,13 @@ const EmployeesForm = () => {
 
   /* eslint-disable no-template-curly-in-string */
   const validateMessages = {
-    required: "${label} is required!",
+    required: '${label} is required!',
     types: {
-      email: "${label} is not validate email!",
-      number: "${label} is not a validate number!",
+      email: '${label} is not validate email!',
+      number: '${label} is not a validate number!',
     },
     number: {
-      range: "${label} must be between ${min} and ${max}",
+      range: '${label} must be between ${min} and ${max}',
     },
   };
 
@@ -64,11 +61,11 @@ const EmployeesForm = () => {
   const [form] = Form.useForm();
 
   const [inputVisible, setInputVisible] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>('');
   const [submitsAmount, setSubmitsAmount] = useState<number>(0);
 
   const [tags, setTags] = useState<string[]>([]);
-  const [employeePhoto, setEmployeePhoto] = useState("");
+  const [employeePhoto, setEmployeePhoto] = useState('');
   // const [skills, setSkills] = useState<ISkills[]>([]);
 
   /* eslint-disable react-hooks/exhaustive-deps */
@@ -96,33 +93,33 @@ const EmployeesForm = () => {
 
   const openNotificationFailed = () =>
     notification.error({
-      message: "Error!",
-      description: "Something went wrong. Please try again. ",
+      message: 'Error!',
+      description: 'Something went wrong. Please try again. ',
     });
 
   const openNotificationSuccess = (formData: IEmployeeDTO): void => {
     if (id) {
       notification.success({
-        message: "Success!",
+        message: 'Success!',
         description: `You have successfully edit employee ${formData.name} ${formData.surname}! `,
       });
     } else {
       notification.success({
-        message: "Success!",
+        message: 'Success!',
         description: `You have successfully added employee ${formData.name} ${formData.surname}! `,
       });
     }
   };
 
   const disabledDate = (current: moment.Moment) => {
-    return current && current > moment().endOf("day");
+    return current && current > moment().endOf('day');
   };
 
   const onFinish = async (values: any) => {
     let isSucces = false;
 
     const photo =
-      typeof values.photo[0] !== "string"
+      typeof values.photo[0] !== 'string'
         ? await uploadImage(values.photo[0].originFileObj)
         : values.photo;
 
@@ -152,7 +149,7 @@ const EmployeesForm = () => {
       }
     }
     if (isSucces) {
-      history.push("/employees");
+      history.push('/employees');
     }
   };
 
@@ -162,9 +159,9 @@ const EmployeesForm = () => {
   };
 
   const onReset = () => {
-    setInputValue("");
+    setInputValue('');
     setTags([]);
-    setEmployeePhoto("");
+    setEmployeePhoto('');
 
     form.resetFields();
   };
@@ -182,7 +179,7 @@ const EmployeesForm = () => {
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           validateMessages={validateMessages}
-          validateTrigger={[submitsAmount > 0 ? "onChange" : "onSubmit"]}
+          validateTrigger={[submitsAmount > 0 ? 'onChange' : 'onSubmit']}
         >
           <Form.Item
             name="name"
@@ -269,7 +266,7 @@ const EmployeesForm = () => {
                   {fields.map((field, index) => (
                     <Form.Item
                       {...field}
-                      label={index === 0 ? "Tags" : ""}
+                      label={index === 0 ? 'Tags' : ''}
                       key={`${field.key}${index}`}
                     >
                       <Tag
@@ -290,7 +287,7 @@ const EmployeesForm = () => {
                     <Form.Item
                       required
                       rules={[{ required: true, whitespace: true }]}
-                      validateTrigger={["onBlur", "onChange", "onFinish"]}
+                      validateTrigger={['onBlur', 'onChange', 'onFinish']}
                     >
                       <Input
                         type="text"
@@ -304,7 +301,7 @@ const EmployeesForm = () => {
                             add(inputValue, 0);
                           }
                           setInputVisible(false);
-                          setInputValue("");
+                          setInputValue('');
                         }}
                         onPressEnter={() => {
                           if (inputValue && tags.indexOf(inputValue) === -1) {
@@ -312,7 +309,7 @@ const EmployeesForm = () => {
                             add(inputValue, 0);
                           }
                           setInputVisible(false);
-                          setInputValue("");
+                          setInputValue('');
                         }}
                       />
                     </Form.Item>

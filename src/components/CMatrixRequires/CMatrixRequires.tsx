@@ -1,7 +1,7 @@
-import React, { FC } from "react";
-import { IEmployee } from "../../models/IEmployee";
-import { ISkills } from "../../models/ISkills";
-import style from "./CMatrixRequires.module.scss";
+import React, { FC } from 'react';
+import { IEmployee } from '../../models/IEmployee';
+import { ISkills } from '../../models/ISkills';
+import style from './CMatrixRequires.module.scss';
 
 const CMatrixRequires: FC<{
   skills: ISkills[];
@@ -35,13 +35,17 @@ const CMatrixRequires: FC<{
       </div>
       <div className={style.Content}>
         <div className={style.ContentRow}>
-          {skillsData?.map((skillData) => (
-            <div className={style.Cell}>{skillData.trainedEmployees}</div>
+          {skillsData?.map((skillData, index) => (
+            <div className={style.Cell} key={`${index}trainedEmployees`}>
+              {skillData.trainedEmployees}
+            </div>
           ))}
         </div>
         <div className={style.ContentRow}>
-          {skillsData?.map((skillData) => (
-            <div className={style.Cell}>{skillData.skillLevel}</div>
+          {skillsData?.map((skillData, index) => (
+            <div className={style.Cell} key={`${index}skillLevel`}>
+              {skillData.skillLevel}
+            </div>
           ))}
         </div>
       </div>
