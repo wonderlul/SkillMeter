@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import SkillsModel, { ISkills } from "../models/skills.model";
 import isSkillMiddleware from "../middlewares/isSkill";
+import isToken from "../../employees/middlewares/isToken";
 
 export interface IGetSkills {
   page?: number;
@@ -12,6 +13,7 @@ const router = express.Router();
 
 router.get(
   "/skills",
+  isToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       let skills: ISkills[];
@@ -40,6 +42,7 @@ router.get(
 );
 router.get(
   "/skills/:id",
+  isToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -52,6 +55,7 @@ router.get(
 );
 router.post(
   "/skills",
+  isToken,
   isSkillMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -66,6 +70,7 @@ router.post(
 );
 router.patch(
   "/skills/:id",
+  isToken,
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
@@ -80,6 +85,7 @@ router.patch(
 );
 router.delete(
   "/skills/:id",
+  isToken,
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {

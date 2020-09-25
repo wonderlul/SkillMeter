@@ -8,11 +8,13 @@ import EmployeeModel, {
 import mongoose, { Schema, Document } from "mongoose";
 
 import isEmployeeMiddleware from "../middlewares/isEmployee";
+import isToken from "../middlewares/isToken";
 
 const router = express.Router();
 
 router.get(
   "/employees",
+  isToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { page = 1 } = req.query;
@@ -44,6 +46,7 @@ router.get(
 
 router.get(
   "/employees/all",
+  isToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const employees = await EmployeeModel.find().populate({
@@ -63,6 +66,7 @@ router.get(
 
 router.get(
   "/employees/:id",
+  isToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -76,6 +80,7 @@ router.get(
 
 router.post(
   "/employees",
+  isToken,
   isEmployeeMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -91,6 +96,7 @@ router.post(
 
 router.patch(
   "/employees/:id",
+  isToken,
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
@@ -106,6 +112,7 @@ router.patch(
 
 router.patch(
   "/employees/:employeeId/skill/:skillObjectId",
+  isToken,
   async (req: Request, res: Response, next: NextFunction) => {
     const { employeeId, skillObjectId } = req.params;
     const {
@@ -139,6 +146,7 @@ router.patch(
 
 router.delete(
   "/employees/:id",
+  isToken,
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {

@@ -1,5 +1,6 @@
 import { ISkillsDTO, ESkills, ISort } from "../models/ISkills";
-import axios from "axios";
+
+import { http } from "./httpSvc";
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
@@ -17,7 +18,7 @@ export const getAllSkills = async (page?: number, sortBy?: ISort) => {
   }
 
   try {
-    const { data } = await axios.get(`${SERVER_URL}/skills/?${url}`);
+    const { data } = await http.get(`${SERVER_URL}/skills/?${url}`);
     return data;
   } catch (error) {
     console.log(error.message);
@@ -25,7 +26,7 @@ export const getAllSkills = async (page?: number, sortBy?: ISort) => {
 };
 export const getSkill = async (id: string) => {
   try {
-    const { data } = await axios.get(`${SERVER_URL}/skills/${id}`);
+    const { data } = await http.get(`${SERVER_URL}/skills/${id}`);
     console.log(data);
     return data;
   } catch (error) {
@@ -34,7 +35,7 @@ export const getSkill = async (id: string) => {
 };
 export const addSkill = async (skill: ISkillsDTO) => {
   try {
-    const { data } = await axios.post(`${SERVER_URL}/skills`, skill);
+    const { data } = await http.post(`${SERVER_URL}/skills`, skill);
     return data;
   } catch (error) {
     console.log(error);
@@ -42,7 +43,7 @@ export const addSkill = async (skill: ISkillsDTO) => {
 };
 export const deleteSkill = async (id: string) => {
   try {
-    const { data } = await axios.delete(`${SERVER_URL}/skills/${id}`);
+    const { data } = await http.delete(`${SERVER_URL}/skills/${id}`);
     return data;
   } catch (error) {
     console.log(error);
@@ -50,7 +51,7 @@ export const deleteSkill = async (id: string) => {
 };
 export const updateSkill = async (id: string, employee: ISkillsDTO) => {
   try {
-    const { data } = await axios.patch(`${SERVER_URL}/skills/${id}`, employee);
+    const { data } = await http.patch(`${SERVER_URL}/skills/${id}`, employee);
     return data;
   } catch (error) {
     console.log(error);

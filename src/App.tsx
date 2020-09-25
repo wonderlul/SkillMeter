@@ -1,15 +1,32 @@
-import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Router, useHistory } from 'react-router-dom';
 
-import "./App.scss";
+import './App.scss';
 
-import CLayout from "./components/CLayout/CLayout";
+import history from './history';
+
+import CLayout from './components/CLayout/CLayout';
+import Login from './pages/Login/Login';
+
+import { hasToken } from './services/authSvc';
 
 export const App = () => {
+  const [isToken, setIsToken] = useState(hasToken());
+
+  useEffect(() => history.listen(() => setIsToken(hasToken())), []);
+
   return (
     <>
-      <Router>
-        <CLayout />
+      <Router history={history}>
+        {isToken ? (
+          <CLayout
+            handlerToken={() => {
+              setIsToken(false);
+            }}
+          />
+        ) : (
+          <Login setIsToken={setIsToken} />
+        )}
       </Router>
     </>
   );
