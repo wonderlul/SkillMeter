@@ -29,12 +29,12 @@ export const CHeader = ({
             className={styles.trigger}
           />
         )}
-        <Search
+        {/* <Search
           className={styles.searchBar}
           placeholder="search employee"
           onSearch={(value) => console.log(value)}
           style={{ width: 200 }}
-        />
+        /> */}
       </Header>
     </div>
   );
