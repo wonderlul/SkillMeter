@@ -13,9 +13,16 @@ export const App = () => {
   const token = getAccessToken();
 
   const [isToken, setIsToken] = useState(true);
+
   return (
     <>
-      <Router>{token ? <CLayout /> : <Login setIsToken={setIsToken} />}</Router>
+      <Router>
+        {isToken ? (
+          <CLayout setIsToken={setIsToken} />
+        ) : (
+          <Login setIsToken={setIsToken} />
+        )}
+      </Router>
     </>
   );
 };

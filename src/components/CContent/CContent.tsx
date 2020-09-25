@@ -8,7 +8,6 @@ import Employees from "../../pages/Employees/Employees";
 import Skillsets from "../../pages/Skillsets/Skillsets";
 import EmployeesForm from "../../pages/EmployeesForm/EmployeesForm";
 import SkillsetsForm from "../../pages/SkillsetsForm/SkillsetsForm";
-import Login from "../../pages/Login/Login";
 
 import { Layout } from "antd";
 
@@ -20,7 +19,6 @@ export const CContent = () => {
       <Content className={styles.siteLayoutBackground}>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/login" component={Login} />
           <Route exact path="/skills" component={Skillsets} />
           <Route exact path="/skills/add" component={SkillsetsForm} />
           <Route path="/skills/:id" component={SkillsetsForm} />

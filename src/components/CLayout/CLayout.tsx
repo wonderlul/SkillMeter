@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 
 import { Redirect } from "react-router-dom";
 
@@ -13,7 +13,7 @@ import { getAccessToken } from "../../services/authSvc";
 
 import { Layout } from "antd";
 
-export const CLayout = () => {
+export const CLayout: FC<{ setIsToken: Function }> = ({ setIsToken }) => {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const collapseHandler = (isCollapsed: ICollapse): void => {
@@ -24,13 +24,13 @@ export const CLayout = () => {
 
   useEffect(() => {
     if (token) {
-      userHasAuthenticated(true);
+      setIsToken(true);
     } else {
-      userHasAuthenticated(false);
+      setIsToken(false);
     }
   }, [token]);
 
-  return isAuthenticated ? (
+  return (
     <div className={styles.centerWrapper}>
       <Layout>
         <CNavbar isCollapsed={isCollapsed} />
@@ -43,8 +43,6 @@ export const CLayout = () => {
         </Layout>
       </Layout>
     </div>
-  ) : (
-    <Redirect to="/login" />
   );
 };
 

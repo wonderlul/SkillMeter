@@ -20,9 +20,9 @@ export const LoginPage: FC<ILogin> = ({ setIsToken }) => {
     if (token) {
       setToken(token?.data);
       history.push("/");
-      setIsToken(false);
+      setIsToken(true);
     } else {
-      console.log("not authorized");
+      setIsToken(false);
     }
   };
 
