@@ -1,18 +1,18 @@
-import axios from "axios";
 import {
   IEmployeeDTO,
   ELevels,
   EPositions,
   IEmployeeSkills,
-  IEmployeeSkillsDTO,
   ISkills,
 } from "../models/IEmployee";
+
+import { http } from "../services/httpSvc";
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
 export const getAllEmployees = async () => {
   try {
-    const { data } = await axios.get(`${SERVER_URL}/employees/all`);
+    const { data } = await http.get(`${SERVER_URL}/employees/all`);
 
     return data;
   } catch (error) {
@@ -22,7 +22,7 @@ export const getAllEmployees = async () => {
 
 export const getPaginatedEmployees = async (page: number) => {
   try {
-    const { data } = await axios.get(`${SERVER_URL}/employees/?page=${page}`);
+    const { data } = await http.get(`${SERVER_URL}/employees/?page=${page}`);
     return data;
   } catch (error) {
     console.log(error.message);
@@ -31,7 +31,7 @@ export const getPaginatedEmployees = async (page: number) => {
 
 export const getEmployee = async (id: string) => {
   try {
-    const { data } = await axios.get(`${SERVER_URL}/employees/${id}`);
+    const { data } = await http.get(`${SERVER_URL}/employees/${id}`);
     return data;
   } catch (error) {
     console.log(error);
@@ -40,7 +40,7 @@ export const getEmployee = async (id: string) => {
 
 export const addEmployee = async (employee: IEmployeeDTO) => {
   try {
-    const { data } = await axios.post(`${SERVER_URL}/employees`, employee);
+    const { data } = await http.post(`${SERVER_URL}/employees`, employee);
     return data;
   } catch (error) {
     console.log(error);
@@ -49,7 +49,7 @@ export const addEmployee = async (employee: IEmployeeDTO) => {
 
 export const updateEmployee = async (id: string, employee: IEmployeeDTO) => {
   try {
-    const { data } = await axios.patch(
+    const { data } = await http.patch(
       `${SERVER_URL}/employees/${id}`,
       employee
     );
@@ -68,7 +68,7 @@ export const updateEmployeeSkill = async (
   try {
     const {
       data,
-    } = await axios.patch(
+    } = await http.patch(
       `${SERVER_URL}/employees/${employeeId}/skill/${skillObject?._id}`,
       { skill, level }
     );
@@ -81,7 +81,7 @@ export const updateEmployeeSkill = async (
 
 export const deleteEmployee = async (id: string) => {
   try {
-    const { data } = await axios.delete(`${SERVER_URL}/employees/${id}`);
+    const { data } = await http.delete(`${SERVER_URL}/employees/${id}`);
     return data;
   } catch (error) {
     console.log(error);

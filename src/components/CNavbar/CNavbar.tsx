@@ -22,7 +22,7 @@ export const CNavbar = ({ isCollapsed }: ICollapse) => {
         <div className={styles.logo} />
         <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
           <Menu.Item key="1" icon={<HomeOutlined />}>
-            <NavLink exact to="/" />
+            <NavLink to="/" />
             Home
           </Menu.Item>
 

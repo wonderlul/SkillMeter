@@ -18,18 +18,22 @@ router.post(
         password,
       });
 
-      const token = jwt.sign({ userId: user?._id }, "RANDOM_TOKEN_SECRET", {
-        expiresIn: "24h",
-      });
+      if (user) {
+        const token = jwt.sign({ userId: user?._id }, "RANDOM_TOKEN_SECRET", {
+          expiresIn: "24h",
+        });
 
-      const newToken = new TokenModel({
-        userId: user?._id,
-        token: token,
-      });
+        const newToken = new TokenModel({
+          userId: user?._id,
+          token: token,
+        });
 
-      const response = await newToken.save();
+        const response = await newToken.save();
 
-      res.status(200).json(newToken);
+        res.status(200).json(token);
+      } else {
+        res.sendStatus(404);
+      }
     } catch (e) {
       next(e);
     }

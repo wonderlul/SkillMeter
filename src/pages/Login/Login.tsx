@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 
 import styles from "./Login.module.scss";
 
-import { login } from "../../services/authSvc";
+import { login, setToken } from "../../services/authSvc";
 
 export interface ILogin {
   setIsToken: Function;
@@ -16,11 +16,14 @@ export const LoginPage: FC<ILogin> = ({ setIsToken }) => {
   const history = useHistory();
 
   const onFinish = async (values: any) => {
-    // setIsToken(false);
-    const dupa = await login();
-    history.push("/home");
-    console.log("Received values of form: ", values);
-    console.log(dupa);
+    const token = await login();
+    if (token) {
+      setToken(token?.data);
+      history.push("/");
+      setIsToken(false);
+    } else {
+      console.log("not authorized");
+    }
   };
 
   return (

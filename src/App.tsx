@@ -6,13 +6,16 @@ import "./App.scss";
 import CLayout from "./components/CLayout/CLayout";
 import Login from "./pages/Login/Login";
 
+import { getAccessToken, clearToken } from "./services/authSvc";
+
 export const App = () => {
+  // clearToken();
+  const token = getAccessToken();
+
   const [isToken, setIsToken] = useState(true);
   return (
     <>
-      <Router>
-        {isToken ? <Login setIsToken={setIsToken} /> : <CLayout />}
-      </Router>
+      <Router>{token ? <CLayout /> : <Login setIsToken={setIsToken} />}</Router>
     </>
   );
 };
