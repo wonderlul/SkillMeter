@@ -1,27 +1,30 @@
-import axios from "axios";
+import axios from 'axios';
 
-import { getAccessToken } from "./authSvc";
+import { clearToken, getAccessToken } from './authSvc';
+import history from '../history';
 
 export const http = axios.create();
 
-http.interceptors.request.use(
-  (config) => {
-    const token = getAccessToken();
+http.interceptors.request.use((config) => {
+  const token = getAccessToken();
 
-    if (token) {
-      config.headers["Authorization"] = "Bearer " + token;
-    }
-
-    return config;
-  },
-  (error) => {
-    Promise.reject(error);
+  if (token) {
+    config.headers['Authorization'] = 'Bearer ' + token;
   }
-);
+
+  return config;
+});
 
 http.interceptors.response.use(
   (response) => {
     return response;
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      clearToken();
+      history.push('/');
+    }
+    return error;
   }
   // , function (error) {
   //   const originalRequest = error.config;

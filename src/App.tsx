@@ -1,24 +1,29 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Router, useHistory } from 'react-router-dom';
 
-import "./App.scss";
+import './App.scss';
 
-import CLayout from "./components/CLayout/CLayout";
-import Login from "./pages/Login/Login";
+import history from './history';
 
-import { getAccessToken, clearToken } from "./services/authSvc";
+import CLayout from './components/CLayout/CLayout';
+import Login from './pages/Login/Login';
+
+import { hasToken } from './services/authSvc';
 
 export const App = () => {
-  // clearToken();
-  const token = getAccessToken();
+  const [isToken, setIsToken] = useState(hasToken());
 
-  const [isToken, setIsToken] = useState(true);
+  useEffect(() => history.listen(() => setIsToken(hasToken())), []);
 
   return (
     <>
-      <Router>
+      <Router history={history}>
         {isToken ? (
-          <CLayout setIsToken={setIsToken} />
+          <CLayout
+            handlerToken={() => {
+              setIsToken(false);
+            }}
+          />
         ) : (
           <Login setIsToken={setIsToken} />
         )}

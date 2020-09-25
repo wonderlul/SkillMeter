@@ -6,13 +6,13 @@ import styles from './CHeader.module.scss';
 
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
-import { Layout, Input } from 'antd';
+import { Layout, Button } from 'antd';
 
 export const CHeader = ({
   isCollapsed,
   collapseHandler = (): void => {},
+  handlerToken,
 }: ICollapse) => {
-  const { Search } = Input;
   const { Header } = Layout;
 
   return (
@@ -29,12 +29,13 @@ export const CHeader = ({
             className={styles.trigger}
           />
         )}
-        {/* <Search
-          className={styles.searchBar}
-          placeholder="search employee"
-          onSearch={(value) => console.log(value)}
-          style={{ width: 200 }}
-        /> */}
+        <Button
+          onClick={() => {
+            handlerToken!();
+          }}
+        >
+          Logout
+        </Button>
       </Header>
     </div>
   );
