@@ -7,6 +7,8 @@ import styles from './CHeader.module.scss';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
 import { Layout, Button } from 'antd';
+import { clear } from 'console';
+import { clearToken } from '../../services/authSvc';
 
 export const CHeader = ({
   isCollapsed,
@@ -32,6 +34,7 @@ export const CHeader = ({
         <Button
           onClick={() => {
             handlerToken!();
+            clearToken();
           }}
         >
           Logout
