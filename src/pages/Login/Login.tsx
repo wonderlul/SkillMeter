@@ -25,6 +25,7 @@ export const LoginPage: FC<ILogin> = ({ setIsToken }) => {
 
   return (
     <div className={styles.wrapper}>
+
       <Form
         name="normal_login"
         initialValues={{ remember: true }}
@@ -33,6 +34,7 @@ export const LoginPage: FC<ILogin> = ({ setIsToken }) => {
         <Form.Item
           name="username"
           rules={[{ required: true, message: 'Please input your Username!' }]}
+          initialValue="test_user"
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
@@ -42,6 +44,7 @@ export const LoginPage: FC<ILogin> = ({ setIsToken }) => {
         <Form.Item
           name="password"
           rules={[{ required: true, message: 'Please input your Password!' }]}
+          initialValue="test_user"
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}

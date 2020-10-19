@@ -231,17 +231,6 @@ const EmployeesForm = () => {
             </Select>
           </Form.Item>
 
-          {/* <Form.Item name="skills" label="Skills" rules={[{ required: true }]}>
-            <Select
-              mode="multiple"
-              placeholder="Select the employee skills"
-              allowClear
-            >
-              {skills!.map((skill) => (
-                <Option value={skill.name}>{skill.name}</Option>
-              ))}
-            </Select>
-          </Form.Item> */}
 
           <Form.Item
             name="position"

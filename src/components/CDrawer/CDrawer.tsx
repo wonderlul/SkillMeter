@@ -85,7 +85,7 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
                 4: "4",
                 6: "6",
                 8: "8",
-                10: "Max",
+                10: "10",
               }}
             />
           </Form.Item>
@@ -95,7 +95,7 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
               {tags.map((tag, index) => (
                 <Row key={`${"" + tag + index}`}>
                   <Col>
-                    <Checkbox value={tag}>{tag}</Checkbox>
+                    <Checkbox value={tag}>#{tag}</Checkbox>
                   </Col>
                 </Row>
               ))}

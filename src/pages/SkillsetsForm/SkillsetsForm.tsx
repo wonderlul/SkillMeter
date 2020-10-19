@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Select, Divider, notification } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, LeftOutlined } from '@ant-design/icons';
 
 import {
   addSkill,
@@ -13,6 +13,8 @@ import {
 import { ISkillsDTO } from "../../models/ISkills";
 
 import { useParams, useHistory } from "react-router-dom";
+
+import styles from "./SkillsetsForm.module.scss"
 
 const SkillsetsForm = () => {
   const history = useHistory();
@@ -111,7 +113,11 @@ const SkillsetsForm = () => {
     }
   };
   return (
-    <>
+    <div className={styles.wrapper}>
+        <div className={styles.goBack} onClick={history.goBack}>
+        <LeftOutlined />
+        <span>Back</span>
+      </div>
       <Form
         onFinish={(values) => {
           onFinish(values);
@@ -192,7 +198,7 @@ const SkillsetsForm = () => {
           </Button>
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 };
 export default SkillsetsForm;

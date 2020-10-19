@@ -112,14 +112,14 @@ const CMatrix = () => {
             }
             if (fieldName === "startWorkDate") {
               const givenLevel = filterProp;
+              
 
               const experience =
                 new Date().getFullYear() -
                 new Date(employee.startWorkDate).getFullYear();
 
               return (
-                givenLevel === experience ||
-                (givenLevel === 10 && experience > givenLevel)
+              experience >= givenLevel
               );
             }
             if (fieldName === "level") {
