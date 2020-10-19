@@ -1,4 +1,4 @@
-## Praktyki 2020!
+## SkillMeter
 
 1. Install deps: `yarn`
-2. Run app: `yarn start` -OR- run storybook: `yarn storybook`
+2. Run app: `yarn start`
