@@ -1,17 +1,18 @@
-import React, { FC, useState } from 'react';
-import style from './CDrawer.module.scss';
+import React, { FC, useState } from "react";
 
-import { Button, Checkbox, Col, Drawer, Form, Row, Select, Slider } from 'antd';
-import { ESkillLevel } from '../../models/ISkills';
+import style from "./CDrawer.module.scss";
+
+import { Button, Checkbox, Col, Drawer, Form, Row, Slider } from "antd";
+
 import {
   FieldData,
   InternalNamePath,
-} from '../../../node_modules/rc-field-form/lib/interface';
+} from "../../../node_modules/rc-field-form/lib/interface";
 
 export interface IFilterConfigData {
   skills: string[];
   tags: string[];
-  filterCallback: (value: any) => void;
+  filterCallback: Function;
 }
 
 const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
@@ -23,29 +24,21 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
     setVisible(false);
   };
   const onFieldsChange = (v: FieldData[], data: FieldData[]) => {
-    let value = data.reduce(
-      (previous: { [key: string]: string[] }[], current) => {
-        if (current.value || current.value?.length > 0) {
-          previous.push({
-            [(current.name as InternalNamePath)[0]]: Array.isArray(
-              current.value
-            )
-              ? current.value
-              : [current.value],
-          });
-        }
-        return previous;
-      },
-      []
-    );
+    let value = data.reduce((result: { [key: string]: string[] }[], field) => {
+      if (field.value || field.value?.length > 0) {
+        result.push({
+          [(field.name as InternalNamePath)[0]]: Array.isArray(field.value)
+            ? field.value
+            : [field.value],
+        });
+      }
+      return result;
+    }, []);
     value = value.filter((elem) => Object.values(elem)[0].length !== 0);
 
     filterCallback(value);
   };
-  const onFinish = (value: any) => {
-    console.log(value);
-  };
-  const { Option } = Select;
+
   const formItemLayout = {
     labelCol: { span: 24 },
     wrapperCol: { span: 24 },
@@ -65,7 +58,7 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
         <Form
           {...formItemLayout}
           name="validate_other"
-          onFinish={onFinish}
+          onFinish={() => {}}
           onFieldsChange={onFieldsChange}
           initialValues={{
             rate: 3.5,
@@ -87,30 +80,20 @@ const CDrawer: FC<IFilterConfigData> = ({ skills, tags, filterCallback }) => {
               min={0}
               max={10}
               marks={{
-                0: '0',
-                2: '2',
-                4: '4',
-                6: '6',
-                8: '8',
-                10: 'Max',
+                0: "0",
+                2: "2",
+                4: "4",
+                6: "6",
+                8: "8",
+                10: "Max",
               }}
             />
           </Form.Item>
-          <Form.Item name="level" label="Level:">
-            <Select placeholder="Select seniority level" allowClear>
-              {Object.entries(ESkillLevel)
-                .filter(([elem]) => !Number.isInteger(Number(elem)))
-                .map(([key, value], index) => (
-                  <Option value={value} key={`${'' + key + value + index}`}>
-                    {key}
-                  </Option>
-                ))}
-            </Select>
-          </Form.Item>
+
           <Form.Item name="tags" label="Tags:">
             <Checkbox.Group>
               {tags.map((tag, index) => (
-                <Row key={`${'' + tag + index}`}>
+                <Row key={`${"" + tag + index}`}>
                   <Col>
                     <Checkbox value={tag}>{tag}</Checkbox>
                   </Col>

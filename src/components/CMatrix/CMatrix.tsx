@@ -1,43 +1,25 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { getAllSkills } from '../../services/skillsSvc';
-import { ISkills } from '../../models/ISkills';
-import { IEmployee } from '../../models/IEmployee';
-import { getAllEmployees } from '../../services/employeesSvc';
-import style from './CMatrix.module.scss';
+import React, { useEffect, useState, useMemo } from "react";
 
-import CMatrixHeader from '../CMatrixHeader/CMatrixHeader';
-import CMatrixRow from '../CMatrixRow/CMatrixRow';
-import CMatrixRequires from '../CMatrixRequires/CMatrixRequires';
-import CMatrixPieChart from '../CMatrixPieChart/CMatrixPieChart';
-import CDrawer, { IFilterConfigData } from '../CDrawer/CDrawer';
-import { Divider } from 'antd';
+import { getAllSkills } from "../../services/skillsSvc";
+import { getAllEmployees } from "../../services/employeesSvc";
 
-export interface IHeader {
-  [key: string]: string[];
-}
+import { ISkills } from "../../models/ISkills";
+import { IEmployee } from "../../models/IEmployee";
+import {
+  IHeader,
+  IMatrixConfig,
+  IMakeEmployeesRows,
+} from "../../models/IMatrix";
 
-export interface IMatrixData {
-  skills?: ISkills[];
-  employees?: IEmployee[];
-  disabledEmployees?: IEmployee[];
-  header?: IHeader;
-  skillsNumber?: number;
-}
+import style from "./CMatrix.module.scss";
 
-interface IMatrixConfig {
-  skills?: ISkills[];
-  employees?: IEmployee[];
-  disabledEmployees: IEmployee[];
-  header?: IHeader;
-  skillsNumber?: number;
-  categories?: string[];
-  skillsSorted?: string[];
-  filterConfigData?: IFilterConfigData;
-}
+import CMatrixHeader from "../CMatrixHeader/CMatrixHeader";
+import CMatrixRow from "../CMatrixRow/CMatrixRow";
+import CMatrixRequires from "../CMatrixRequires/CMatrixRequires";
+import CMatrixPieChart from "../CMatrixPieChart/CMatrixPieChart";
+import CDrawer, { IFilterConfigData } from "../CDrawer/CDrawer";
 
-interface IMakeEmployeesRows {
-  (employees?: IEmployee[], disabled?: boolean): JSX.Element[] | undefined;
-}
+import { Divider } from "antd";
 
 const CMatrix = () => {
   const [matrixData, setMatrixData] = useState<IMatrixConfig>({
@@ -123,12 +105,12 @@ const CMatrix = () => {
         return data.every((filterRecord) => {
           const [fieldName, filterArray] = Object.entries(filterRecord)[0];
           return filterArray.every((filterProp: string | number) => {
-            if (fieldName === 'skills') {
+            if (fieldName === "skills") {
               return employee.skills?.some((skill) => {
                 return skill.skill?.name === String(filterProp);
               });
             }
-            if (fieldName === 'startWorkDate') {
+            if (fieldName === "startWorkDate") {
               const givenLevel = filterProp;
 
               const experience =
@@ -140,10 +122,10 @@ const CMatrix = () => {
                 (givenLevel === 10 && experience > givenLevel)
               );
             }
-            if (fieldName === 'level') {
+            if (fieldName === "level") {
               return String(employee[fieldName]) === String(filterProp);
             }
-            if (fieldName === 'tags') {
+            if (fieldName === "tags") {
               return employee[fieldName]?.includes(String(filterProp));
             }
             return false;

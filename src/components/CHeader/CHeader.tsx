@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import ICollapse from '../../models/ICollapse';
+import ICollapse from "../../models/ICollapse";
 
-import styles from './CHeader.module.scss';
+import styles from "./CHeader.module.scss";
 
-import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 
-import { Layout, Button } from 'antd';
-import { clearToken } from '../../services/authSvc';
+import { Layout, Button } from "antd";
+import { clearToken } from "../../services/authSvc";
 
 export const CHeader = ({
   isCollapsed,

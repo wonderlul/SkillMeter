@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { IHeader } from "../CMatrix/CMatrix";
+import { IHeader } from "../../models/IMatrix";
 import styles from "./CMatrixHeader.module.scss";
 
 export interface IMatrixSkills {

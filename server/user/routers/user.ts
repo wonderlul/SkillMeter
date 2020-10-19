@@ -1,8 +1,9 @@
 import express, { Request, Response, NextFunction } from "express";
-import UserModel from "../models/user.model";
-import TokenModel from "../../token/models/token.model";
 
 import jwt from "jsonwebtoken";
+
+import UserModel from "../models/user.model";
+import TokenModel from "../../token/models/token.model";
 
 const router = express.Router();
 
@@ -28,7 +29,7 @@ router.post(
           token: token,
         });
 
-        const response = await newToken.save();
+        await newToken.save();
 
         res.status(200).json(token);
       } else {

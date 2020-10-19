@@ -3,10 +3,11 @@ import {
   ELevels,
   EPositions,
   IEmployeeSkills,
-  ISkills,
-} from '../models/IEmployee';
+} from "../models/IEmployee";
 
-import { http } from '../services/httpSvc';
+import { ISkills } from "../models/ISkills";
+
+import { http } from "../services/httpSvc";
 
 const SERVER_URL = process.env.REACT_APP_URL_SERVER;
 
@@ -89,10 +90,10 @@ export const deleteEmployee = async (id: string) => {
 };
 
 export const levelsValues: { [key: number]: string } = {
-  [ELevels.JUNIOR]: 'Junior',
-  [ELevels.MID]: 'Mid',
-  [ELevels.SENIOR]: 'Senior',
-  [ELevels.TRAINEE]: 'Trainee',
+  [ELevels.JUNIOR]: "Junior",
+  [ELevels.MID]: "Mid",
+  [ELevels.SENIOR]: "Senior",
+  [ELevels.TRAINEE]: "Trainee",
 };
 
 export const levelsMap = (param: number) => {
@@ -103,9 +104,9 @@ export const levelsMap = (param: number) => {
 };
 
 export const positionsValues: { [key: number]: string } = {
-  [EPositions.PROJECT_MANAGER]: 'Project Manager',
-  [EPositions.QA]: 'QA',
-  [EPositions.SOFTWARE_DEVELOPER]: 'Software Developer',
+  [EPositions.PROJECT_MANAGER]: "Project Manager",
+  [EPositions.QA]: "QA",
+  [EPositions.SOFTWARE_DEVELOPER]: "Software Developer",
 };
 
 export const positionsMap = (param: EPositions) => {

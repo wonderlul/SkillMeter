@@ -4,9 +4,8 @@ $SignatureWith: 299px;
 
 .Row {
   display: inline-flex;
-  border: 1px solid black;
-  border-bottom: none;
-  border-top: none;
+  border-right: 1px solid black;
+
   position: sticky;
   top: 310px;
   z-index: 5;
@@ -48,6 +47,7 @@ $SignatureWith: 299px;
   z-index: 2;
   align-items: flex-start;
   background-color: #fff;
+  border-left: 1px solid black;
   // justify-content: flex-start;
 }
 

@@ -1,9 +1,10 @@
 $CellWith: 60px;
 $CellHeight: 50px;
-$SignatureWith: 299px;
+$SignatureWith: 300px;
 
 .Row {
   border: 1px solid black;
+  border-left: none;
   display: inline-flex;
   flex-direction: row;
   height: $CellHeight;
@@ -24,6 +25,7 @@ $SignatureWith: 299px;
   z-index: 2;
   align-items: center;
   background-color: #fff;
+  border-left: 1px solid black;
   cursor: pointer;
 }
 

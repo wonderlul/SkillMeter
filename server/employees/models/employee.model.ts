@@ -1,23 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface ISkills {
-  _id: string;
-  name: string;
-  category: string;
-  weight: ESkills;
-}
-
-export enum ESkills {
-  ZERO,
-  ONE,
-  TWO,
-  THREE,
-  FOUR,
-  FIVE,
-  SIX,
-  SEVEN,
-}
-
 export enum ELevels {
   TRAINEE,
   JUNIOR,

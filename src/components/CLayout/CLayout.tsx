@@ -1,14 +1,14 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState } from "react";
 
-import CNavbar from '../CNavbar/CNavbar';
-import CHeader from '../CHeader/CHeader';
-import CContent from '../CContent/CContent';
+import CNavbar from "../CNavbar/CNavbar";
+import CHeader from "../CHeader/CHeader";
+import CContent from "../CContent/CContent";
 
-import styles from './CLayout.module.scss';
+import styles from "./CLayout.module.scss";
 
-import ICollapse from '../../models/ICollapse';
+import ICollapse from "../../models/ICollapse";
 
-import { Layout } from 'antd';
+import { Layout } from "antd";
 
 export const CLayout: FC<{ handlerToken: Function }> = ({ handlerToken }) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);

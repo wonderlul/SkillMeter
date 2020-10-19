@@ -1,21 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export enum ESortSkills {
-  NAME,
-  CATEGORY,
-  WEIGHT,
-}
-
-export enum ESortSkillsDirection {
-  ASCEND = 1,
-  DESCEND = -1,
-}
-
-export interface ISort {
-  tag: ESortSkills;
-  direction: ESortSkillsDirection;
-}
-
 export enum ESkills {
   ZERO,
   ONE,
@@ -25,6 +9,12 @@ export enum ESkills {
   FIVE,
   SIX,
   SEVEN,
+}
+
+export interface IGetSkills {
+  page?: number;
+  columnKey?: string;
+  order?: string;
 }
 
 export interface ISkills extends Document {

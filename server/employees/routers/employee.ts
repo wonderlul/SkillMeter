@@ -1,11 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
-import EmployeeModel, {
-  IEmployee,
-  IEmployeeSkills,
-  ISkills,
-} from "../models/employee.model";
+import mongoose from "mongoose";
 
-import mongoose, { Schema, Document } from "mongoose";
+import EmployeeModel, { IEmployee } from "../models/employee.model";
 
 import isEmployeeMiddleware from "../middlewares/isEmployee";
 import isToken from "../middlewares/isToken";

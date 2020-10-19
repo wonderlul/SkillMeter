@@ -1,6 +1,7 @@
 import React, { FC, useMemo } from "react";
 import { ResponsivePie } from "@nivo/pie";
-import { IEmployee, ISkills } from "../../models/IEmployee";
+import { IEmployee } from "../../models/IEmployee";
+import { ISkills } from "../../models/ISkills";
 
 import styles from "./CMatrixPieChart.module.scss";
 

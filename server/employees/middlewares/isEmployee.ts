@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+
 import EmployeeModel from "../models/employee.model";
 
 const isEmployeeMiddleware = async (

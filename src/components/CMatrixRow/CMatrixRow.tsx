@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
-import style from './CMatrixRow.module.scss';
+import React, { FC } from "react";
+import style from "./CMatrixRow.module.scss";
 
-import CCircle, { levelRange } from '../CCircle/CCircle';
-import CUserSignature from '../CUserSignature/CUserSignature';
-import { IEmployee } from '../../models/IEmployee';
-import { ISkills, ESkillLevel } from '../../models/ISkills';
-import { Dropdown, Menu, Popconfirm } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import { updateEmployeeSkill } from '../../services/employeesSvc';
+import CCircle from "../CCircle/CCircle";
+import CUserSignature from "../CUserSignature/CUserSignature";
+import { IEmployee } from "../../models/IEmployee";
+import { ISkills, ESkillLevel } from "../../models/ISkills";
+import { Dropdown, Menu, Popconfirm } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
+import { updateEmployeeSkill } from "../../services/employeesSvc";
 
 export interface ICMatrixRow {
   employee: IEmployee;
@@ -64,7 +64,7 @@ const CMatrixRow: FC<ICMatrixRow> = ({
               {Number(skill) === 0 ? (
                 <div className={style.None}>{`\u2717`}</div>
               ) : (
-                <CCircle level={+skill as levelRange} />
+                <CCircle level={+skill} />
               )}
             </Menu.Item>
           ))}
@@ -76,17 +76,15 @@ const CMatrixRow: FC<ICMatrixRow> = ({
       <Dropdown
         key={`${employee._id}${index}`}
         overlay={menu}
-        trigger={['click']}
+        trigger={["click"]}
         disabled={disabledEmployee}
       >
         <div
           className={`${style.Content} ${
-            disabledEmployee ? style.DisabledCell : ''
+            disabledEmployee ? style.DisabledCell : ""
           }`}
         >
-          {!!employeeSkill && (
-            <CCircle level={employeeSkill.level as levelRange} />
-          )}
+          {!!employeeSkill && <CCircle level={employeeSkill.level} />}
         </div>
       </Dropdown>
     );
@@ -95,14 +93,14 @@ const CMatrixRow: FC<ICMatrixRow> = ({
   //Row
 
   return (
-    <div className={`${style.Row} ${disabledEmployee ? style.Disabled : ''}`}>
+    <div className={`${style.Row} ${disabledEmployee ? style.Disabled : ""}`}>
       <Popconfirm
-        title={`Are you sure ${disabledEmployee ? 'enable' : 'disable'} ${
+        title={`Are you sure ${disabledEmployee ? "enable" : "disable"} ${
           employee.name
         } ${employee.surname}？`}
         icon={
           <QuestionCircleOutlined
-            style={disabledEmployee ? { color: 'green' } : { color: 'red' }}
+            style={disabledEmployee ? { color: "green" } : { color: "red" }}
           />
         }
         okText="Yes"

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import { Upload, Form } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 
@@ -26,12 +27,14 @@ export const CAvatarUpload: React.FC<IImage> = ({ initialImage }) => {
       setLoading(false);
     }
   };
+
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
+
   return (
     <Form.Item
       // valuePropName="fileList"
@@ -66,7 +69,7 @@ export const uploadImage = (img: any) =>
     reader.readAsDataURL(img);
   });
 
-function beforeUpload(file: any) {
+const beforeUpload = (file: any) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
   if (!isJpgOrPng) {
     console.log("You can only upload JPG/PNG file!");
@@ -76,4 +79,4 @@ function beforeUpload(file: any) {
     console.log("Image must smaller than 2MB!");
   }
   return isJpgOrPng && isLt2M;
-}
+};

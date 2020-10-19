@@ -37,7 +37,7 @@ require("dotenv").config();
 
   app.listen(process.env.PORT, () => {
     console.log(
-      `⚡️[server]⚡️: Server is running at \u269D \u269D http://localhost:${process.env.PORT} \u269D \u269D`
+      `[SkillMetrix]: Server is running at http://localhost:${process.env.PORT}`
     );
   });
 })();
